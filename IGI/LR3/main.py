@@ -1,3 +1,4 @@
+import os
 from task1 import task1
 from task2 import task2
 from task3 import task3
@@ -19,5 +20,6 @@ while True:
         case "5":
             task5()
         case _:
+            os.system("cls")
             print("Program was finished")
             break

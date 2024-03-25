@@ -1,8 +1,10 @@
+from inputvalidator import inputValidate, TYPES
+
 wordlendict = {}
 def dictInit(string: str):
     for i in string.split(" "):
         if i.__contains__(",") or i.__contains__("."):
-            i = i[:len(i)-1:]
+            i = i[:len(i) - 1:]
         wordlendict[i] = len(i)
         
     return
@@ -13,7 +15,7 @@ def countWordsLessThanFive(string: str):
 
     for i in string.split(" "):
         if i.__contains__(",") or i.__contains__("."):
-            i = i[:len(i)-1:]
+            i = i[:len(i) - 1:]
         if len(i) < 5:
             counter += 1
     
@@ -41,16 +43,20 @@ def task4():
 
     dictInit(string)
 
-    choice = int(input("Enter function number: "))
+    while True:
+        choice = inputValidate("Enter function number: ", TYPES.INT)
 
-    match choice:
-        case 1:     
-            print(f"Words less than 5: {countWordsLessThanFive(string)}")
-            return
-        case 2:
-            print(f"Min word that ends with D: {findShortestDWord()}")
-            return
-        case 3:
-            printWordsInOrder(string)
-            return
+        match choice:
+            case 1:     
+                print(f"Words less than 5: {countWordsLessThanFive(string)}")
+                return
+            case 2:
+                print(f"Min word that ends with D: {findShortestDWord()}")
+                return
+            case 3:
+                printWordsInOrder(string)
+                return
+            case _:
+                print("Incorrect option")
+                continue
         

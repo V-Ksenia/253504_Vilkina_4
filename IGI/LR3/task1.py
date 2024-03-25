@@ -1,4 +1,5 @@
 from math import fabs, log
+from inputvalidator import inputValidate, TYPES
 
 def calculateSeries(x, eps):
     result = 0.0
@@ -11,12 +12,15 @@ def calculateSeries(x, eps):
     return
 
 def task1():
-    x = float(input("enter x: "))
-    eps = float(input("enter eps: "))
-
-    calculateSeries(x, eps)
-
-    return
+    while True:
+        
+        x = inputValidate("enter x: ", TYPES.FLOAT)
+        if fabs(x) > 1:
+            print("|x| > 1. Enter again.")
+        else:
+            eps = inputValidate("enter eps: ", TYPES.FLOAT)
+            calculateSeries(x, eps)
+            return
 
 
     

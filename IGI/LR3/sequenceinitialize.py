@@ -1,4 +1,5 @@
 from random import randint
+from inputvalidator import inputValidate, TYPES
 
 def seqRandomInit():
 
@@ -21,7 +22,7 @@ def seqInputInit():
     sequence = []
 
     while True:
-        x = int(input())
+        x = inputValidate("", TYPES.INT)
         
         if x > 1000:
             return sequence

@@ -1,5 +1,5 @@
 from sequenceinitialize import seqInputInit, seqRandomInit
-
+from inputvalidator import inputValidate, TYPES
 
 def calculateEven(list_):
 
@@ -15,7 +15,7 @@ def calculateEven(list_):
 def task2():
     while True:
 
-        choice = int(input("enter choice 1(user's input) or 2(random): "))
+        choice = inputValidate("enter choice 1(user's input) or 2(random): ", TYPES.INT)
 
         match choice:
             case 1:
@@ -27,6 +27,6 @@ def task2():
                 list2 = seqRandomInit()
                 print(f"Amount of even numbers: {calculateEven(list2)}")
                 return
-            
             case _:
-                break
+                print("Incorrect option")
+                continue

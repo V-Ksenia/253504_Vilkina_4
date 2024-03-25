@@ -1,12 +1,13 @@
 from math import fabs
+from inputvalidator import inputValidate, TYPES
 
 lst = []
 
 def listInputInit():
-    size = int(input(("Enter size of list: ")))
+    size = inputValidate("Enter size of list: ", TYPES.INT)
     print("Enter list")
     for i in range(size):
-        lst.append(float(input()))
+        lst.append(inputValidate("", TYPES.INT))
 
 def findMaxAbsoluteElement():
     maxElementIndex = 0
