@@ -1,8 +1,10 @@
 from sequenceinitialize import seqInputInit, seqRandomInit
 from inputvalidator import inputValidate, TYPES
+from decorator import funcInfoDec
 
+@funcInfoDec
 def calculateEven(list_):
-
+    """Counts even numbers"""
     counter = 0
 
     for i in list_:
@@ -13,6 +15,7 @@ def calculateEven(list_):
 
 
 def task2():
+    """Runs task2"""
     while True:
 
         choice = inputValidate("enter choice 1(user's input) or 2(random): ", TYPES.INT)
