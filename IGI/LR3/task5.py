@@ -46,7 +46,10 @@ def multiplyElementsBetweenZeros(lst):
 
 
 def task5():
-    """Runs task5"""
+    """Runs task5 \n
+    Task: Find the number of the maximum modulo element of the list and\\
+    the product of the elements located between the first and second zero element.
+    """
     llist = listInputInit()
     print(f"List: {llist}")
     print(f"Max element index: {findMaxAbsoluteElement(llist)}")

@@ -15,7 +15,11 @@ def calculateEven(list_):
 
 
 def task2():
-    """Runs task2"""
+    """Runs task2 \n
+    Task: Create a loop that takes integers from the keyboard \\
+    and counts the number of even numbers. \\
+    End of cycle is entering a number greater than 1000
+    """
     while True:
 
         choice = inputValidate("enter choice 1(user's input) or 2(random): ", TYPES.INT)

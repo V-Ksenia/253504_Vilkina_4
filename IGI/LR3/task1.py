@@ -16,7 +16,11 @@ def calculateSeries(x, eps):
     return None
 
 def task1():
-    """Runs task1"""
+    """Runs task1 \n
+    Task: Calculate function values by expanding this function into a series \\
+    Max iterations = 500 \\
+    Print the number of series terms required to achieve the specified accuracy
+    """
     while True:        
         x = inputValidate("enter x: ", TYPES.FLOAT)
         if fabs(x) > 1:

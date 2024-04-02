@@ -5,6 +5,11 @@ from task3 import task3
 from task4 import task4
 from task5 import task5
 
+#   -----LAB №3. Standard data types, collections, functions, modules.-----
+#   Made by Ksenia Vilkina. Gr.253504
+#   28.03.2024
+
+
 while True:
     choice = input("\033[96m ENTER NUMBER FROM 1 TO 5 OR ANY OTHER SYMBOL TO LEAVE: \033[00m \n")
 
