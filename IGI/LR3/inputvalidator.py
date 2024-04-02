@@ -2,6 +2,7 @@ from enum import Enum
 from decorator import inputDec
 
 class TYPES(Enum):
+    """Allowed types for input"""
     INT = 1
     FLOAT = 2
 
