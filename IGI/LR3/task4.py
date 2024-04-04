@@ -43,15 +43,15 @@ def printWordsInOrder(string: str):
     """Prints string in reversed order"""
     return sorted(wordlendict, key=wordlendict.get, reverse=True)
 
-
+@funcInfoDec
 def task4():
     """Runs task4 \n
     Task: Make operations with the given string: \n
-    «So she was considering in her own mind, as well as she could, for the hot day made her \\
-    feel very sleepy and stupid, whether the pleasure of making a daisy-chain would be worth the trouble \\
+    «So she was considering in her own mind, as well as she could, for the hot day made her 
+    feel very sleepy and stupid, whether the pleasure of making a daisy-chain would be worth the trouble 
     of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.»  \n
-    Count words which lenght is less than five. \\
-    Find the min word that ends wirh letter 'd'. \\
+    Count words which lenght is less than five. 
+    Find the min word that ends wirh letter 'd'. 
     Print sorted string in reversed order.
     """
     dictInit(string)

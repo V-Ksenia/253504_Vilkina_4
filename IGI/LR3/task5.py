@@ -44,10 +44,10 @@ def multiplyElementsBetweenZeros(lst):
     
     return "No zero elements" 
 
-
+@funcInfoDec
 def task5():
     """Runs task5 \n
-    Task: Find the number of the maximum modulo element of the list and\\
+    Task: Find the number of the maximum modulo element of the list and   
     the product of the elements located between the first and second zero element.
     """
     llist = listInputInit()

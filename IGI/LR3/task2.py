@@ -13,11 +13,12 @@ def calculateEven(list_):
 
     return counter
 
-
+@funcInfoDec
 def task2():
     """Runs task2 \n
-    Task: Create a loop that takes integers from the keyboard \\
-    and counts the number of even numbers. \\
+    Task: Create a loop that takes integers from the keyboard 
+    and counts the number of even numbers. 
+    
     End of cycle is entering a number greater than 1000
     """
     while True:
