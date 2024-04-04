@@ -1,4 +1,4 @@
-from sequenceinitialize import seqInputInit, seqRandomInit
+from sequenceinitialize import seqInputInit, seqRandomInit, seqGenerateInit
 from inputvalidator import inputValidate, TYPES
 from decorator import funcInfoDec
 
@@ -31,7 +31,15 @@ def task2():
                 return
 
             case 2:
-                list2 = seqRandomInit()
+                list2 = []
+                
+                for n in seqGenerateInit():
+                    if n > 1000:
+                        break
+                    else:
+                        list2.append(n)
+                
+                print(list2)
                 print(f"Amount of even numbers: {calculateEven(list2)}")
                 return
             case _:
