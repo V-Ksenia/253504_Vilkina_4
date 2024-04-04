@@ -10,7 +10,7 @@ def calculateSeries(x, eps):
     for n in range(1, 500):
         result += (-1) * x**n / n
         if fabs(result - log(1 - x)) <= eps:
-            print(f"x = {x}, n = {n}, ln(1-x) = {result}, math ln(1-x) = {log(1 - x)}, eps = {eps}")
+            print(f"x = {x}, n = {n}, ln(1-x) = {round(result, 3)}, math ln(1-x) = {round(log(1 - x), 3)}, eps = {eps}")
             return n
     print("iterations > 500")
     return None
