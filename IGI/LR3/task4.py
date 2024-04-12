@@ -3,15 +3,14 @@ from decorator import funcInfoDec
 
 
 string = "So she was considering in her own mind, as well as she could, for the hot day made her feel very sleepy and stupid, whether the pleasure of making a daisy-chain would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her."
-wordlendict = {}
+wordlist = []
 
 def dictInit(string: str):
     """Initializes dictionary from given string"""
     for i in string.split(" "):
         if i.__contains__(",") or i.__contains__("."):
             i = i[:len(i) - 1:]
-        wordlendict[i] = len(i)
-        
+        wordlist.append(i)
     return
 
 @funcInfoDec
@@ -32,16 +31,18 @@ def findShortestDWord():
     """Returns shortest word that ends with letter 'd' """
     dwords = []
 
-    for i in wordlendict:
+    for i in wordlist:
         if i[len(i) - 1] == 'd':
             dwords.append(i)
     
     return min(dwords)
 
+
 @funcInfoDec
 def printWordsInOrder(string: str):
-    """Prints string in reversed order"""
-    return sorted(wordlendict, key=wordlendict.get, reverse=True)
+    """Prints sorted string in reversed order"""
+    return sorted(set(wordlist), key=lambda i: len(i), reverse=True)
+
 
 @funcInfoDec
 def task4():
@@ -55,7 +56,7 @@ def task4():
     Print sorted string in reversed order.
     """
     dictInit(string)
-
+    print(wordlist)
     while True:
         choice = inputValidate("Enter function number \n"
                                 "1 - Words lenght < 5 \n"

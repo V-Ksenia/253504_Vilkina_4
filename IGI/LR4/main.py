@@ -1,13 +1,9 @@
 import os
-from task1 import task1
-from task2 import task2
-from task3 import task3
-from task4 import task4
-from task5 import task5
+from task1.task1 import TaskFirst
 
-#   -----LAB №3. Standard data types, collections, functions, modules.-----
+#   -----LAB №4. .-----
 #   Made by Ksenia Vilkina. Gr.253504
-#   28.03.2024
+#   12.04.2024
 
 
 while True:
@@ -15,15 +11,20 @@ while True:
 
     match choice:
         case "1":
+            task1 = TaskFirst()
             task1()
         case "2":
-            task2()
+            pass
+           # task2()
         case "3":
-            task3()
+            pass
+           # task3()
         case "4":
-            task4()
+            pass
+           # task4()
         case "5":
-            task5()
+            pass
+           # task5()
         case _:
             os.system("cls")
             print("\033[96m Program was finished \033[00m")
