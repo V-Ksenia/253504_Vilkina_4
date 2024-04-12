@@ -1,6 +1,6 @@
 import os
 from task1.task1 import TaskFirst
-
+from task3.task3 import TaskThird
 #   -----LAB №4. .-----
 #   Made by Ksenia Vilkina. Gr.253504
 #   12.04.2024
@@ -17,8 +17,8 @@ while True:
             pass
            # task2()
         case "3":
-            pass
-           # task3()
+            task3 = TaskThird()
+            task3()
         case "4":
             pass
            # task4()
