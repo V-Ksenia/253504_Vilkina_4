@@ -51,7 +51,7 @@ class EventDictActions:
         for cent, dates in self._eventsdict.items():
             if cent == century:
                 return dates
-        return 'nothing'
+        return 'No events in this century'
     
 class TaskFirst:
     @staticmethod

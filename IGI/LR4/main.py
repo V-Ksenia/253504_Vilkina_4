@@ -7,7 +7,7 @@ from task1.task1 import TaskFirst
 
 
 while True:
-    choice = input("\033[96m ENTER NUMBER FROM 1 TO 5 OR ANY OTHER SYMBOL TO LEAVE: \033[00m \n")
+    choice = input("\n \033[1m ENTER NUMBER FROM 1 TO 5 OR ANY OTHER SYMBOL TO LEAVE: \033[00m \n")
 
     match choice:
         case "1":
@@ -27,7 +27,7 @@ while True:
            # task5()
         case _:
             os.system("cls")
-            print("\033[96m Program was finished \033[00m")
+            print("\033[96m \033[1m Program was finished \033[00m")
             break
 
 
