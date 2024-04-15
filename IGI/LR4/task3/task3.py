@@ -33,9 +33,7 @@ class Series:
 class AdditionalCalculations:
     @staticmethod
     def calculateDispersion(series):
-        selective_average = sum(series)/len(series)
-        all_elements_squares_sum = sum(i*i for i in series)
-        return round(all_elements_squares_sum/len(series) - selective_average**2, 4)
+        return round(np.var(series), 4) 
     
     @staticmethod
     def calculateMode(series):

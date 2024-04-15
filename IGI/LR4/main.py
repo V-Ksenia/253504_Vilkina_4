@@ -1,6 +1,8 @@
 import os
 from task1.task1 import TaskFirst
 from task3.task3 import TaskThird
+from task4.task4 import TaskFourth
+from task5.task5 import TaskFifth
 #   -----LAB №4. .-----
 #   Made by Ksenia Vilkina. Gr.253504
 #   12.04.2024
@@ -20,11 +22,11 @@ while True:
             task3 = TaskThird()
             task3()
         case "4":
-            pass
-           # task4()
+            task4 = TaskFourth()
+            task4()
         case "5":
-            pass
-           # task5()
+            task5 = TaskFifth()
+            task5()
         case _:
             os.system("cls")
             print("\033[96m \033[1m Program was finished \033[00m")
