@@ -11,7 +11,7 @@ from additionaltask.additionaltask import TaskAdditional
 
 
 while True:
-    choice = input("\n \033[1m ENTER NUMBER FROM 1 TO 5 OR ANY OTHER SYMBOL TO LEAVE: \033[00m \n")
+    choice = input("\n \033[1m ENTER NUMBER FROM 1 TO 6 OR ANY OTHER SYMBOL TO LEAVE: \033[00m \n")
 
     match choice:
         case "1":

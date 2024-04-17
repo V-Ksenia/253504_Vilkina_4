@@ -1,6 +1,7 @@
 import re
 from inputvalidator import *
 from zipfile import ZipFile
+from generaltask import GeneralTask
 
 class FileHandler:
     filename_ = r'task2\inputText.txt' 
@@ -102,7 +103,7 @@ class TextHandler:
         return "String isn't in a GUID format"
        
 
-class TaskSecond:
+class TaskSecond(GeneralTask):
     @staticmethod
     def __call__():
         file_loader = FileHandler()

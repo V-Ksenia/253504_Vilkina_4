@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from math import fabs, log, sqrt
 from statistics import median, mode
 from inputvalidator import *
+from generaltask import GeneralTask
 
 class Series:
     def __init__(self, x, eps):
@@ -57,28 +58,27 @@ class PlotBuilder:
 
     def buildPlot(self):
         x = np.linspace(-0.99, 0.99, 200)
+
         func1 = np.log(1 - x)
         func2 = sum((-1) * x**i / i for i in range(1, self._n))
 
-        plt.style.use('_mpl-gallery')
-        plt.plot(x, func1, label='log(1 - x)', color='r')
-        plt.plot(x, func2, label='(-1) * x**n / n', color='g')
-        plt.subplots_adjust(bottom=0.05, left=0.05)
-
-        plt.legend()
+        plt.plot(x, func1, color='g')
+        plt.plot(x, func2, color='y')
+        
+        plt.legend(['log(1 - x)', '(-1) * x**n / n'])
         plt.xlabel('X')
         plt.ylabel('Y')
-        plt.title('Series Convergence')
-        plt.text(-1.05, 85, 'There are two plots:\nred is our math function\ngreen is our series ')
-        plt.annotate('Annotation :)', (-1.05, 80))
+        plt.title('Series plots')
+        plt.text(-0.95, -4, 'And a little bit of text\nright here')
+        plt.annotate('Some annotation here', (-0.95, -3))
 
         plt.grid(True)
         figure = plt.gcf()
-        figure.set_size_inches(9, 4)
+        figure.set_size_inches(9, 5)
         plt.savefig(r'C:\253504_Vilkina_4\IGI\LR4\task3\plots.png', dpi=300)
         plt.show()
 
-class TaskThird:
+class TaskThird(GeneralTask):
     @staticmethod
     def __call__():
 

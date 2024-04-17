@@ -1,6 +1,7 @@
 import pandas as pd
+from generaltask import GeneralTask
 
-class TaskAdditional:
+class TaskAdditional(GeneralTask):
     @staticmethod
     def __call__():
         dtframe = pd.read_csv(r"C:\253504_Vilkina_4\IGI\LR4\additionaltask\Sleep_health_and_lifestyle_dataset.csv")
@@ -29,6 +30,7 @@ class TaskAdditional:
 
         mean_activity_less_sleep = dtframe[dtframe['Sleep Duration'] < mean_sleep]['Physical Activity Level'].mean()
         print(round(mean_activity_less_sleep, 2))
+
 if __name__ == '__main__':
     task6 = TaskAdditional()
     task6()

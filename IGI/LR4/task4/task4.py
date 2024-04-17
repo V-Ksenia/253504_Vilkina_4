@@ -3,6 +3,7 @@ import numpy as np
 from scipy.spatial import ConvexHull
 import matplotlib.pyplot as plt
 from inputvalidator import *
+from generaltask import GeneralTask
 
 class GeometricShape(ABC):
     def __init__(self, color, name):
@@ -57,7 +58,7 @@ class Triangle(GeometricShape):
     
     def print_params(self):
         print("\033[1m Shape name: \033[00m {}\n\033[1m Shape Color: \033[00m {}\n\033[1m A side: \033[00m {}\n\033[1m B side: \033[00m {}\n\033[1m C angle between A n B: \033[00m {}\n\033[1m\033[92m Area: \033[00m {}"
-              .format(self._name, self._color.color, self._a, self._b, self._c, self.calculate_area()))
+              .format(self.getShapeName(), self._color.color, self._a, self._b, self._c, self.calculate_area()))
         
 class TriangleBuilder:
     def __init__(self, triangle: Triangle):
@@ -91,7 +92,7 @@ class TriangleBuilder:
         plt.savefig(r'C:\253504_Vilkina_4\IGI\LR4\task4\shape.png', dpi=300)
         plt.show()
 
-class TaskFourth:
+class TaskFourth(GeneralTask):
     @staticmethod
     def __call__():
         a = inputValidate("Enter A side: ", TYPES.INT)

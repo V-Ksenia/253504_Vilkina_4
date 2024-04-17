@@ -1,7 +1,8 @@
 import numpy as np
 from inputvalidator import *
+from generaltask import GeneralTask
 
-class TaskFifth:
+class TaskFifth(GeneralTask):
     @staticmethod
     def __call__():
 

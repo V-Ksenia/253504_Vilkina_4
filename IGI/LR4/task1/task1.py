@@ -1,6 +1,7 @@
 import csv
 import pickle
 from inputvalidator import *
+from generaltask import GeneralTask
 
 event_dates = { 
                 20 : {  1914 : 'Начало Первой мировой войны',
@@ -53,7 +54,7 @@ class EventDictActions:
                 return dates
         return 'No events in this century'
     
-class TaskFirst:
+class TaskFirst(GeneralTask):
     @staticmethod
     def __call__():
         global event_dates
