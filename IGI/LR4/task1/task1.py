@@ -68,6 +68,7 @@ class TaskFirst(GeneralTask):
         print(f"\033[92m CSV deserealized data: \033[00m \n{file_serializer.csvDeserialize('task1/csv_file.csv')}")
 
         action = EventDictActions(event_dates)
+    
         centuryToFind = inputValidate("\033[1m Enter century: \033[00m", TYPES.INT)
 
         print(f"\033[92m Events: \033[00m \n{action.CenturyEventsList(centuryToFind)}")

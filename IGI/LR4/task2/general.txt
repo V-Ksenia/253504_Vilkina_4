@@ -1,0 +1,7 @@
+Amount of declarative sentences: 2
+Amount of interrogative sentences: 1
+Amount of incentive sentences: 2
+Amount of sentences: 5
+Average lenght of sentences(symbols): 36.5
+Average lenght of words: 7.3
+Amount of smiles: 4

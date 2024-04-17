@@ -45,13 +45,13 @@ class TextHandler:
         return self.count_declarative_sentences() + self.count_incentive_sentences() + self.count_interrogative_sentences()
 
     def count_declarative_sentences(self):
-        return len(re.findall(r"\.\W", self.text_))
+        return len(re.findall(r"\.\W?", self.text_))
 
     def count_interrogative_sentences(self):
-        return len(re.findall(r"\?\W", self.text_))
+        return len(re.findall(r"\?\W?", self.text_))
 
     def count_incentive_sentences(self):
-        return len(re.findall(r"!\W", self.text_))
+        return len(re.findall(r"!\W?", self.text_))
     
     def calculate_sentence_average_length(self):
         sentences_list = re.split(r'\.\W |\?\W |!\W', self.text_)
@@ -84,7 +84,6 @@ class TextHandler:
     
     def find_firts_zword_index(self):
         words_list = re.findall(r'\w+', self.text_)
-        print(words_list)
         match = re.search(r'[a-yA-Y]*[zZ][a-yA-Y]*', self.text_)
         return match[0], words_list.index(match[0]) + 1
 
@@ -107,21 +106,68 @@ class TaskSecond(GeneralTask):
     @staticmethod
     def __call__():
         file_loader = FileHandler()
+        text_handler = TextHandler()
+
         text = file_loader.read_from_file()
         print(text)
-        
-        text_handler = TextHandler()
-        text_handler.text_ = text
-        print(f"{text_handler.count_declarative_sentences()}\n{text_handler.count_interrogative_sentences()}\n{text_handler.count_incentive_sentences()}")
-        print(text_handler.count_sentences())
-        print(text_handler.calculate_sentence_average_length())
-        print(text_handler.calculate_word_average_length())
-        print(text_handler.calculate_smiles_count())
-        c = input("Enter char: ")
-        print(text_handler.replace_spaces_wcharacter(c))
-        print(text_handler.find_capital_letter(), text_handler.find_lowercase_letter())
-        print(text_handler.find_firts_zword_index())
-        print(text_handler.remove_awords())
 
-        text_handler.text = "e02fd0e4-00fd-090A-ca30-0d00a0038ba0"
-        print(text_handler.validate_guid_string())
+        files_zip = []
+
+        while True:
+            choice = input('\033[92m\033[1m Enter 1(for general task), 2(for fourth task option) or any other symbol to leave:\033[00m ')
+            match choice:
+                case '1':                    
+                    text_handler.text = text
+
+                    saved_result = ''
+
+                    str1 = (f"Amount of declarative sentences: {text_handler.count_declarative_sentences()}")
+                    str2 = (f"Amount of interrogative sentences: {text_handler.count_interrogative_sentences()}")
+                    str3 = (f"Amount of incentive sentences: {text_handler.count_incentive_sentences()}")
+                    str4 = (f"Amount of sentences: {text_handler.count_sentences()}")
+                    str5 = (f"Average lenght of sentences(symbols): {text_handler.calculate_sentence_average_length()}")
+                    str6 = (f"Average lenght of words: {text_handler.calculate_word_average_length()}")
+                    str7 = (f"Amount of smiles: {text_handler.calculate_smiles_count()}")
+
+                    saved_result = str1 + '\n' + str2 + '\n' + str3 + '\n' + str4 + '\n' + str5 + '\n' + str6 + '\n' + str7 
+                    print(saved_result)
+
+                    file_loader.filename = r'task2\general.txt'
+                    file_loader.write_to_file(saved_result)
+                    Zipper.zipFile(r'task2\general.txt', r'task2\general.zip')
+
+                    files_zip.append(r'task2\general.zip')
+
+                case '2':
+                    text_handler.text = text
+
+                    saved_result = ''
+
+                    c = input("Enter char u want to replace spaces with: ")
+                    str1 = (f"Spaces replaced with {c}: {text_handler.replace_spaces_wcharacter(c)}")
+                    str2 = (f"Amount of capital letters: {text_handler.find_capital_letter()}\nand lowercase letters: {text_handler.find_lowercase_letter()}")
+                    str3 = (f"First word with 'z' and index: {text_handler.find_firts_zword_index()}")
+                    str4 = (f"Words that start with 'a' removed: {text_handler.remove_awords()}")
+
+                    text_handler.text = "e02fd0e4-00fd-090A-ca30-0d00a0038ba0"
+                    print(f"\033[1mEntered GUID: {text_handler.text}\033[00m")
+                    str5 = (text_handler.validate_guid_string())
+
+                    saved_result = str1 + '\n' + str2 + '\n' + str3 + '\n' + str4 + '\n' + str5
+                    print(saved_result)
+
+                    file_loader.filename = r'task2\option.txt'
+                    file_loader.write_to_file(saved_result)
+                    Zipper.zipFile(r'task2\option.txt', r'task2\option.zip')
+
+                    files_zip.append(r'task2\option.zip')
+
+                case _:
+                    break
+
+        print("\033[1mZip Info:\033[00m")
+        for zip in files_zip:
+            print(f"\033[92m{zip}\033[00m:")
+            with ZipFile(zip, 'r') as zp:
+                for item in zp.infolist():
+                    print(f'filename: {item.filename}, date: {item.date_time}, size: {item.file_size}')
