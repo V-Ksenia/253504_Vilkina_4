@@ -76,11 +76,7 @@ class TriangleBuilder:
         plt.plot([A[0], B[0]], [A[1], B[1]], color='black')
         plt.plot([B[0], C[0]], [B[1], C[1]], color='black')
 
-        dots = np.array([A, B, C])
-
-        hull = ConvexHull(dots)
-
-        plt.fill(dots[hull.vertices, 0], dots[hull.vertices, 1], self._triangle.color.color)
+        plt.fill([A[0], B[0], C[0]], [A[1], B[1], C[1]], self._triangle.color.color)
 
         plt.xlabel('x')
         plt.ylabel('y')
