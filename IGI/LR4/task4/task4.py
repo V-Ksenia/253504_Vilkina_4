@@ -82,7 +82,6 @@ class TriangleBuilder:
 
         plt.fill(dots[hull.vertices, 0], dots[hull.vertices, 1], self._triangle.color.color)
 
-        plt.axis('equal')
         plt.xlabel('x')
         plt.ylabel('y')
 

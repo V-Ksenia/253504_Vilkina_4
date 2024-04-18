@@ -34,6 +34,3 @@ class TaskAdditional(GeneralTask):
         mean_activity_less_sleep = dtframe[dtframe['Sleep Duration'] < mean_sleep]['Physical Activity Level'].mean()
         print(f"\033[92m\033[1mАктивность людей, продолжительность сна которых не ниже среднего:\033[00m {round(mean_activity_less_sleep, 2)}")
 
-if __name__ == '__main__':
-    task6 = TaskAdditional()
-    task6()

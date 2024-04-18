@@ -53,14 +53,11 @@ class AdditionalCalculations:
         return round(series / n, 4)
 
 class PlotBuilder:
-    def __init__(self, n):
-        self._n = n
-
-    def buildPlot(self):
+    def buildPlot(self, n):
         x = np.linspace(-0.99, 0.99, 200)
 
         func1 = np.log(1 - x)
-        func2 = sum((-1) * x**i / i for i in range(1, self._n))
+        func2 = sum((-1) * x**i / i for i in range(1, n))
 
         plt.plot(x, func1, color='g')
         plt.plot(x, func2, color='y')
@@ -69,9 +66,9 @@ class PlotBuilder:
         plt.xlabel('X')
         plt.ylabel('Y')
         plt.title('Series plots')
-        plt.text(-0.95, -4, 'And a little bit of text\nright here')
         plt.annotate('Some annotation here', (-0.95, -3))
-
+        plt.text(-0.95, -4, 'And a little bit of text\nright here')
+    
         plt.grid(True)
         figure = plt.gcf()
         figure.set_size_inches(9, 5)
@@ -92,6 +89,6 @@ class TaskThird(GeneralTask):
                 series = Series(x, eps)
                 iterations = series.calculateSeries()
 
-                plotBuilder = PlotBuilder(iterations)
-                plotBuilder.buildPlot()
+                plotBuilder = PlotBuilder()
+                plotBuilder.buildPlot(iterations)
                 return

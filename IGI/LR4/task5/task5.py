@@ -3,7 +3,7 @@ from inputvalidator import *
 from generaltask import GeneralTask
 
 class InputMatrixMixin:
-    matrix : any
+
     def input_matrix(self):
         n = inputValidate("\033[1mEnter the number of rows:\033[00m ", TYPES.INT) 
         m = inputValidate("\033[1mEnter the number of columns:\033[00m ", TYPES.INT) 
@@ -22,8 +22,6 @@ class InputMatrixMixin:
         return self.matrix
 
 class MatrixHandler(InputMatrixMixin):
-    
-
     @property
     def matrix_(self):
         return self.matrix
