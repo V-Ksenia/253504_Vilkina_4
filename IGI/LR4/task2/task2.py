@@ -91,8 +91,8 @@ class TextHandler:
         return re.sub(r" [aA][a-zA-Z]*", "", self.text_)
         
     def validate_guid_string(self):
-        guid = re.fullmatch(r'[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}', self.text_)
-        match = re.fullmatch(r'\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\}', self.text_)
+        guid = re.fullmatch(r'[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}', self.text_)
+        match = re.fullmatch(r'\{[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}\}', self.text_)
 
         if match:
             return 'GUID with brackets'

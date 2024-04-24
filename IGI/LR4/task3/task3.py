@@ -1,7 +1,7 @@
 import numpy as np 
 import matplotlib.pyplot as plt
 from math import fabs, log, sqrt
-from statistics import median, mode
+from statistics import median, mode, mean
 from inputvalidator import *
 from generaltask import GeneralTask
 
@@ -20,7 +20,7 @@ class Series:
             if fabs(result - log(1 - self._x)) <= self._eps:
                 print(f"\033[92m x = {self._x}, n = {n}, ln(1-x) = {round(result, 3)}, math ln(1-x) = {round(log(1 - self._x), 3)}, eps = {self._eps} \033[00m")
                 
-                print(f"\033[92m Average of elements: \033[00m {self._additionalCalculator.calculateAverage(result, n)}")
+                print(f"\033[92m Average of elements: \033[00m {self._additionalCalculator.calculateAverage(seriesList)}")
                 print(f"\033[92m Mode: \033[00m {self._additionalCalculator.calculateMode(seriesList)}")
                 print(f"\033[92m Median: \033[00m {self._additionalCalculator.calculateMedian(seriesList)}")
 
@@ -49,12 +49,12 @@ class AdditionalCalculations:
         return round(sqrt(dispertion), 4)
 
     @staticmethod
-    def calculateAverage(series, n):
-        return round(series / n, 4)
+    def calculateAverage(series):
+        return round(mean(series), 4)
 
 class PlotBuilder:
     def buildPlot(self, n):
-        x = np.linspace(-0.99, 0.99, 200)
+        x = np.linspace(-0.99, 0.99, 100)
 
         func1 = np.log(1 - x)
         func2 = sum((-1) * x**i / i for i in range(1, n))
@@ -66,13 +66,13 @@ class PlotBuilder:
         plt.xlabel('X')
         plt.ylabel('Y')
         plt.title('Series plots')
-        plt.annotate('Some annotation here', (-0.95, -3))
+        plt.annotate('Some annotation here', xy=(0.0, 0.0), xytext=(-0.25, -1), arrowprops=dict(facecolor="black"))
         plt.text(-0.95, -4, 'And a little bit of text\nright here')
     
         plt.grid(True)
         figure = plt.gcf()
         figure.set_size_inches(9, 5)
-        plt.savefig(r'C:\253504_Vilkina_4\IGI\LR4\task3\plots.png', dpi=300)
+        plt.savefig(r'C:\253504_Vilkina_4\IGI\LR4\task3\plots.png')
         plt.show()
 
 class TaskThird(GeneralTask):

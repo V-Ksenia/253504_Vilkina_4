@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 import numpy as np
-from scipy.spatial import ConvexHull
 import matplotlib.pyplot as plt
 from inputvalidator import *
 from generaltask import GeneralTask
@@ -84,7 +83,7 @@ class TriangleBuilder:
         plt.title(self._triangle.name)
         figure = plt.gcf()
         figure.set_size_inches(9, 5)
-        plt.savefig(r'C:\253504_Vilkina_4\IGI\LR4\task4\shape.png', dpi=300)
+        plt.savefig(r'C:\253504_Vilkina_4\IGI\LR4\task4\shape.png')
         plt.show()
 
 class TaskFourth(GeneralTask):
