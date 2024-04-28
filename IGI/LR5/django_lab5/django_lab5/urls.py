@@ -16,7 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from touragency import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('register/', views.UserRegistrationView.as_view(), name="register"),
+    path('login/', views.UserLoginView.as_view(), name="login"),
+    path('logout/', views.UserLogoutView.as_view(), name='logout'),
+    path('tours/', views.TourListView.as_view(), name="tours"),
+    path('tours/<int:pk>/', views.SpecificTourList.as_view(), name='tour'),
+    path('tours/sortby/hotel/<str:stars_value>/', views.get_tours_by_hotelstars),
+
+    path('users/', views.UserListView.as_view(), name='users')
 ]
