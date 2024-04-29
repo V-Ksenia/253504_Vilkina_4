@@ -28,6 +28,7 @@ urlpatterns = [
     path('tours/', views.TourListView.as_view(), name="tours"),
     path('hotels/', views.HotelListView.as_view(), name="hotels"),
     path('countries/', views.CountryListView.as_view(), name="countries"),
+    path('promocodes/', views.PromocodesView.as_view(), name="promocodes"),
     path('tours/<int:pk>/', views.SpecificTourList.as_view(), name='tour'),
     path('tours/<int:pk>/order/create/', views.OrderCreateView.as_view(), name='create_order'),
     path('user/<int:pk>/orders/', views.UserOrderView.as_view(), name='user_orders'),

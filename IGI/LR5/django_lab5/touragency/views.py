@@ -1,3 +1,4 @@
+import datetime
 from django.shortcuts import render
 from django.views.generic import *
 from django.views import View
@@ -15,27 +16,35 @@ class UserRegistrationView(View):
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
 
-        user = User.objects.create_user(
-                                username=body["username"],
-                                password=body["password"],
-                                first_name=body["first_name"],
-                                last_name=body["last_name"],
-                                address=body["address"],
-                                phone_number=body["phone_number"],
-                                status=body["status"],
-                                )
-        if user:
-            user_data = {
-                "username": body["username"],
-                "password": body["password"],
-                "first_name": body["first_name"],
-                "last_name": body["last_name"],
-                "address": body["address"],
-                "phone_number": body["phone_number"],
-                "status": body["status"],
-            }
-            return JsonResponse(user_data, safe=False)
-        return HttpResponse('error while creating user!')
+        age =body["age"]
+
+        if age < 18:
+            return HttpResponse('Your age must be greater than 17!')
+        else:
+            user = User.objects.create_user(
+                                    username=body["username"],
+                                    password=body["password"],
+                                    first_name=body["first_name"],
+                                    last_name=body["last_name"],
+                                    age=body["age"],
+                                    address=body["address"],
+                                    phone_number=body["phone_number"],
+                                    status=body["status"],
+                                    )
+            
+            if user:
+                user_data = {
+                    "username": user.username,
+                    "password": user.password,
+                    "first_name": user.first_name,
+                    "last_name": user.last_name,
+                    "age": user.age,
+                    "address": user.address,
+                    "phone_number": user.phone_number,
+                    "status": user.status,
+                }
+                return JsonResponse(user_data, safe=False)
+        return HttpResponse('User registration failed')
 
 
 class UserLoginView(View):
@@ -53,6 +62,7 @@ class UserLoginView(View):
                 "password": user.password,
                 "first_name": user.first_name,
                 "last_name": user.last_name,
+                "age": user.age,
                 "address": user.address,
                 "phone_number": user.phone_number,
                 "status": user.status,
@@ -122,6 +132,7 @@ class SpecificTourList(DetailView):
             'hotel_stars': tour.hotel.stars,
             'duration_weeks': tour.duration,
             'price': tour.price,
+            'amount_of_trips': tour.trips,
         })
         return JsonResponse(tours_data, safe=False)
 
@@ -200,9 +211,11 @@ class UserListView(View):
                     "username": user.username,
                     "first_name": user.first_name,
                     "last_name": user.last_name,
+                    "age": user.age,
                     "phone_number": user.phone_number,
                 })
             return JsonResponse(users_data, safe=False)
+        
         return HttpResponseNotFound("For staff only")
 
 
@@ -222,19 +235,30 @@ class OrderCreateView(View):
             body = json.loads(body_unicode)
             amount = body["amount"]
             departure_date = body["departure_date"]
+            code = body["promocode"]
+            promocode = Promocode.objects.filter(code=code).first()
 
-            order = Order.objects.create(user=request.user, tour=tour, amount=amount,
-                                         price=amount * tour.price, departure_date=departure_date)
-            order_data = {
-                "user": order.user.username,
-                "tour_id": order.tour.id,
-                "number": order.number,
-                "price": order.price,
-                "amount": order.amount,
-                "departure_date": order.departure_date,
-            }
+            if datetime.datetime.strptime(departure_date, '%Y-%m-%d') < datetime.datetime.now() + datetime.timedelta(days=5) or amount > tour.trips:
+                return HttpResponseNotFound("Check departure date (no orders less than 5 days in advance) and amount of trips")
+            else:
+                order = Order.objects.create(user=request.user, tour=tour, amount=amount,
+                                            price=amount * tour.price, departure_date=departure_date)      
+                if promocode:
+                    order.use_discount(promocode)
 
-            return JsonResponse(order_data, safe=False)
+                order_data = {
+                    "user": order.user.username,
+                    "tour_id": order.tour.id,
+                    "number": order.number,
+                    "price": order.price,
+                    "amount": order.amount,
+                    "departure_date": order.departure_date,
+                }
+
+                tour.trips -= amount
+                tour.save()
+                
+                return JsonResponse(order_data, safe=False)
         elif request.user.is_authenticated and request.user.status == "staff":
             return HttpResponseNotFound("For clients only")
         else:
@@ -258,8 +282,9 @@ class UserOrderView(View):
                     "amount": order.amount,
                     "departure_date": order.departure_date,
                 })
+
             return JsonResponse(orders_data, safe=False)
-        
+       
         return HttpResponseNotFound("Page not found")
     
 
@@ -285,7 +310,17 @@ class OrderListView(View):
         return HttpResponseNotFound("Page not found")
 
 
+class PromocodesView(View):
+    def get(self, request, *args, **kwargs):
+        codes = Promocode.objects.all()
+        codes_data = []
 
+        for code in codes:
+            codes_data.append({
+                "code": code.code,
+                "discount": code.discount,
+            })
+        return JsonResponse(codes_data, safe=False)
 
 
 

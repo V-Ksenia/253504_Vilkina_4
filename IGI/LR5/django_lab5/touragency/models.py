@@ -12,6 +12,7 @@ class User(AbstractUser):
     status = models.CharField(choices=STATUS_CHOICES, default="client", max_length=6)
     phone_number = models.CharField(max_length=15)
     address = models.CharField(max_length=255)
+    age = models.PositiveSmallIntegerField()
 
     def __str__(self):
         return self.first_name
@@ -25,7 +26,7 @@ class Climate(models.Model):
 
 class Country(models.Model):
     name = models.CharField(max_length=255)
-    climate = models.ManyToManyField('Climate', related_name='countries')
+    climate = models.ManyToManyField(Climate, related_name='countries')
 
     def __str__(self):
         return self.name
@@ -56,7 +57,7 @@ class Tour(models.Model):
         4: "Four weeks",
     }
     duration = models.IntegerField(choices=DURATION_CHOICES)
-
+    trips = models.PositiveSmallIntegerField()
 
     hotel = models.ForeignKey(Hotel, related_name="tours", on_delete=models.CASCADE)
     country = models.ForeignKey(Country, related_name="tours", on_delete=models.CASCADE)
@@ -81,7 +82,26 @@ class Order(models.Model):
     user = models.ForeignKey(User, related_name='orders', on_delete=models.CASCADE)
     tour = models.ForeignKey(Tour, related_name='tours', on_delete=models.CASCADE)
 
+    promocode = models.CharField(max_length=10, null=True)
 
+    def use_discount(self, promocode):
+        if UsedDiscounts.objects.filter(promocode_id=promocode, user_id=self.user).exists():
+            return
+        self.price *= (100 - promocode.discount) / 100
+        self.promocode = promocode.code
+        self.save()
+
+        UsedDiscounts.objects.create(promocode=promocode, user=self.user)
+
+
+class Promocode(models.Model):
+    code = models.CharField(max_length=10)
+    discount = models.PositiveSmallIntegerField()
+
+
+class UsedDiscounts(models.Model):
+    promocode = models.ForeignKey(Promocode, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 
