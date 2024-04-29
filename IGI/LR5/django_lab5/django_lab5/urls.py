@@ -23,10 +23,16 @@ urlpatterns = [
     path('register/', views.UserRegistrationView.as_view(), name="register"),
     path('login/', views.UserLoginView.as_view(), name="login"),
     path('logout/', views.UserLogoutView.as_view(), name='logout'),
+
+    #CLIENTS
     path('tours/', views.TourListView.as_view(), name="tours"),
     path('hotels/', views.HotelListView.as_view(), name="hotels"),
     path('countries/', views.CountryListView.as_view(), name="countries"),
     path('tours/<int:pk>/', views.SpecificTourList.as_view(), name='tour'),
     path('tours/<int:pk>/order/create/', views.OrderCreateView.as_view(), name='create_order'),
-    path('users/', views.UserListView.as_view(), name='users')
+    path('user/<int:pk>/orders/', views.UserOrderView.as_view(), name='user_orders'),
+
+    #STAFF
+    path('users/', views.UserListView.as_view(), name='users'),
+    path('orders/', views.OrderListView.as_view(), name='orders')
 ]

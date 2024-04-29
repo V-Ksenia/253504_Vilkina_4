@@ -80,7 +80,7 @@ class TourListView(ListView):
                 'name': tour.name,
                 'country': tour.country.name,
                 'hotel': tour.hotel.name,
-                'duration': tour.duration,
+                'duration_weeks': tour.duration,
                 'price': tour.get_price(),
             })
         return JsonResponse(tours_data, safe=False)
@@ -117,8 +117,10 @@ class SpecificTourList(DetailView):
             'id': tour.id,
             'name': tour.name,
             'country': tour.country.name,
+            'country_climate': list(tour.country.climate.all().values_list('climate', flat=True)),
             'hotel': tour.hotel.name,
-            'duration': tour.duration,
+            'hotel_stars': tour.hotel.stars,
+            'duration_weeks': tour.duration,
             'price': tour.price,
         })
         return JsonResponse(tours_data, safe=False)
@@ -201,7 +203,7 @@ class UserListView(View):
                     "phone_number": user.phone_number,
                 })
             return JsonResponse(users_data, safe=False)
-        return HttpResponseNotFound("Page not found")
+        return HttpResponseNotFound("For staff only")
 
 
 class UserLogoutView(View):
@@ -234,12 +236,53 @@ class OrderCreateView(View):
 
             return JsonResponse(order_data, safe=False)
         elif request.user.is_authenticated and request.user.status == "staff":
-            return HttpResponseNotFound("Page not found")
+            return HttpResponseNotFound("For clients only")
         else:
-            return HttpResponse('please, login for making an order!')
+            return HttpResponse('Sign in to make an order')
 
 
+class UserOrderView(View):
+    def get(self, request, *args, **kwargs):
+        pk = self.kwargs.get("pk")
+        
+        if request.user.is_authenticated and request.user.id==pk:
+            orders = Order.objects.filter(user_id=pk)
 
+            orders_data = []
+            for order in orders:
+                orders_data.append({
+                    "user": order.user.username,
+                    "number": order.number,
+                    "tour_name": order.tour.name,
+                    "price": order.price,
+                    "amount": order.amount,
+                    "departure_date": order.departure_date,
+                })
+            return JsonResponse(orders_data, safe=False)
+        
+        return HttpResponseNotFound("Page not found")
+    
+
+class OrderListView(View):
+    def get(self, request, *args, **kwargs):      
+        if request.user.is_authenticated and request.user.status == "staff":
+            orders = Order.objects.all()
+
+            orders_data = []
+            for order in orders:
+                orders_data.append({
+                    "user": order.user.username,
+                    "first_name": order.user.first_name,
+                    "phone_number": order.user.phone_number,
+                    "number": order.number,
+                    "tour_name": order.tour.name,
+                    "price": order.price,
+                    "amount": order.amount,
+                    "departure_date": order.departure_date,
+                })
+            return JsonResponse(orders_data, safe=False)
+        
+        return HttpResponseNotFound("Page not found")
 
 
 

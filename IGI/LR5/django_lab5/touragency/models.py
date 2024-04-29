@@ -10,17 +10,11 @@ class User(AbstractUser):
         ("client", "client"),
     )
     status = models.CharField(choices=STATUS_CHOICES, default="client", max_length=6)
-    phone_number = models.CharField(max_length=13)
+    phone_number = models.CharField(max_length=15)
     address = models.CharField(max_length=255)
 
     def __str__(self):
         return self.first_name
-    
-    def save(self, *args, **kwargs):
-        phone_pattern = re.compile(r'\+375(25|29|33)\d{7}')
-        if not re.fullmatch(phone_pattern, str(self.phone_number)):
-            raise ValidationError("This field accepts mail id of google only")
-        super().save(*args, **kwargs)
     
 
 class Climate(models.Model):
@@ -86,6 +80,7 @@ class Order(models.Model):
 
     user = models.ForeignKey(User, related_name='orders', on_delete=models.CASCADE)
     tour = models.ForeignKey(Tour, related_name='tours', on_delete=models.CASCADE)
+
 
 
 
