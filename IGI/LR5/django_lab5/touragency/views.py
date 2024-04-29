@@ -81,8 +81,7 @@ class TourListView(ListView):
                 'country': tour.country.name,
                 'hotel': tour.hotel.name,
                 'duration': tour.duration,
-                'departure_date': str(tour.departure_date),
-                'price': tour.price,
+                'price': tour.get_price(),
             })
         return JsonResponse(tours_data, safe=False)
 
@@ -120,11 +119,72 @@ class SpecificTourList(DetailView):
             'country': tour.country.name,
             'hotel': tour.hotel.name,
             'duration': tour.duration,
-            'departure_date': str(tour.departure_date),
             'price': tour.price,
         })
         return JsonResponse(tours_data, safe=False)
 
+
+class HotelListView(ListView):
+    model = Hotel
+    queryset = Hotel.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        min_price = request.GET.get('min_price')
+        max_price = request.GET.get('max_price')
+        country_id = request.GET.get('country_id')
+        stars_value = request.GET.get('stars')
+
+        hotels = self.filter_hotels(min_price, max_price, country_id, stars_value)
+
+        hotels_data = []
+        for hotel in hotels:
+            hotels_data.append({
+                'id': hotel.id,
+                'name': hotel.name,
+                'stars': hotel.stars,
+                'country': hotel.country.name,
+                'price_per_night': hotel.price_per_night,
+            })
+        return JsonResponse(hotels_data, safe=False)
+
+    @staticmethod
+    def filter_hotels(min_price=None, max_price=None, country=None, stars=None):
+        hotels = Hotel.objects.all()
+
+        filtered_hotels = None
+        if stars:
+            hotels = hotels.filter(stars=stars)
+        if country:
+            hotels = hotels.filter(country=country)
+
+        if min_price is not None and max_price is not None:
+            filtered_hotels = hotels.filter(price_per_night__gte=min_price, price__lte=max_price)
+        elif min_price is not None:
+            filtered_hotels = hotels.filter(price_per_night__gte=min_price)
+        elif max_price is not None:
+            filtered_hotels = hotels.filter(price_per_night__lte=max_price)
+
+        if filtered_hotels is not None:
+            return filtered_hotels
+        return hotels
+    
+
+class CountryListView(ListView):
+    def get(self, request, *args, **kwargs):
+       
+        countries = Country.objects.all()
+
+        countries_data = []
+        for country in countries:
+            climates = list(country.climate.all().values_list('climate', flat=True))
+            
+            countries_data.append({
+                'id': country.id,
+                'name': country.name,
+                'climate': climates,
+            })
+        return JsonResponse(countries_data, safe=False)
+    
 
 class UserListView(View):
     def get(self, request, *args, **kwargs):
@@ -150,35 +210,70 @@ class UserLogoutView(View):
             auth.logout(request)
         return HttpResponseRedirect('/tours')
 
-def get_tours_by_country(request, country_name):
-    country = Country.objects.get(name=country_name)
-    tours = Tour.objects.filter(country_id=country.id)
-    tours_data = []
-    for tour in tours:
-        tours_data.append({
-            'name': tour.name,
-            'hotel': tour.hotel.name,
-            'country_id': country.id,
-        })
-    return HttpResponse(tours_data)
 
-def get_tours_by_hotelstars(request, stars_value):
-    hotels = Hotel.objects.filter(stars=stars_value)
+class OrderCreateView(View):
+    def post(self, request, pk, *args, **kwargs):
+        if request.user.is_authenticated and request.user.status == "client":
+            tour = Tour.objects.get(pk=pk)
 
-    tours_list = []
+            body_unicode = request.body.decode('utf-8')
+            body = json.loads(body_unicode)
+            amount = body["amount"]
+            #departure_date = body["departure_date"]
 
-    for hotel_ in hotels:
-        tours = Tour.objects.filter(hotel=hotel_)
-        tours_list.append(tours)
+            order = Order.objects.create(user=request.user, tour=tour, amount=amount,
+                                         price=amount * tour.price)
+            order_data = {
+                "user": order.user.username,
+                "tour_id": order.tour.id,
+                "number": order.number,
+                "price": order.price,
+                "amount": order.amount,
+                "departure_date": order.departure_date,
+            }
 
-    tours_data = []
-    for tour in tours:
-        tours_data.append({
-            'name': tour.name,
-            'hotel': tour.hotel.name,
-            'stars': tour.hotel.stars,
-            'country': tour.country.name,
-        })
-    return HttpResponse(tours_data)
+            return JsonResponse(order_data, safe=False)
+        elif request.user.is_authenticated and request.user.status == "staff":
+            return HttpResponseNotFound("Page not found")
+        else:
+            return HttpResponse('please, login for making an order!')
 
 
+
+
+
+
+
+
+
+#ADDITIONAL PAGES
+def home(request):
+    latest_article = Article.objects.latest('published_date')
+    return render(request, 'home.html', {'latest_article': latest_article})
+
+def about_company(request):
+    company_info = CompanyInfo.objects.first()
+    return render(request, 'about.html', {'company_info': company_info})
+
+def news(request):
+    all_news = News.objects.all()
+    return render(request, 'news.html', {'all_news': all_news})
+
+def terms(request):
+    all_terms = Term.objects.all()
+    return render(request, 'terms.html', {'all_terms': all_terms})
+
+def contacts(request):
+    all_contacts = Contact.objects.all()
+    return render(request, 'contacts.html', {'all_contacts': all_contacts})
+
+def vacancies(request):
+    all_vacancies = Vacancy.objects.all()
+    return render(request, 'vacancies.html', {'all_vacancies': all_vacancies})
+
+def reviews(request):
+    all_reviews = Review.objects.all()
+    return render(request, 'reviews.html', {'all_reviews': all_reviews})
+
+def privacy_policy(request):
+    return render(request, 'privacy.html')

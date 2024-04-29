@@ -24,8 +24,9 @@ urlpatterns = [
     path('login/', views.UserLoginView.as_view(), name="login"),
     path('logout/', views.UserLogoutView.as_view(), name='logout'),
     path('tours/', views.TourListView.as_view(), name="tours"),
+    path('hotels/', views.HotelListView.as_view(), name="hotels"),
+    path('countries/', views.CountryListView.as_view(), name="countries"),
     path('tours/<int:pk>/', views.SpecificTourList.as_view(), name='tour'),
-    path('tours/sortby/hotel/<str:stars_value>/', views.get_tours_by_hotelstars),
-
+    path('tours/<int:pk>/order/create/', views.OrderCreateView.as_view(), name='create_order'),
     path('users/', views.UserListView.as_view(), name='users')
 ]
