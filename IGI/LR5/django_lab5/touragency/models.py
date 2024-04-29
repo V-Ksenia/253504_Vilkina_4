@@ -82,13 +82,10 @@ class Order(models.Model):
     user = models.ForeignKey(User, related_name='orders', on_delete=models.CASCADE)
     tour = models.ForeignKey(Tour, related_name='tours', on_delete=models.CASCADE)
 
-    promocode = models.CharField(max_length=10, null=True)
-
     def use_discount(self, promocode):
         if UsedDiscounts.objects.filter(promocode_id=promocode, user_id=self.user).exists():
             return
         self.price *= (100 - promocode.discount) / 100
-        self.promocode = promocode.code
         self.save()
 
         UsedDiscounts.objects.create(promocode=promocode, user=self.user)
@@ -109,38 +106,37 @@ class UsedDiscounts(models.Model):
 #ADDITIONAL PAGES
 
 class Article(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.TextField(max_length=120)
     content = models.TextField()
-    image = models.ImageField(upload_to='images/')
-    published_date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(auto_now_add=True)
 
 
 class CompanyInfo(models.Model):
     text = models.TextField()
+    logo = models.ImageField(upload_to='images/')
 
 
 class News(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.TextField(max_length=120)
     content = models.TextField()
-    image = models.ImageField(upload_to='images/')
-    published_date = models.DateTimeField(auto_now_add=True)
+    #image = models.ImageField(upload_to='images/')
 
-class Term(models.Model):
+class FAQ(models.Model):
     question = models.CharField(max_length=255)
     answer = models.TextField()
-    date_added = models.DateField(auto_now_add=True)
+    date = models.DateField(auto_now_add=True)
 
 
 class Contact(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     #photo = models.ImageField(upload_to='images/')
-    phone = models.CharField(max_length=20)
+    phone = models.CharField(max_length=15)
     email = models.EmailField()
 
 
 class Vacancy(models.Model):
-    title = models.CharField(max_length=100)
+    name = models.CharField(max_length=20)
     description = models.TextField()
 
 

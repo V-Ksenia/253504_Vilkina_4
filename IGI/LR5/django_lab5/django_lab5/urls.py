@@ -35,5 +35,17 @@ urlpatterns = [
 
     #STAFF
     path('users/', views.UserListView.as_view(), name='users'),
-    path('orders/', views.OrderListView.as_view(), name='orders')
+    path('orders/', views.OrderListView.as_view(), name='orders'),
+
+
+    #ADDITIONAL PAGES
+    path('home/', views.home, name='home'),
+    path('about/', views.about_company, name='about'),
+    path('news/', views.news, name='news'),
+    path('faq/', views.faqs, name='terms'),
+    path('contacts/', views.contacts, name='contacts'),
+    path('vacancies/', views.vacancies, name='vacancies'),
+   # path('reviews/', views.ReviewListView.as_view(), name='reviews'),
+   # path('add_review/', views.ReviewCreateView.as_view(), name='add_review'),
+    path('privacy-policy', views.privacy_policy, name='privacy_policy'),
 ]

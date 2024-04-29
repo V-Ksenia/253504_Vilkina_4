@@ -241,14 +241,13 @@ class OrderCreateView(View):
             if datetime.datetime.strptime(departure_date, '%Y-%m-%d') < datetime.datetime.now() + datetime.timedelta(days=5) or amount > tour.trips:
                 return HttpResponseNotFound("Check departure date (no orders less than 5 days in advance) and amount of trips")
             else:
-                order = Order.objects.create(user=request.user, tour=tour, amount=amount,
-                                            price=amount * tour.price, departure_date=departure_date)      
+                order = Order.objects.create(user=request.user, tour=tour, amount=amount, price=amount * tour.price, departure_date=departure_date)      
                 if promocode:
                     order.use_discount(promocode)
 
                 order_data = {
                     "user": order.user.username,
-                    "tour_id": order.tour.id,
+                    "tour_name": order.tour.name,
                     "number": order.number,
                     "price": order.price,
                     "amount": order.amount,
@@ -257,7 +256,7 @@ class OrderCreateView(View):
 
                 tour.trips -= amount
                 tour.save()
-                
+
                 return JsonResponse(order_data, safe=False)
         elif request.user.is_authenticated and request.user.status == "staff":
             return HttpResponseNotFound("For clients only")
@@ -326,32 +325,32 @@ class PromocodesView(View):
 
 #ADDITIONAL PAGES
 def home(request):
-    latest_article = Article.objects.latest('published_date')
+    latest_article = Article.objects.latest('date')
     return render(request, 'home.html', {'latest_article': latest_article})
 
 def about_company(request):
-    company_info = CompanyInfo.objects.first()
-    return render(request, 'about.html', {'company_info': company_info})
+    info = CompanyInfo.objects.first()
+    return render(request, 'about.html', {'company_info': info})
 
 def news(request):
-    all_news = News.objects.all()
-    return render(request, 'news.html', {'all_news': all_news})
+    news = News.objects.all()
+    return render(request, 'news.html', {'news': news})
 
-def terms(request):
-    all_terms = Term.objects.all()
-    return render(request, 'terms.html', {'all_terms': all_terms})
+def faqs(request):
+    faqs = FAQ.objects.all()
+    return render(request, 'faqs.html', {'faqs': faqs})
 
 def contacts(request):
-    all_contacts = Contact.objects.all()
-    return render(request, 'contacts.html', {'all_contacts': all_contacts})
+    contacts = Contact.objects.all()
+    return render(request, 'contacts.html', {'contacts': contacts})
 
 def vacancies(request):
-    all_vacancies = Vacancy.objects.all()
-    return render(request, 'vacancies.html', {'all_vacancies': all_vacancies})
+    vacancies = Vacancy.objects.all()
+    return render(request, 'vacancies.html', {'vacancies': vacancies})
 
 def reviews(request):
-    all_reviews = Review.objects.all()
-    return render(request, 'reviews.html', {'all_reviews': all_reviews})
+    reviews = Review.objects.all()
+    return render(request, 'reviews.html', {'reviews': reviews})
 
 def privacy_policy(request):
     return render(request, 'privacy.html')

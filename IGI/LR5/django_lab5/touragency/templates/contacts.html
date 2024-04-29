@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Contacts</title>
+</head>
+<body>
+    <h1>Contacts</h1>
+    {% for contact in contacts %}
+        <div>
+            <h2>{{ contact.name }}</h2>
+            <p>{{ contact.description }}</p>
+            <p>Phone: {{ contact.phone }}</p>
+            <p>Email: {{ contact.email }}</p>
+        </div>
+    {% endfor %}
+</body>
+</html>
