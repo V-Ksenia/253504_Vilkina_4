@@ -177,7 +177,7 @@ class CountryListView(ListView):
         countries_data = []
         for country in countries:
             climates = list(country.climate.all().values_list('climate', flat=True))
-            
+
             countries_data.append({
                 'id': country.id,
                 'name': country.name,
@@ -219,10 +219,10 @@ class OrderCreateView(View):
             body_unicode = request.body.decode('utf-8')
             body = json.loads(body_unicode)
             amount = body["amount"]
-            #departure_date = body["departure_date"]
+            departure_date = body["departure_date"]
 
             order = Order.objects.create(user=request.user, tour=tour, amount=amount,
-                                         price=amount * tour.price)
+                                         price=amount * tour.price, departure_date=departure_date)
             order_data = {
                 "user": order.user.username,
                 "tour_id": order.tour.id,
