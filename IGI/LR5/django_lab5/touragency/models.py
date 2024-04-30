@@ -129,11 +129,10 @@ class FAQ(models.Model):
 
 
 class Contact(models.Model):
-    name = models.CharField(max_length=100)
     description = models.TextField()
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     #photo = models.ImageField(upload_to='images/')
-    phone = models.CharField(max_length=15)
-    email = models.EmailField()
+
 
 
 class Vacancy(models.Model):
@@ -142,7 +141,8 @@ class Vacancy(models.Model):
 
 
 class Review(models.Model):
-    name = models.CharField(max_length=100)
+    title = models.CharField(max_length=100)
     rating = models.IntegerField()
     text = models.TextField()
     date = models.DateField(auto_now_add=True)
+    user = models.ForeignKey(User, related_name="reviews", on_delete=models.CASCADE)

@@ -49,8 +49,8 @@ urlpatterns = [
     path('faq/', views.faqs, name='terms'),
     path('contacts/', views.contacts, name='contacts'),
     path('vacancies/', views.vacancies, name='vacancies'),
-   # path('reviews/', views.ReviewListView.as_view(), name='reviews'),
-   # path('add_review/', views.ReviewCreateView.as_view(), name='add_review'),
+    path('reviews/', views.ReviewListView.as_view(), name='reviews'),
+    path('review/create/', views.ReviewCreateView.as_view(), name='add_review'),
     path('privacy-policy', views.privacy_policy, name='privacy_policy'),
 ]
 

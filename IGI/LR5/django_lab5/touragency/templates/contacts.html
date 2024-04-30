@@ -7,10 +7,10 @@
     <h1>Contacts</h1>
     {% for contact in contacts %}
         <div>
-            <h2>{{ contact.name }}</h2>
+            <h2>{{ contact.user.first_name }} {{ contact.user.last_name}}</h2>
             <p>{{ contact.description }}</p>
-            <p>Phone: {{ contact.phone }}</p>
-            <p>Email: {{ contact.email }}</p>
+            <p>Phone: {{ contact.user.phone_number }}</p>
+            <p>Email: {{ contact.user.email }}</p>
         </div>
     {% endfor %}
 </body>

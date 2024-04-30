@@ -246,31 +246,6 @@ class OrderCreateView(View):
             return HttpResponse('Sign in to make an order')
 
 
-class OrderDeleteView(View):
-    def post(self, request, *args, **kwargs):
-        pk = self.kwargs.get("pk")
-        jk = self.kwargs.get("jk")
-        if request.user.is_authenticated and request.user.status == "client" and request.user.id==pk and Order.objects.filter(jk).exists():
-                order_id = self.kwargs.get("jk")
-                order = Order.objects.filter(jk=order_id, pk=request.user.id).first()
-
-                if order:
-                    order_data = {
-                        "user": order.user.username,
-                        "number": order.number,
-                        "tour_id": order.tour.id,
-                        "price": order.price,
-                        "amount": order.amount,
-                        "departure_date": order.departure_date,
-                    }
-
-                    order.tour.trips += order.amount
-                    order.tour.save()
-                    order.delete()
-                    return JsonResponse(order_data, safe=False)
-        return HttpResponseNotFound("Page not found")
-    
-
 class UserOrderView(View):
     def get(self, request, *args, **kwargs):
         pk = self.kwargs.get("pk")
@@ -353,6 +328,32 @@ class PromocodesView(View):
             })
         return JsonResponse(codes_data, safe=False)
 
+
+class ReviewListView(ListView):
+    model = Review
+    queryset = Review.objects.all()
+    template_name = 'reviews.html'
+
+
+class ReviewCreateView(View):
+    def get(self, request, **kwargs):
+        if request.user.is_authenticated and request.user.status == 'client':
+            form = ReviewForm()
+            return render(request, 'review_create_form.html', {'form': form})
+        return redirect('login')
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated and request.user.status == 'client':
+            form = ReviewForm(request.POST)
+            if form.is_valid():
+                title = form.cleaned_data['title']
+                rating = form.cleaned_data['rating']
+                text = form.cleaned_data['text']
+
+                review = Review.objects.create(title=title, rating=rating, text=text, user=request.user)
+                
+                return redirect('reviews')
+        return redirect('login')
 
 
 #ADDITIONAL PAGES
