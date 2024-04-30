@@ -1,74 +1,41 @@
 import datetime
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from django.urls import reverse_lazy, reverse
 from django.views.generic import *
 from django.views import View
+
+from touragency.forms import *
 from .models import *
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.models import auth
+from django.contrib.auth.views import LoginView
 from django.contrib.auth import authenticate
+from django.contrib import messages
 import json
 
 
-class UserRegistrationView(View):
-    @csrf_exempt
-    def post(self, request):
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
-
-        age =body["age"]
-
-        if age < 18:
-            return HttpResponse('Your age must be greater than 17!')
+class UserRegistrationView(CreateView):
+    def post(self, request, *args, **kwargs):
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.save()
+            return redirect('login')
         else:
-            user = User.objects.create_user(
-                                    username=body["username"],
-                                    password=body["password"],
-                                    first_name=body["first_name"],
-                                    last_name=body["last_name"],
-                                    age=body["age"],
-                                    address=body["address"],
-                                    phone_number=body["phone_number"],
-                                    status=body["status"],
-                                    )
-            
-            if user:
-                user_data = {
-                    "username": user.username,
-                    "password": user.password,
-                    "first_name": user.first_name,
-                    "last_name": user.last_name,
-                    "age": user.age,
-                    "address": user.address,
-                    "phone_number": user.phone_number,
-                    "status": user.status,
-                }
-                return JsonResponse(user_data, safe=False)
-        return HttpResponse('User registration failed')
+            return render(request, 'registration_form.html', {'form': form})
+
+    def get(self, request, *args, **kwargs):
+        form = RegistrationForm()
+        return render(request, 'registration_form.html', {'form': form})
 
 
-class UserLoginView(View):
-    @csrf_exempt
-    def post(self, request):
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
-        user = authenticate(request, username=body["username"], password=body["password"])
+class UserLoginView(LoginView):
+    redirect_authenticated_user = True
+    template_name = 'login_form.html'
 
-        if user is not None:
-            auth.login(request, user)
-
-            user_data = {
-                "username": user.get_username(),
-                "password": user.password,
-                "first_name": user.first_name,
-                "last_name": user.last_name,
-                "age": user.age,
-                "address": user.address,
-                "phone_number": user.phone_number,
-                "status": user.status,
-            }
-            return JsonResponse(user_data, safe=False)
-        return HttpResponse('login unsuccessfully!')
+    def get_success_url(self):
+        return reverse_lazy('home')
             
 
 class TourListView(ListView):
@@ -227,42 +194,82 @@ class UserLogoutView(View):
 
 
 class OrderCreateView(View):
+    def get(self, request, pk, *args, **kwargs):
+        if request.user.is_authenticated and request.user.status == "client" and Tour.objects.filter(pk=pk).exists():
+            tour = Tour.objects.get(pk=pk)
+            form = OrderForm()
+            context = {
+                'tour': tour,
+                'form': form,
+            }
+            return render(request, 'order_create_form.html', context)
+        return HttpResponseNotFound('page not found')
+    
     def post(self, request, pk, *args, **kwargs):
         if request.user.is_authenticated and request.user.status == "client":
             tour = Tour.objects.get(pk=pk)
 
-            body_unicode = request.body.decode('utf-8')
-            body = json.loads(body_unicode)
-            amount = body["amount"]
-            departure_date = body["departure_date"]
-            code = body["promocode"]
-            promocode = Promocode.objects.filter(code=code).first()
+            form = OrderForm(request.POST)
 
-            if datetime.datetime.strptime(departure_date, '%Y-%m-%d') < datetime.datetime.now() + datetime.timedelta(days=5) or amount > tour.trips:
-                return HttpResponseNotFound("Check departure date (no orders less than 5 days in advance) and amount of trips")
-            else:
-                order = Order.objects.create(user=request.user, tour=tour, amount=amount, price=amount * tour.price, departure_date=departure_date)      
-                if promocode:
-                    order.use_discount(promocode)
+            if form.is_valid():
+                amount = form.cleaned_data['amount']
+                departure_date = form.cleaned_data['departure_date']
+                code = form.cleaned_data['promocode']
 
-                order_data = {
-                    "user": order.user.username,
-                    "tour_name": order.tour.name,
-                    "number": order.number,
-                    "price": order.price,
-                    "amount": order.amount,
-                    "departure_date": order.departure_date,
-                }
+                promocode = Promocode.objects.filter(code=code).first()
 
-                tour.trips -= amount
-                tour.save()
+                if datetime.datetime.strptime(departure_date, '%Y-%m-%d') < datetime.datetime.now() + datetime.timedelta(days=5) or amount > tour.trips:
+                    return HttpResponse("Check departure date (no orders less than 5 days in advance) and amount of trips")
+                else:
+                    order = Order.objects.create(user=request.user, tour=tour, amount=amount, price=amount * tour.price, departure_date=departure_date)      
+                    
+                    if promocode:
+                        order.use_discount(promocode)
 
-                return JsonResponse(order_data, safe=False)
+                    order_data = {
+                        "user": order.user.username,
+                        "tour_name": order.tour.name,
+                        "number": order.number,
+                        "price": order.price,
+                        "amount": order.amount,
+                        "departure_date": order.departure_date,
+                    }
+
+                    tour.trips -= amount
+                    tour.save()
+
+                    url = reverse('user_spec_order', kwargs={"pk": order.user_id, "jk": order.number})
+                    return redirect(url)
         elif request.user.is_authenticated and request.user.status == "staff":
             return HttpResponseNotFound("For clients only")
         else:
             return HttpResponse('Sign in to make an order')
 
+
+class OrderDeleteView(View):
+    def post(self, request, *args, **kwargs):
+        pk = self.kwargs.get("pk")
+        jk = self.kwargs.get("jk")
+        if request.user.is_authenticated and request.user.status == "client" and request.user.id==pk and Order.objects.filter(jk).exists():
+                order_id = self.kwargs.get("jk")
+                order = Order.objects.filter(jk=order_id, pk=request.user.id).first()
+
+                if order:
+                    order_data = {
+                        "user": order.user.username,
+                        "number": order.number,
+                        "tour_id": order.tour.id,
+                        "price": order.price,
+                        "amount": order.amount,
+                        "departure_date": order.departure_date,
+                    }
+
+                    order.tour.trips += order.amount
+                    order.tour.save()
+                    order.delete()
+                    return JsonResponse(order_data, safe=False)
+        return HttpResponseNotFound("Page not found")
+    
 
 class UserOrderView(View):
     def get(self, request, *args, **kwargs):
@@ -286,6 +293,32 @@ class UserOrderView(View):
        
         return HttpResponseNotFound("Page not found")
     
+    
+class SpecificOrderView(View):
+    def get(self, request, pk, jk, *args, **kwargs):
+        
+        if request.user.is_authenticated and request.user.id==pk and Order.objects.filter(user_id=pk, number=jk).exists():
+            order = Order.objects.filter(user_id=pk, number=jk).first()
+
+            form = OrderDeleteForm()
+            return render(request, 'order_delete_form.html', {'form': form, 'order': order})
+        return HttpResponseNotFound("Page not found")
+    
+    def post(self, request, pk, jk, *args, **kwargs):
+        if request.user.is_authenticated and request.user.id==pk and Order.objects.filter(user_id=pk, number=jk).exists():
+            form = OrderDeleteForm(request.POST)
+            if form.is_valid():
+                order = Order.objects.filter(number=jk, user_id=pk).first()
+
+                order.tour.trips += order.amount
+                order.tour.save()
+                order.delete()
+
+                url = reverse('user_orders', kwargs={"pk": order.user_id})
+                return redirect(url)
+                    
+        return HttpResponseNotFound("Page not found")
+    
 
 class OrderListView(View):
     def get(self, request, *args, **kwargs):      
@@ -304,8 +337,7 @@ class OrderListView(View):
                     "amount": order.amount,
                     "departure_date": order.departure_date,
                 })
-            return JsonResponse(orders_data, safe=False)
-        
+            return JsonResponse(orders_data, safe=False)  
         return HttpResponseNotFound("Page not found")
 
 
@@ -333,7 +365,7 @@ def about_company(request):
     return render(request, 'about.html', {'company_info': info})
 
 def news(request):
-    news = News.objects.all()
+    news = Article.objects.all()
     return render(request, 'news.html', {'news': news})
 
 def faqs(request):

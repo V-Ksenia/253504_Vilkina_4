@@ -1,0 +1,9 @@
+<h1>Order create</h1>
+<p>Name: {{ tour.name }}</p>
+<p>Price: ${{ tour.price }}</p>
+
+<form method="post" action="{% url 'create_order' pk=tour.pk %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Place Order</button>
+</form>

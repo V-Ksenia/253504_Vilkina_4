@@ -14,6 +14,12 @@ class User(AbstractUser):
     address = models.CharField(max_length=255)
     age = models.PositiveSmallIntegerField()
 
+    def save(self, *args, **kwargs):
+        phone_number_pattern = re.compile(r'\+375\((25|29|33)\)\d{7}')
+        if not re.fullmatch(phone_number_pattern, str(self.phone_number)) or self.age < 18 or self.age > 100:
+            raise ValidationError("Error while creating user")
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.first_name
     
@@ -115,11 +121,6 @@ class CompanyInfo(models.Model):
     text = models.TextField()
     logo = models.ImageField(upload_to='images/')
 
-
-class News(models.Model):
-    title = models.TextField(max_length=120)
-    content = models.TextField()
-    #image = models.ImageField(upload_to='images/')
 
 class FAQ(models.Model):
     question = models.CharField(max_length=255)

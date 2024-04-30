@@ -18,6 +18,9 @@ from django.contrib import admin
 from django.urls import path
 from touragency import views
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('register/', views.UserRegistrationView.as_view(), name="register"),
@@ -30,9 +33,10 @@ urlpatterns = [
     path('countries/', views.CountryListView.as_view(), name="countries"),
     path('promocodes/', views.PromocodesView.as_view(), name="promocodes"),
     path('tours/<int:pk>/', views.SpecificTourList.as_view(), name='tour'),
-    path('tours/<int:pk>/order/create/', views.OrderCreateView.as_view(), name='create_order'),
+    path('tour/<int:pk>/order/create/', views.OrderCreateView.as_view(), name='create_order'),
     path('user/<int:pk>/orders/', views.UserOrderView.as_view(), name='user_orders'),
-
+    path('user/<int:pk>/order/<int:jk>/', views.SpecificOrderView.as_view(), name='user_spec_order'),
+    
     #STAFF
     path('users/', views.UserListView.as_view(), name='users'),
     path('orders/', views.OrderListView.as_view(), name='orders'),
@@ -49,3 +53,7 @@ urlpatterns = [
    # path('add_review/', views.ReviewCreateView.as_view(), name='add_review'),
     path('privacy-policy', views.privacy_policy, name='privacy_policy'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)
