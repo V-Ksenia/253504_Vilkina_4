@@ -51,6 +51,7 @@ urlpatterns = [
     path('vacancies/', views.vacancies, name='vacancies'),
     path('reviews/', views.ReviewListView.as_view(), name='reviews'),
     path('review/create/', views.ReviewCreateView.as_view(), name='add_review'),
+    path('user/<int:pk>/review/<int:jk>/', views.ReviewEditView.as_view(), name='edit_review'),
     path('privacy-policy', views.privacy_policy, name='privacy_policy'),
 ]
 

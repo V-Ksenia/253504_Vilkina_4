@@ -114,6 +114,7 @@ class UsedDiscounts(models.Model):
 class Article(models.Model):
     title = models.TextField(max_length=120)
     content = models.TextField()
+    image = models.ImageField(upload_to='images/')
     date = models.DateTimeField(auto_now_add=True)
 
 
@@ -131,7 +132,7 @@ class FAQ(models.Model):
 class Contact(models.Model):
     description = models.TextField()
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    #photo = models.ImageField(upload_to='images/')
+    photo = models.ImageField(upload_to='images/')
 
 
 

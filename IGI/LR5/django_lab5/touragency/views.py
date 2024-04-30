@@ -356,6 +356,27 @@ class ReviewCreateView(View):
         return redirect('login')
 
 
+
+class ReviewEditView(View):
+    def get(self, request, pk, jk, *args, **kwargs):
+        if request.user.is_authenticated and request.user.id==pk and Review.objects.filter(user_id=pk, id=jk).exists():
+            review = Review.objects.filter(user_id=pk, id=jk).first()
+            form = ReviewForm()
+            return render(request, 'review_edit_form.html', {'form': form, 'review': review})
+        return HttpResponseNotFound("Page not found")
+     
+    def post(self, request, pk, jk, *args, **kwargs):
+        if request.user.is_authenticated and request.user.status == 'client':
+            form = ReviewForm(request.POST)
+            if form.is_valid():
+                title = form.cleaned_data['title']
+                rating = form.cleaned_data['rating']
+                text = form.cleaned_data['text']
+                review = Review.objects.update(title=title, rating=rating, text=text)           
+                return redirect('reviews')
+        return redirect('login')
+
+
 #ADDITIONAL PAGES
 def home(request):
     latest_article = Article.objects.latest('date')
