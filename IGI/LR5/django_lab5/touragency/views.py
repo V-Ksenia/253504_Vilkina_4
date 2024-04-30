@@ -3,6 +3,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import *
 from django.views import View
+import requests
 
 from touragency.forms import *
 from .models import *
@@ -190,7 +191,7 @@ class UserLogoutView(View):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             auth.logout(request)
-        return HttpResponseRedirect('/tours')
+        return redirect('tours')
 
 
 class OrderCreateView(View):
@@ -315,19 +316,6 @@ class OrderListView(View):
         return HttpResponseNotFound("Page not found")
 
 
-class PromocodesView(View):
-    def get(self, request, *args, **kwargs):
-        codes = Promocode.objects.all()
-        codes_data = []
-
-        for code in codes:
-            codes_data.append({
-                "code": code.code,
-                "discount": code.discount,
-            })
-        return JsonResponse(codes_data, safe=False)
-
-
 class ReviewCreateView(View):
     def get(self, request, **kwargs):
         if request.user.is_authenticated and request.user.status == 'client':
@@ -347,7 +335,6 @@ class ReviewCreateView(View):
                 
                 return redirect('reviews')
         return redirect('login')
-
 
 
 class ReviewEditView(View):
@@ -375,6 +362,34 @@ class ReviewEditView(View):
                 return redirect('reviews')
         return redirect('login')
 
+#API
+class PlaceCoordinates(View):
+    def get(self, request, pk, *args, **kwargs):
+        url = "https://opentripmap-places-v1.p.rapidapi.com/en/places/geoname"
+
+        name = str(pk)
+        querystring = {"name": name}
+
+        headers = {
+        "X-RapidAPI-Key": "cf52fdec52msh3467d0348f8b9a8p15eb7fjsn4a6d39d8974e",
+        "X-RapidAPI-Host": "opentripmap-places-v1.p.rapidapi.com"
+        }
+
+        response = requests.get(url, headers=headers, params=querystring)
+        return JsonResponse(response.json())
+    
+
+def world_languages(request):
+    url = "https://tourist-attraction.p.rapidapi.com/languages"
+
+    headers = {
+	"X-RapidAPI-Key": "cf52fdec52msh3467d0348f8b9a8p15eb7fjsn4a6d39d8974e",
+	"X-RapidAPI-Host": "tourist-attraction.p.rapidapi.com"
+    }
+
+    response = requests.get(url, headers=headers)  
+    return JsonResponse(response.json()) 
+
 
 #ADDITIONAL PAGES
 def home(request):
@@ -388,6 +403,10 @@ def about_company(request):
 def news(request):
     news = Article.objects.all()
     return render(request, 'news.html', {'news': news})
+
+def promocodes(request):
+    promocodes = Promocode.objects.all()
+    return render(request, 'promocodes.html', {'promocodes': promocodes})
 
 def faqs(request):
     faqs = FAQ.objects.all()

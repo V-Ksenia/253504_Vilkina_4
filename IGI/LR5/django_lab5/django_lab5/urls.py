@@ -31,7 +31,6 @@ urlpatterns = [
     path('tours/', views.TourListView.as_view(), name="tours"),
     path('hotels/', views.HotelListView.as_view(), name="hotels"),
     path('countries/', views.CountryListView.as_view(), name="countries"),
-    path('promocodes/', views.PromocodesView.as_view(), name="promocodes"),
     re_path(r'tours/(?P<pk>\d+)/$', views.SpecificTourList.as_view(), name='tour'),
     re_path(r'tour/(?P<pk>\d+)/order/create/$', views.OrderCreateView.as_view(), name='create_order'),
     re_path(r'user/(?P<pk>\d+)/orders/$', views.UserOrderView.as_view(), name='user_orders'),
@@ -46,6 +45,7 @@ urlpatterns = [
     path('home/', views.home, name='home'),
     path('about/', views.about_company, name='about'),
     path('news/', views.news, name='news'),
+    path('promocodes/', views.promocodes, name="promocodes"),
     path('faq/', views.faqs, name='terms'),
     path('contacts/', views.contacts, name='contacts'),
     path('vacancies/', views.vacancies, name='vacancies'),
@@ -53,6 +53,8 @@ urlpatterns = [
     path('review/create/', views.ReviewCreateView.as_view(), name='add_review'),
     re_path(r'user/(?P<pk>\d+)/review/(?P<jk>\d+)/$', views.ReviewEditView.as_view(), name='edit_review'),
     path('privacy-policy', views.privacy_policy, name='privacy_policy'),
+    re_path(r'place_coordinates/(?P<pk>\w+)/$', views.PlaceCoordinates.as_view(), name='place_coordinates'),
+    path('world_languages/', views.world_languages, name='world_languages'),
 ]
 
 if settings.DEBUG:
