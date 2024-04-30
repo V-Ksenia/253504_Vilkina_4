@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 from touragency import views
 
 from django.conf import settings
@@ -32,10 +32,10 @@ urlpatterns = [
     path('hotels/', views.HotelListView.as_view(), name="hotels"),
     path('countries/', views.CountryListView.as_view(), name="countries"),
     path('promocodes/', views.PromocodesView.as_view(), name="promocodes"),
-    path('tours/<int:pk>/', views.SpecificTourList.as_view(), name='tour'),
-    path('tour/<int:pk>/order/create/', views.OrderCreateView.as_view(), name='create_order'),
-    path('user/<int:pk>/orders/', views.UserOrderView.as_view(), name='user_orders'),
-    path('user/<int:pk>/order/<int:jk>/', views.SpecificOrderView.as_view(), name='user_spec_order'),
+    re_path(r'tours/(?P<pk>\d+)/$', views.SpecificTourList.as_view(), name='tour'),
+    re_path(r'tour/(?P<pk>\d+)/order/create/$', views.OrderCreateView.as_view(), name='create_order'),
+    re_path(r'user/(?P<pk>\d+)/orders/$', views.UserOrderView.as_view(), name='user_orders'),
+    re_path(r'user/(?P<pk>\d+)/order/(?P<jk>\d+)/$', views.SpecificOrderView.as_view(), name='user_spec_order'),
     
     #STAFF
     path('users/', views.UserListView.as_view(), name='users'),
@@ -51,7 +51,7 @@ urlpatterns = [
     path('vacancies/', views.vacancies, name='vacancies'),
     path('reviews/', views.reviews, name='reviews'),
     path('review/create/', views.ReviewCreateView.as_view(), name='add_review'),
-    path('user/<int:pk>/review/<int:jk>/', views.ReviewEditView.as_view(), name='edit_review'),
+    re_path(r'user/(?P<pk>\d+)/review/(?P<jk>\d+)/$', views.ReviewEditView.as_view(), name='edit_review'),
     path('privacy-policy', views.privacy_policy, name='privacy_policy'),
 ]
 

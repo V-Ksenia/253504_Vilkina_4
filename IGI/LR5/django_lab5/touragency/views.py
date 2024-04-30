@@ -247,10 +247,9 @@ class OrderCreateView(View):
 
 
 class UserOrderView(View):
-    def get(self, request, *args, **kwargs):
-        pk = self.kwargs.get("pk")
-        
-        if request.user.is_authenticated and request.user.id==pk:
+    def get(self, request, pk, *args, **kwargs):
+
+        if request.user.is_authenticated and request.user.id==int(pk):
             orders = Order.objects.filter(user_id=pk)
 
             orders_data = []
@@ -272,7 +271,7 @@ class UserOrderView(View):
 class SpecificOrderView(View):
     def get(self, request, pk, jk, *args, **kwargs):
         
-        if request.user.is_authenticated and request.user.id==pk and Order.objects.filter(user_id=pk, number=jk).exists():
+        if request.user.is_authenticated and request.user.id==int(pk) and Order.objects.filter(user_id=int(pk), number=int(jk)).exists():
             order = Order.objects.filter(user_id=pk, number=jk).first()
 
             form = OrderDeleteForm()
@@ -280,7 +279,7 @@ class SpecificOrderView(View):
         return HttpResponseNotFound("Page not found")
     
     def post(self, request, pk, jk, *args, **kwargs):
-        if request.user.is_authenticated and request.user.id==pk and Order.objects.filter(user_id=pk, number=jk).exists():
+        if request.user.is_authenticated and request.user.id==int(pk) and Order.objects.filter(user_id=int(pk), number=int(jk)).exists():
             form = OrderDeleteForm(request.POST)
             if form.is_valid():
                 order = Order.objects.filter(number=jk, user_id=pk).first()
@@ -353,14 +352,14 @@ class ReviewCreateView(View):
 
 class ReviewEditView(View):
     def get(self, request, pk, jk, *args, **kwargs):
-        if request.user.is_authenticated and request.user.id==pk and Review.objects.filter(user_id=pk, id=jk).exists():
+        if request.user.is_authenticated and request.user.id==int(pk) and Review.objects.filter(user_id=int(pk), id=int(jk)).exists():
             review = Review.objects.filter(user_id=pk, id=jk).first()
             form = ReviewForm()
             return render(request, 'review_edit_form.html', {'form': form, 'review': review})
         return HttpResponseNotFound("Page not found")
      
     def post(self, request, pk, jk, *args, **kwargs):
-        if request.user.is_authenticated and request.user.id==pk and Review.objects.filter(user_id=pk, id=jk).exists():
+        if request.user.is_authenticated and request.user.id==int(pk) and Review.objects.filter(user_id=int(pk), id=int(jk)).exists():
             form = ReviewForm(request.POST)
             if form.is_valid():
                 review = Review.objects.filter(user_id=pk, id=jk).first()
