@@ -329,12 +329,6 @@ class PromocodesView(View):
         return JsonResponse(codes_data, safe=False)
 
 
-class ReviewListView(ListView):
-    model = Review
-    queryset = Review.objects.all()
-    template_name = 'reviews.html'
-
-
 class ReviewCreateView(View):
     def get(self, request, **kwargs):
         if request.user.is_authenticated and request.user.status == 'client':
@@ -366,13 +360,19 @@ class ReviewEditView(View):
         return HttpResponseNotFound("Page not found")
      
     def post(self, request, pk, jk, *args, **kwargs):
-        if request.user.is_authenticated and request.user.status == 'client':
+        if request.user.is_authenticated and request.user.id==pk and Review.objects.filter(user_id=pk, id=jk).exists():
             form = ReviewForm(request.POST)
             if form.is_valid():
+                review = Review.objects.filter(user_id=pk, id=jk).first()
                 title = form.cleaned_data['title']
                 rating = form.cleaned_data['rating']
                 text = form.cleaned_data['text']
-                review = Review.objects.update(title=title, rating=rating, text=text)           
+
+                review.title = title
+                review.text = text
+                review.rating = rating
+
+                review.save()           
                 return redirect('reviews')
         return redirect('login')
 

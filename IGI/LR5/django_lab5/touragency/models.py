@@ -135,7 +135,6 @@ class Contact(models.Model):
     photo = models.ImageField(upload_to='images/')
 
 
-
 class Vacancy(models.Model):
     name = models.CharField(max_length=20)
     description = models.TextField()

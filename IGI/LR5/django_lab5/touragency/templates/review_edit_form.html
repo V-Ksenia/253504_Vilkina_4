@@ -14,7 +14,7 @@
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="Save">
+        <input type="submit" value="Save"> <a href="{%url 'reviews' %}">Or go to reviews page</a></p>
     </form>
     {% endif %}
 </body>
