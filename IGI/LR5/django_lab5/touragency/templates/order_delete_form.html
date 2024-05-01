@@ -15,7 +15,7 @@
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Delete</button>
+        <button type="submit">Delete</button> <a href="{% url 'user_orders' pk=user.pk %}"> My orders</a>
     </form>
     {% endif %}
 </body>

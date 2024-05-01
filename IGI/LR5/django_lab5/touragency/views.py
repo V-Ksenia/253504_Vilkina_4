@@ -208,11 +208,8 @@ class OrderCreateView(View):
             logging.info(f"{request.user.username} called OrderCreateView")
             tour = Tour.objects.get(pk=pk)
             form = OrderForm()
-            context = {
-                'tour': tour,
-                'form': form,
-            }
-            return render(request, 'order_create_form.html', context)
+            
+            return render(request, 'order_create_form.html', {'form': form, 'tour': tour})
         logging.error(f"Call failed OrderCreateView")
         return HttpResponseNotFound('page not found')
     
@@ -241,15 +238,6 @@ class OrderCreateView(View):
                         logging.info(f"Promocode {promocode.code} used by {request.user.username}")
                         order.use_discount(promocode)
 
-                    order_data = {
-                        "user": order.user.username,
-                        "tour_name": order.tour.name,
-                        "number": order.number,
-                        "price": order.price,
-                        "amount": order.amount,
-                        "departure_date": order.departure_date,
-                    }
-
                     tour.trips -= amount
                     tour.save()
 
@@ -257,6 +245,7 @@ class OrderCreateView(View):
 
                     url = reverse('user_spec_order', kwargs={"pk": order.user_id, "jk": order.number})
                     return redirect(url)
+                
         elif request.user.is_authenticated and request.user.status == "staff":
             logging.error(f"{request.user.username} has status {request.user.status}")
             return HttpResponseNotFound("For clients only")
@@ -406,6 +395,7 @@ class ReviewEditView(View):
                 return redirect('reviews')
         logging.warning("User is not authenticated")
         return redirect('login')
+
 
 #API
 class PlaceCoordinates(View):

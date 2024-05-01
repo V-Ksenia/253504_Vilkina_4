@@ -144,3 +144,23 @@ django.core.exceptions.ValidationError: ['Error while creating order (Check depa
 2024-05-01 14:30:11,528 INFO dnoal called UserOrderView
 2024-05-01 14:30:45,387 INFO C:\253504_Vilkina_4\IGI\LR5\django_lab5\touragency\views.py changed, reloading.
 2024-05-01 14:30:45,971 INFO Watching for file changes with StatReloader
+2024-05-01 14:32:09,608 INFO C:\253504_Vilkina_4\IGI\LR5\django_lab5\touragency\views.py changed, reloading.
+2024-05-01 14:32:10,074 INFO Watching for file changes with StatReloader
+2024-05-01 14:32:38,300 INFO C:\253504_Vilkina_4\IGI\LR5\django_lab5\touragency\views.py changed, reloading.
+2024-05-01 14:32:38,737 INFO Watching for file changes with StatReloader
+2024-05-01 14:33:15,186 INFO C:\253504_Vilkina_4\IGI\LR5\django_lab5\touragency\views.py changed, reloading.
+2024-05-01 14:33:15,629 INFO Watching for file changes with StatReloader
+2024-05-01 14:33:30,853 INFO dnoal called OrderCreateView
+2024-05-01 14:33:44,388 INFO OrderForm has no errors
+2024-05-01 14:33:44,401 INFO Promocode 10discount used by dnoal
+2024-05-01 14:33:44,429 INFO NRBudTrip updated
+2024-05-01 14:33:44,446 INFO dnoal called SpecificOrderView
+2024-05-01 14:34:05,596 INFO C:\253504_Vilkina_4\IGI\LR5\django_lab5\touragency\views.py changed, reloading.
+2024-05-01 14:34:06,051 INFO Watching for file changes with StatReloader
+2024-05-01 14:36:09,316 INFO C:\253504_Vilkina_4\IGI\LR5\django_lab5\touragency\views.py changed, reloading.
+2024-05-01 14:36:09,800 INFO Watching for file changes with StatReloader
+2024-05-01 14:38:49,400 INFO dnoal called SpecificOrderView
+2024-05-01 14:38:53,499 INFO dnoal called UserOrderView
+2024-05-01 14:39:12,916 INFO dnoal called SpecificOrderView
+2024-05-01 14:39:14,629 INFO dnoal called SpecificOrderView
+2024-05-01 14:39:21,609 INFO dnoal called UserOrderView
