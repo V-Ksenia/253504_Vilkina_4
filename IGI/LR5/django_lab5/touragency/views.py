@@ -41,7 +41,7 @@ class UserRegistrationView(CreateView):
 class UserLoginView(LoginView):
     redirect_authenticated_user = True
     template_name = 'login_form.html'
-    def get_success_url(self):   
+    def get_success_url(self):  
         return reverse_lazy('home')
             
 
@@ -54,8 +54,9 @@ class TourListView(ListView):
         max_price = request.GET.get('max_price')
         hotel_id = request.GET.get('hotel_id')
         country_id = request.GET.get('country_id')
+        duration = request.GET.get('duration')
 
-        tours = self.filter_tours(min_price, max_price, country_id, hotel_id)
+        tours = self.filter_tours(min_price, max_price, country_id, hotel_id, duration)
 
         tours_data = []
         for tour in tours:
@@ -70,7 +71,7 @@ class TourListView(ListView):
         return JsonResponse(tours_data, safe=False)
 
     @staticmethod
-    def filter_tours(min_price=None, max_price=None, country=None, hotel=None):
+    def filter_tours(min_price=None, max_price=None, country=None, hotel=None, duration=None):
         tours = Tour.objects.all()
 
         filtered_tours = None
@@ -79,6 +80,8 @@ class TourListView(ListView):
             tours = tours.filter(hotel=hotel)
         if country:
             tours = tours.filter(country=country)
+        if duration:
+            tours = tours.filter(duration=duration)
 
         if min_price is not None and max_price is not None:
             filtered_tours = tours.filter(price__gte=min_price, price__lte=max_price)

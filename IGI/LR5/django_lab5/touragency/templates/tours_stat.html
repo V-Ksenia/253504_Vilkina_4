@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Tours</title>
+</head>
+<body>
+    <h1>Tours</h1>
+    <h3>A-Z</h3>
+    {% for tour in tours%}
+        <p>{{ tour.name }}, price: {{ tour.price }}$<p>
+    {% endfor %}
+    
+    <h3>Most popular: {{ most_popular_tour.tour__name }}, Orders: {{ most_popular_tour.order_count}} </h3>
+    <h3>Most profitable: {{ most_profitable_tour}}</h3>
+</body>
+</html>

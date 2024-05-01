@@ -22,7 +22,7 @@ class User(AbstractUser):
 
         if not re.fullmatch(phone_number_pattern, str(self.phone_number)) or self.age < 18 or self.age > 100:
 
-            logging.error(f"{self.phone_number} is in incorrect format OR 18 < {self.age} < 100")
+            logging.exception(f"ValidationError, {self.phone_number} is in incorrect format OR 18 < {self.age} < 100")
 
             raise ValidationError("Error while creating user (Check phone number and age!)")
         super().save(*args, **kwargs)
@@ -54,7 +54,7 @@ class Hotel(models.Model):
         (4, "Very Good"),
         (5, "Excellent"),
     )
-    stars = models.CharField(choices=STAR_CHOICES, default="Average", max_length=255)
+    stars = models.PositiveSmallIntegerField(choices=STAR_CHOICES, default=3)
     price_per_night = models.PositiveSmallIntegerField()
     country = models.ForeignKey(Country, related_name="hotels", on_delete=models.CASCADE)
 
@@ -75,13 +75,17 @@ class Tour(models.Model):
     hotel = models.ForeignKey(Hotel, related_name="tours", on_delete=models.CASCADE)
     country = models.ForeignKey(Country, related_name="tours", on_delete=models.CASCADE)
 
-    price = models.PositiveIntegerField()
+    price = models.PositiveIntegerField(default=1)
 
     def get_price(self):
         self.price = self.hotel.price_per_night * int(self.duration * 7)
         self.save()
         return self.price
     
+    def save(self, *args, **kwargs):
+        self.price = self.hotel.price_per_night * int(self.duration * 7)
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.name
     
@@ -93,7 +97,7 @@ class Order(models.Model):
     departure_date = models.DateField()
 
     user = models.ForeignKey(User, related_name='orders', on_delete=models.CASCADE)
-    tour = models.ForeignKey(Tour, related_name='tours', on_delete=models.CASCADE)
+    tour = models.ForeignKey(Tour, related_name='orders', on_delete=models.CASCADE)
 
     def use_discount(self, promocode):
         if UsedDiscounts.objects.filter(promocode_id=promocode, user_id=self.user).exists():
@@ -108,7 +112,7 @@ class Order(models.Model):
 
         if not re.fullmatch(departure_date_pattern, str(self.departure_date)) or \
           datetime.datetime.strptime(self.departure_date, '%Y-%m-%d') < datetime.datetime.now() + datetime.timedelta(days=5):   
-            logging.error(f"{self.departure_date} is in incorrect format")
+            logging.exception(f"ValidationError, {self.departure_date} is in incorrect format")
 
             raise ValidationError("Error while creating order (Check departure date!)")
         super().save(*args, **kwargs)

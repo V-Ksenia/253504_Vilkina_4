@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path
-from touragency import views
+from touragency import views, statistics
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -55,6 +55,12 @@ urlpatterns = [
     path('privacy-policy', views.privacy_policy, name='privacy_policy'),
     re_path(r'place_coordinates/(?P<pk>\w+)/$', views.PlaceCoordinates.as_view(), name='place_coordinates'),
     path('world_languages/', views.world_languages, name='world_languages'),
+
+
+    #STATISTICS
+    path('clients', statistics.clients, name='clients'),
+    path('sales', statistics.sales, name='sales'),
+    path('tours_stat', statistics.tours, name='tours_stat')
 ]
 
 if settings.DEBUG:

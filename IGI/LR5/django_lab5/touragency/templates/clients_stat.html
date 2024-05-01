@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Clients</title>
+</head>
+<body>
+    <h1>Clients</h1>
+    <h3>A-Z</h3>
+    {% for client in clients%}
+        <p>{{ client.first_name }} {{ client.last_name }}, {{ client.age }} years<p>
+    {% endfor %}
+
+    <h3>Average Age: {{ average_age }} years</h3>
+    <h3>Median Age: {{ median_age }} years</h3>
+</body>
+</html>
