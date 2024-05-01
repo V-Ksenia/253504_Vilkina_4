@@ -3,16 +3,16 @@ from django.shortcuts import redirect, render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import *
 from django.views import View
+
+from pytz import timezone
 import requests
 
 from touragency.forms import *
 from .models import *
-from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.models import auth
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import authenticate
-from django.contrib import messages
 import json
 import logging
 
@@ -208,7 +208,7 @@ class UserLogoutView(View):
 class OrderCreateView(View):
     def get(self, request, pk, *args, **kwargs):
         if request.user.is_authenticated and request.user.status == "client" and Tour.objects.filter(pk=pk).exists():
-            logging.info(f"{request.user.username} called OrderCreateView")
+            logging.info(f"{request.user.username} called OrderCreateView Time: {request.user.timezone}, {datetime.datetime.now().__format__('%d/%m/%Y')}")
             tour = Tour.objects.get(pk=pk)
             form = OrderForm()
             
@@ -243,7 +243,7 @@ class OrderCreateView(View):
 
                     tour.trips -= amount
                     tour.save()
-
+                    
                     logging.info(f"{tour.name} updated")
 
                     url = reverse('user_spec_order', kwargs={"pk": order.user_id, "jk": order.number})
@@ -273,6 +273,7 @@ class UserOrderView(View):
                     "price": order.price,
                     "amount": order.amount,
                     "departure_date": order.departure_date,
+                    "creation_date": order.date,
                 })
 
             return JsonResponse(orders_data, safe=False)

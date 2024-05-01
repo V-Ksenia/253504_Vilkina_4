@@ -9,5 +9,18 @@
     <h3>Average sales: {{ average_sales }}$</h3>
     <h3>Median sales: {{ median_sales }}$</h3>
     <h3>Mode sales: {{ mode_sales }}$</h3>
+
+    <h1>Yearly Sales Report with Trend</h1>
+    <img src="data:image/png;base64,{{ image }}" height="400" width="1000">
+    <h2>Yearly Sales Data</h2>
+    {% for year, sales in yearly_sales_data %}
+        <p>{{ year }}: {{ sales }}$</p> 
+    {% endfor %}
+    <h1>Year Sales Volume</h1>
+    {% for image in image_urls %}
+        <img src="data:image/png;base64,{{ image }}" height="700" width="700">
+    {% endfor %}
+    </table>
+
 </body>
 </html>

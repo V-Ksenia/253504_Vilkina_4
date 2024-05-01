@@ -5,6 +5,8 @@ from django.contrib.auth.models import AbstractUser
 from django.forms import ValidationError
 import logging
 
+from tzlocal import get_localzone_name
+
 logging.basicConfig(level=logging.INFO, filename='logging.log', filemode='a', format='%(asctime)s %(levelname)s %(message)s')
 
 class User(AbstractUser):
@@ -16,10 +18,11 @@ class User(AbstractUser):
     phone_number = models.CharField(max_length=15)
     address = models.CharField(max_length=255)
     age = models.PositiveSmallIntegerField()
+    
+    timezone = get_localzone_name()
 
     def save(self, *args, **kwargs):
         phone_number_pattern = re.compile(r'\+375\((25|29|33)\)\d{7}')
-
         if not re.fullmatch(phone_number_pattern, str(self.phone_number)) or self.age < 18 or self.age > 100:
 
             logging.exception(f"ValidationError, {self.phone_number} is in incorrect format OR 18 < {self.age} < 100")
@@ -99,6 +102,8 @@ class Order(models.Model):
     user = models.ForeignKey(User, related_name='orders', on_delete=models.CASCADE)
     tour = models.ForeignKey(Tour, related_name='orders', on_delete=models.CASCADE)
 
+    date = models.DateField(default=datetime.datetime.now())
+
     def use_discount(self, promocode):
         if UsedDiscounts.objects.filter(promocode_id=promocode, user_id=self.user).exists():
             return
@@ -109,6 +114,8 @@ class Order(models.Model):
 
     def save(self, *args, **kwargs):
         departure_date_pattern = re.compile(r'^\d{4}-\d{2}-\d{2}$')
+
+        self.date = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d')
 
         if not re.fullmatch(departure_date_pattern, str(self.departure_date)) or \
           datetime.datetime.strptime(self.departure_date, '%Y-%m-%d') < datetime.datetime.now() + datetime.timedelta(days=5):   
