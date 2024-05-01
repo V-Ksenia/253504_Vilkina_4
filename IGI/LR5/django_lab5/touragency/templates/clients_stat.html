@@ -7,9 +7,10 @@
     <h1>Clients</h1>
     <h3>A-Z</h3>
     {% for client in clients%}
-        <p>{{ client.first_name }} {{ client.last_name }}, {{ client.age }} years<p>
+        <p><b>{{ client.first_name }} {{ client.last_name }}</b>, {{ client.age }} years<p>
+        <p>{{ client.address}}, {{ client.phone_number }}</p>
     {% endfor %}
-
+    
     <h3>Average Age: {{ average_age }} years</h3>
     <h3>Median Age: {{ median_age }} years</h3>
 </body>

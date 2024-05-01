@@ -219,7 +219,7 @@ class OrderCreateView(View):
     def post(self, request, pk, *args, **kwargs):
         if request.user.is_authenticated and request.user.status == "client":
             tour = Tour.objects.get(pk=pk)
-
+            
             form = OrderForm(request.POST)
 
             if form.is_valid():

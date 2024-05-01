@@ -61,7 +61,7 @@ urlpatterns = [
     path('clients', statistics.clients, name='clients'),
     path('sales', statistics.sales, name='sales'),
     path('tours_stat', statistics.tours, name='tours_stat'),
-    path('sales_graph', statistics.linear_sales_trend, name='sales_graph'),
+    path('hotels_stat', statistics.hotels, name='hotels_stat'),
 ]
 
 if settings.DEBUG:

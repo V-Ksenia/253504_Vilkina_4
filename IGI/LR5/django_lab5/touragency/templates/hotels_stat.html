@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Hotels</title>
+</head>
+<body>
+    <h1>Hotels</h1>
+    <h3>country A-Z</h3>
+    {% for hotel in hotels%}
+        <p><b>{{ hotel.name }}</b>, {{ hotel.stars }} stars<p>
+            <p><i>{{ hotel.country.name }}: 
+                {% for climate in hotel.country.climate.all %}
+                    {{ climate.climate }}
+                {% endfor %}
+            </i>, {{ hotel.price_per_night }}$</p>
+    {% endfor %}
+    
+    <h3>Average Price: {{ average_price }} $</h3>
+    <h3>Median Price: {{ median_price }} $</h3>
+</body>
+</html>

@@ -44,6 +44,22 @@ def tours(request):
     return HttpResponseNotFound("Page not found")
 
 
+def hotels(request): 
+    if request.user.is_authenticated and request.user.is_superuser:   
+        hotels = Hotel.objects.all().order_by('country__name')
+        prices = []
+        for hotel in hotels:
+            prices.append(hotel.price_per_night)
+
+        average_price = round(mean(prices), 2)
+        median_price = round(median(prices), 2)
+
+        return render(request, 'hotels_stat.html', {'hotels': hotels,
+                                                'average_price': average_price,
+                                                'median_price': median_price,
+                                                })
+    return HttpResponseNotFound("Page not found")
+
 def sales(request):
     if request.user.is_authenticated and request.user.is_superuser: 
         orders = Order.objects.all()
