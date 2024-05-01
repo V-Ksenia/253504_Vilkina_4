@@ -14,16 +14,23 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth import authenticate
 from django.contrib import messages
 import json
+import logging
+
+logging.basicConfig(level=logging.INFO, filename='logging.log', filemode='a', format='%(asctime)s %(levelname)s %(message)s')
 
 
 class UserRegistrationView(CreateView):
     def post(self, request, *args, **kwargs):
         form = RegistrationForm(request.POST)
         if form.is_valid():
+            logging.info("Registration form has no errors")
             user = form.save(commit=False)
             user.save()
+
+            logging.info(f"{user.username} REGISTER (status: {user.status})")
             return redirect('login')
         else:
+            logging.warning("Registration form is invalid")
             return render(request, 'registration_form.html', {'form': form})
 
     def get(self, request, *args, **kwargs):
@@ -34,8 +41,7 @@ class UserRegistrationView(CreateView):
 class UserLoginView(LoginView):
     redirect_authenticated_user = True
     template_name = 'login_form.html'
-
-    def get_success_url(self):
+    def get_success_url(self):   
         return reverse_lazy('home')
             
 
@@ -170,6 +176,7 @@ class CountryListView(ListView):
 class UserListView(View):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated and request.user.status == "staff":
+            logging.info(f"{request.user.username} called UserListView (status: {request.user.status})")
             users = User.objects.filter(status="client")
 
             users_data = []
@@ -183,13 +190,14 @@ class UserListView(View):
                     "phone_number": user.phone_number,
                 })
             return JsonResponse(users_data, safe=False)
-        
+        logging.error(f"{request.user.username} tried to call UserListView (status: {request.user.status})")
         return HttpResponseNotFound("For staff only")
 
 
 class UserLogoutView(View):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
+            logging.info(f"{request.user.username} LOGOUT (status: {request.user.status})")
             auth.logout(request)
         return redirect('tours')
 
@@ -197,6 +205,7 @@ class UserLogoutView(View):
 class OrderCreateView(View):
     def get(self, request, pk, *args, **kwargs):
         if request.user.is_authenticated and request.user.status == "client" and Tour.objects.filter(pk=pk).exists():
+            logging.info(f"{request.user.username} called OrderCreateView")
             tour = Tour.objects.get(pk=pk)
             form = OrderForm()
             context = {
@@ -204,6 +213,7 @@ class OrderCreateView(View):
                 'form': form,
             }
             return render(request, 'order_create_form.html', context)
+        logging.error(f"Call failed OrderCreateView")
         return HttpResponseNotFound('page not found')
     
     def post(self, request, pk, *args, **kwargs):
@@ -213,18 +223,22 @@ class OrderCreateView(View):
             form = OrderForm(request.POST)
 
             if form.is_valid():
+                logging.info(f"OrderForm has no errors")
+
                 amount = form.cleaned_data['amount']
                 departure_date = form.cleaned_data['departure_date']
                 code = form.cleaned_data['promocode']
 
                 promocode = Promocode.objects.filter(code=code).first()
 
-                if datetime.datetime.strptime(departure_date, '%Y-%m-%d') < datetime.datetime.now() + datetime.timedelta(days=5) or amount > tour.trips:
-                    return HttpResponse("Check departure date (no orders less than 5 days in advance) and amount of trips")
+                if amount > tour.trips:
+                    logging.warning(f"{amount} is greater than {tour.trips}")
+                    return HttpResponse("Check amount of trips")
                 else:
                     order = Order.objects.create(user=request.user, tour=tour, amount=amount, price=amount * tour.price, departure_date=departure_date)      
                     
                     if promocode:
+                        logging.info(f"Promocode {promocode.code} used by {request.user.username}")
                         order.use_discount(promocode)
 
                     order_data = {
@@ -239,11 +253,15 @@ class OrderCreateView(View):
                     tour.trips -= amount
                     tour.save()
 
+                    logging.info(f"{tour.name} updated")
+
                     url = reverse('user_spec_order', kwargs={"pk": order.user_id, "jk": order.number})
                     return redirect(url)
         elif request.user.is_authenticated and request.user.status == "staff":
+            logging.error(f"{request.user.username} has status {request.user.status}")
             return HttpResponseNotFound("For clients only")
         else:
+            logging.error(f"User is not authenticated")
             return HttpResponse('Sign in to make an order')
 
 
@@ -251,6 +269,7 @@ class UserOrderView(View):
     def get(self, request, pk, *args, **kwargs):
 
         if request.user.is_authenticated and request.user.id==int(pk):
+            logging.info(f"{request.user.username} called UserOrderView")
             orders = Order.objects.filter(user_id=pk)
 
             orders_data = []
@@ -265,14 +284,15 @@ class UserOrderView(View):
                 })
 
             return JsonResponse(orders_data, safe=False)
-       
+        logging.error(f"Call failed UserOrderView")
         return HttpResponseNotFound("Page not found")
     
     
 class SpecificOrderView(View):
     def get(self, request, pk, jk, *args, **kwargs):
-        
         if request.user.is_authenticated and request.user.id==int(pk) and Order.objects.filter(user_id=int(pk), number=int(jk)).exists():
+            logging.info(f"{request.user.username} called SpecificOrderView")
+
             order = Order.objects.filter(user_id=pk, number=jk).first()
 
             form = OrderDeleteForm()
@@ -283,21 +303,29 @@ class SpecificOrderView(View):
         if request.user.is_authenticated and request.user.id==int(pk) and Order.objects.filter(user_id=int(pk), number=int(jk)).exists():
             form = OrderDeleteForm(request.POST)
             if form.is_valid():
+                logging.info(f"OrderDeleteForm has no errors")
+
                 order = Order.objects.filter(number=jk, user_id=pk).first()
 
                 order.tour.trips += order.amount
                 order.tour.save()
+                d = order.number
                 order.delete()
+
+                logging.info(f"order number {d} was deleted")
 
                 url = reverse('user_orders', kwargs={"pk": order.user_id})
                 return redirect(url)
-                    
+        logging.error(f"{request.user.username} doesn't own this order")            
         return HttpResponseNotFound("Page not found")
     
 
 class OrderListView(View):
     def get(self, request, *args, **kwargs):      
         if request.user.is_authenticated and request.user.status == "staff":
+
+            logging.info(f"{request.user.username} called OrderListView (status: {request.user.status})")
+            
             orders = Order.objects.all()
 
             orders_data = []
@@ -313,12 +341,16 @@ class OrderListView(View):
                     "departure_date": order.departure_date,
                 })
             return JsonResponse(orders_data, safe=False)  
+        logging.error(f"{request.user.username} has status {request.user.status}") 
         return HttpResponseNotFound("Page not found")
 
 
 class ReviewCreateView(View):
     def get(self, request, **kwargs):
         if request.user.is_authenticated and request.user.status == 'client':
+
+            logging.info(f"{request.user.username} called ReviewCreateView (status: {request.user.status})")
+
             form = ReviewForm()
             return render(request, 'review_create_form.html', {'form': form})
         return redirect('login')
@@ -327,28 +359,37 @@ class ReviewCreateView(View):
         if request.user.is_authenticated and request.user.status == 'client':
             form = ReviewForm(request.POST)
             if form.is_valid():
+                logging.info(f"ReviewForm has no errors)")
+
                 title = form.cleaned_data['title']
                 rating = form.cleaned_data['rating']
                 text = form.cleaned_data['text']
 
                 review = Review.objects.create(title=title, rating=rating, text=text, user=request.user)
-                
+                logging.info(f"Review '{review.title}' was created by {request.user.username} ")
                 return redirect('reviews')
+        logging.warning("User is not authenticated")
         return redirect('login')
 
 
 class ReviewEditView(View):
     def get(self, request, pk, jk, *args, **kwargs):
         if request.user.is_authenticated and request.user.id==int(pk) and Review.objects.filter(user_id=int(pk), id=int(jk)).exists():
+
+            logging.info(f"{request.user.username} called ReviewEditView (status: {request.user.status})")
+
             review = Review.objects.filter(user_id=pk, id=jk).first()
             form = ReviewForm()
             return render(request, 'review_edit_form.html', {'form': form, 'review': review})
+        logging.error(f"Call failed ReviewEditPage")
         return HttpResponseNotFound("Page not found")
      
     def post(self, request, pk, jk, *args, **kwargs):
         if request.user.is_authenticated and request.user.id==int(pk) and Review.objects.filter(user_id=int(pk), id=int(jk)).exists():
             form = ReviewForm(request.POST)
             if form.is_valid():
+                logging.info(f"ReviewForm has no errors)")
+
                 review = Review.objects.filter(user_id=pk, id=jk).first()
                 title = form.cleaned_data['title']
                 rating = form.cleaned_data['rating']
@@ -358,8 +399,12 @@ class ReviewEditView(View):
                 review.text = text
                 review.rating = rating
 
-                review.save()           
+                review.save()  
+
+                logging.info(f"Review '{review.title}' was updated by {request.user.username} ") 
+
                 return redirect('reviews')
+        logging.warning("User is not authenticated")
         return redirect('login')
 
 #API

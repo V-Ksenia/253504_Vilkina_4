@@ -1,8 +1,11 @@
+import datetime
 import re
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.forms import ValidationError
+import logging
 
+logging.basicConfig(level=logging.INFO, filename='logging.log', filemode='a', format='%(asctime)s %(levelname)s %(message)s')
 
 class User(AbstractUser):
     STATUS_CHOICES = (
@@ -16,8 +19,12 @@ class User(AbstractUser):
 
     def save(self, *args, **kwargs):
         phone_number_pattern = re.compile(r'\+375\((25|29|33)\)\d{7}')
+
         if not re.fullmatch(phone_number_pattern, str(self.phone_number)) or self.age < 18 or self.age > 100:
-            raise ValidationError("Error while creating user")
+
+            logging.error(f"{self.phone_number} is in incorrect format OR 18 < {self.age} < 100")
+
+            raise ValidationError("Error while creating user (Check phone number and age!)")
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -95,6 +102,16 @@ class Order(models.Model):
         self.save()
 
         UsedDiscounts.objects.create(promocode=promocode, user=self.user)
+
+    def save(self, *args, **kwargs):
+        departure_date_pattern = re.compile(r'^\d{4}-\d{2}-\d{2}$')
+
+        if not re.fullmatch(departure_date_pattern, str(self.departure_date)) or \
+          datetime.datetime.strptime(self.departure_date, '%Y-%m-%d') < datetime.datetime.now() + datetime.timedelta(days=5):   
+            logging.error(f"{self.departure_date} is in incorrect format")
+
+            raise ValidationError("Error while creating order (Check departure date!)")
+        super().save(*args, **kwargs)
 
 
 class Promocode(models.Model):
