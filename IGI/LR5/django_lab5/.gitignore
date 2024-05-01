@@ -1,2 +1,2 @@
-db.sqlite3
-logging.log
+*.sqlite3
+*.log

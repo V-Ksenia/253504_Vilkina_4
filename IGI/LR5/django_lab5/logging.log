@@ -164,3 +164,5 @@ django.core.exceptions.ValidationError: ['Error while creating order (Check depa
 2024-05-01 14:39:12,916 INFO dnoal called SpecificOrderView
 2024-05-01 14:39:14,629 INFO dnoal called SpecificOrderView
 2024-05-01 14:39:21,609 INFO dnoal called UserOrderView
+2024-05-01 14:44:59,561 INFO C:\253504_Vilkina_4\IGI\LR5\django_lab5\touragency\views.py changed, reloading.
+2024-05-01 14:45:00,032 INFO Watching for file changes with StatReloader
