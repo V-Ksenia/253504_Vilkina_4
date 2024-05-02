@@ -3,6 +3,7 @@ import re
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.forms import ValidationError
+from django.utils import timezone
 import logging
 
 from tzlocal import get_localzone_name
@@ -102,7 +103,7 @@ class Order(models.Model):
     user = models.ForeignKey(User, related_name='orders', on_delete=models.CASCADE)
     tour = models.ForeignKey(Tour, related_name='orders', on_delete=models.CASCADE)
 
-    date = models.DateField(default=datetime.datetime.now())
+    date = models.DateField()
 
     def use_discount(self, promocode):
         if UsedDiscounts.objects.filter(promocode_id=promocode, user_id=self.user).exists():

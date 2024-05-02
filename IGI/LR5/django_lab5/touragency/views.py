@@ -332,6 +332,7 @@ class OrderListView(View):
                     "price": order.price,
                     "amount": order.amount,
                     "departure_date": order.departure_date,
+                    "creation_date": order.date,
                 })
             return JsonResponse(orders_data, safe=False)  
         logging.error(f"{request.user.username} has status {request.user.status}") 
