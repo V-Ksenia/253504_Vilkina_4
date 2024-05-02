@@ -36,6 +36,7 @@ urlpatterns = [
     re_path(r'user/(?P<pk>\d+)/orders/$', views.UserOrderView.as_view(), name='user_orders'),
     re_path(r'user/(?P<pk>\d+)/order/(?P<jk>\d+)/$', views.SpecificOrderView.as_view(), name='user_spec_order'),
     
+    
     #STAFF
     path('users/', views.UserListView.as_view(), name='users'),
     path('orders/', views.OrderListView.as_view(), name='orders'),
@@ -53,6 +54,9 @@ urlpatterns = [
     path('review/create/', views.ReviewCreateView.as_view(), name='add_review'),
     re_path(r'user/(?P<pk>\d+)/review/(?P<jk>\d+)/$', views.ReviewEditView.as_view(), name='edit_review'),
     path('privacy-policy', views.privacy_policy, name='privacy_policy'),
+
+
+    #API
     re_path(r'place_coordinates/(?P<pk>\w+)/$', views.PlaceCoordinates.as_view(), name='place_coordinates'),
     path('world_languages/', views.world_languages, name='world_languages'),
 

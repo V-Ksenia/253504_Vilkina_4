@@ -27,7 +27,7 @@ class UserRegistrationView(CreateView):
             user = form.save(commit=False)
             user.save()
 
-            logging.info(f"{user.username} REGISTER (status: {user.status})")
+            logging.info(f"{user.username} REGISTER (status: {user.status}) | user's Timezone: {request.user.timezone}")
             return redirect('login')
         else:
             logging.warning("Registration form is invalid")
@@ -42,6 +42,7 @@ class UserLoginView(LoginView):
     redirect_authenticated_user = True
     template_name = 'login_form.html'
     def get_success_url(self):  
+        logging.info("User LOGIN")
         return reverse_lazy('home')
             
 
@@ -179,7 +180,7 @@ class CountryListView(ListView):
 class UserListView(View):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated and request.user.status == "staff":
-            logging.info(f"{request.user.username} called UserListView (status: {request.user.status})")
+            logging.info(f"{request.user.username} called UserListView (status: {request.user.status}) | user's Timezone: {request.user.timezone}")
             users = User.objects.filter(status="client")
 
             users_data = []
@@ -200,7 +201,7 @@ class UserListView(View):
 class UserLogoutView(View):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            logging.info(f"{request.user.username} LOGOUT (status: {request.user.status})")
+            logging.info(f"{request.user.username} LOGOUT (status: {request.user.status}) | user's Timezone: {request.user.timezone}")
             auth.logout(request)
         return redirect('tours')
 
@@ -208,7 +209,7 @@ class UserLogoutView(View):
 class OrderCreateView(View):
     def get(self, request, pk, *args, **kwargs):
         if request.user.is_authenticated and request.user.status == "client" and Tour.objects.filter(pk=pk).exists():
-            logging.info(f"{request.user.username} called OrderCreateView Time: {request.user.timezone}, {datetime.datetime.now().__format__('%d/%m/%Y')}")
+            logging.info(f"{request.user.username} called OrderCreateView | user's Timezone: {request.user.timezone}")
             tour = Tour.objects.get(pk=pk)
             form = OrderForm()
             
@@ -244,7 +245,7 @@ class OrderCreateView(View):
                     tour.trips -= amount
                     tour.save()
                     
-                    logging.info(f"{tour.name} updated")
+                    logging.info(f"{tour.name} updated ")
 
                     url = reverse('user_spec_order', kwargs={"pk": order.user_id, "jk": order.number})
                     return redirect(url)
@@ -261,7 +262,7 @@ class UserOrderView(View):
     def get(self, request, pk, *args, **kwargs):
 
         if request.user.is_authenticated and request.user.id==int(pk):
-            logging.info(f"{request.user.username} called UserOrderView")
+            logging.info(f"{request.user.username} called UserOrderView | user's Timezone: {request.user.timezone}")
             orders = Order.objects.filter(user_id=pk)
 
             orders_data = []
@@ -284,7 +285,7 @@ class UserOrderView(View):
 class SpecificOrderView(View):
     def get(self, request, pk, jk, *args, **kwargs):
         if request.user.is_authenticated and request.user.id==int(pk) and Order.objects.filter(user_id=int(pk), number=int(jk)).exists():
-            logging.info(f"{request.user.username} called SpecificOrderView")
+            logging.info(f"{request.user.username} called SpecificOrderView | user's Timezone: {request.user.timezone}")
 
             order = Order.objects.filter(user_id=pk, number=jk).first()
 
@@ -317,7 +318,7 @@ class OrderListView(View):
     def get(self, request, *args, **kwargs):      
         if request.user.is_authenticated and request.user.status == "staff":
 
-            logging.info(f"{request.user.username} called OrderListView (status: {request.user.status})")
+            logging.info(f"{request.user.username} called OrderListView (status: {request.user.status}) | user's Timezone: {request.user.timezone}")
             
             orders = Order.objects.all()
 
@@ -343,7 +344,7 @@ class ReviewCreateView(View):
     def get(self, request, **kwargs):
         if request.user.is_authenticated and request.user.status == 'client':
 
-            logging.info(f"{request.user.username} called ReviewCreateView (status: {request.user.status})")
+            logging.info(f"{request.user.username} called ReviewCreateView (status: {request.user.status}) | user's Timezone: {request.user.timezone}")
 
             form = ReviewForm()
             return render(request, 'review_create_form.html', {'form': form})
@@ -370,7 +371,7 @@ class ReviewEditView(View):
     def get(self, request, pk, jk, *args, **kwargs):
         if request.user.is_authenticated and request.user.id==int(pk) and Review.objects.filter(user_id=int(pk), id=int(jk)).exists():
 
-            logging.info(f"{request.user.username} called ReviewEditView (status: {request.user.status})")
+            logging.info(f"{request.user.username} called ReviewEditView (status: {request.user.status}) | user's Timezone: {request.user.timezone}")
 
             review = Review.objects.filter(user_id=pk, id=jk).first()
             form = ReviewForm()
