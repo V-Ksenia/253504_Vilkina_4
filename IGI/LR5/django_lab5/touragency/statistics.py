@@ -7,7 +7,7 @@ from django.http import HttpResponseNotFound
 import numpy as np
 from statistics import median, mode, mean
 import matplotlib
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, Avg
 
 from .models import *
 from matplotlib import pyplot as plt

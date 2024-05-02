@@ -4,15 +4,13 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import *
 from django.views import View
 
-from pytz import timezone
 import requests
 
 from touragency.forms import *
 from .models import *
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.contrib.auth.models import auth
 from django.contrib.auth.views import LoginView
-from django.contrib.auth import authenticate
 import json
 import logging
 
@@ -46,7 +44,15 @@ class UserLoginView(LoginView):
         return reverse_lazy('home')
             
 
-class TourListView(ListView):
+class UserLogoutView(View):
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            logging.info(f"{request.user.username} LOGOUT (status: {request.user.status}) | user's Timezone: {request.user.timezone}")
+            auth.logout(request)
+        return redirect('tours')
+
+
+class TourListView(View):
     model = Tour
     queryset = Tour.objects.all()
 
@@ -96,7 +102,7 @@ class TourListView(ListView):
         return tours
 
 
-class SpecificTourList(DetailView):
+class SpecificTourList(View):
     model = Tour
     def get(self, request, *args, **kwargs):
         tour = self.get_object()
@@ -115,7 +121,7 @@ class SpecificTourList(DetailView):
         return JsonResponse(tours_data, safe=False)
 
 
-class HotelListView(ListView):
+class HotelListView(View):
     model = Hotel
     queryset = Hotel.objects.all()
 
@@ -160,7 +166,7 @@ class HotelListView(ListView):
         return hotels
     
 
-class CountryListView(ListView):
+class CountryListView(View):
     def get(self, request, *args, **kwargs):
        
         countries = Country.objects.all()
@@ -196,14 +202,6 @@ class UserListView(View):
             return JsonResponse(users_data, safe=False)
         logging.error(f"{request.user.username} tried to call UserListView (status: {request.user.status})")
         return HttpResponseNotFound("For staff only")
-
-
-class UserLogoutView(View):
-    def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            logging.info(f"{request.user.username} LOGOUT (status: {request.user.status}) | user's Timezone: {request.user.timezone}")
-            auth.logout(request)
-        return redirect('tours')
 
 
 class OrderCreateView(View):
@@ -394,7 +392,7 @@ class ReviewEditView(View):
                 review.text = text
                 review.rating = rating
 
-                review.save()  
+                review.save(update_fields=['text'])  
 
                 logging.info(f"Review '{review.title}' was updated by {request.user.username} ") 
 
@@ -446,7 +444,7 @@ def about_company(request):
     return render(request, 'about.html', {'company_info': info})
 
 def news(request):
-    news = Article.objects.all().order_by('date').reverse()
+    news = Article.objects.all().order_by('-date')
     return render(request, 'news.html', {'news': news})
 
 def promocodes(request):

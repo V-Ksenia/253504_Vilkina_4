@@ -15,11 +15,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, re_path
+from django.urls import include, path, re_path
 from touragency import views, statistics
 
 from django.conf import settings
 from django.conf.urls.static import static
+
+user_patterns = [
+    re_path(r'orders', views.UserOrderView.as_view(), name='user_orders'),
+    re_path(r'order/(?P<jk>\d+)', views.SpecificOrderView.as_view(), name='user_spec_order'),
+    re_path(r'review/(?P<jk>\d+)', views.ReviewEditView.as_view(), name='edit_review'),
+]
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,8 +39,7 @@ urlpatterns = [
     path('countries/', views.CountryListView.as_view(), name="countries"),
     re_path(r'tours/(?P<pk>\d+)/$', views.SpecificTourList.as_view(), name='tour'),
     re_path(r'tour/(?P<pk>\d+)/order/create/$', views.OrderCreateView.as_view(), name='create_order'),
-    re_path(r'user/(?P<pk>\d+)/orders/$', views.UserOrderView.as_view(), name='user_orders'),
-    re_path(r'user/(?P<pk>\d+)/order/(?P<jk>\d+)/$', views.SpecificOrderView.as_view(), name='user_spec_order'),
+    re_path(r'user/(?P<pk>\d+)/', include(user_patterns)),
     
 
     #STAFF
@@ -52,7 +57,6 @@ urlpatterns = [
     path('vacancies/', views.vacancies, name='vacancies'),
     path('reviews/', views.reviews, name='reviews'),
     path('review/create/', views.ReviewCreateView.as_view(), name='add_review'),
-    re_path(r'user/(?P<pk>\d+)/review/(?P<jk>\d+)/$', views.ReviewEditView.as_view(), name='edit_review'),
     path('privacy-policy', views.privacy_policy, name='privacy_policy'),
 
 
