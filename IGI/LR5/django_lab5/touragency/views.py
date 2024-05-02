@@ -406,30 +406,34 @@ class ReviewEditView(View):
 #API
 class PlaceCoordinates(View):
     def get(self, request, pk, *args, **kwargs):
-        url = "https://opentripmap-places-v1.p.rapidapi.com/en/places/geoname"
+        if request.user.is_authenticated:
+            url = "https://opentripmap-places-v1.p.rapidapi.com/en/places/geoname"
 
-        name = str(pk)
-        querystring = {"name": name}
+            name = str(pk)
+            querystring = {"name": name}
 
-        headers = {
-        "X-RapidAPI-Key": "cf52fdec52msh3467d0348f8b9a8p15eb7fjsn4a6d39d8974e",
-        "X-RapidAPI-Host": "opentripmap-places-v1.p.rapidapi.com"
-        }
+            headers = {
+            "X-RapidAPI-Key": "cf52fdec52msh3467d0348f8b9a8p15eb7fjsn4a6d39d8974e",
+            "X-RapidAPI-Host": "opentripmap-places-v1.p.rapidapi.com"
+            }
 
-        response = requests.get(url, headers=headers, params=querystring)
-        return JsonResponse(response.json())
+            response = requests.get(url, headers=headers, params=querystring)
+            return JsonResponse(response.json())
+        return HttpResponseNotFound("Page not found")
     
 
 def world_languages(request):
-    url = "https://tourist-attraction.p.rapidapi.com/languages"
+    if request.user.is_authenticated:
+        url = "https://tourist-attraction.p.rapidapi.com/languages"
 
-    headers = {
-	"X-RapidAPI-Key": "cf52fdec52msh3467d0348f8b9a8p15eb7fjsn4a6d39d8974e",
-	"X-RapidAPI-Host": "tourist-attraction.p.rapidapi.com"
-    }
+        headers = {
+        "X-RapidAPI-Key": "cf52fdec52msh3467d0348f8b9a8p15eb7fjsn4a6d39d8974e",
+        "X-RapidAPI-Host": "tourist-attraction.p.rapidapi.com"
+        }
 
-    response = requests.get(url, headers=headers)  
-    return JsonResponse(response.json()) 
+        response = requests.get(url, headers=headers)  
+        return JsonResponse(response.json()) 
+    return HttpResponseNotFound("Page not found")
 
 
 #ADDITIONAL PAGES
@@ -442,7 +446,7 @@ def about_company(request):
     return render(request, 'about.html', {'company_info': info})
 
 def news(request):
-    news = Article.objects.all()
+    news = Article.objects.all().order_by('date').reverse()
     return render(request, 'news.html', {'news': news})
 
 def promocodes(request):

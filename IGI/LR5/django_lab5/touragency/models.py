@@ -126,16 +126,14 @@ class Order(models.Model):
         super().save(*args, **kwargs)
 
 
-class Promocode(models.Model):
-    code = models.CharField(max_length=10)
-    discount = models.PositiveSmallIntegerField()
-
-
 class UsedDiscounts(models.Model):
-    promocode = models.ForeignKey(Promocode, on_delete=models.CASCADE)
+    promocode = models.ForeignKey('Promocode', on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
+class Promocode(models.Model):
+    code = models.CharField(max_length=10)
+    discount = models.PositiveSmallIntegerField()
 
 
 #ADDITIONAL PAGES

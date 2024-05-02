@@ -8,14 +8,14 @@
     {% for review in reviews %}
         <div>
             <h2>{{ review.title }}</h2>
-            <p>Rating: {{ review.rating }}/5</p>
+            <p>Rating: <b>{{ review.rating }}/5</b></p>
             <p>{{ review.text }}</p>
             <p>By: {{ review.user.username }}</p>
             <p>Posted: {{ review.date }}</p>
         </div>
     {% endfor %}
     <form action="{% url 'add_review' %}" method="get">
-        <button type="submit">Leave a review</button>
+        <button type="submit">Write a review</button>
     </form>
 </body>
 </html>
