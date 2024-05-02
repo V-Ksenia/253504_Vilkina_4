@@ -161,3 +161,9 @@ def year_sales_volume():
     image_urls.append(url)
 
     return image_urls
+
+
+def class_diagramm(request):
+    if request.user.is_authenticated and request.user.is_superuser:
+        return render(request, 'classdiag.html')
+    return HttpResponseNotFound("Page not found")

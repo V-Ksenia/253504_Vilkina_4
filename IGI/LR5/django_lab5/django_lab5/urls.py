@@ -36,7 +36,7 @@ urlpatterns = [
     re_path(r'user/(?P<pk>\d+)/orders/$', views.UserOrderView.as_view(), name='user_orders'),
     re_path(r'user/(?P<pk>\d+)/order/(?P<jk>\d+)/$', views.SpecificOrderView.as_view(), name='user_spec_order'),
     
-    
+
     #STAFF
     path('users/', views.UserListView.as_view(), name='users'),
     path('orders/', views.OrderListView.as_view(), name='orders'),
@@ -66,6 +66,7 @@ urlpatterns = [
     path('sales', statistics.sales, name='sales'),
     path('tours_stat', statistics.tours, name='tours_stat'),
     path('hotels_stat', statistics.hotels, name='hotels_stat'),
+    path('model_diagramm', statistics.class_diagramm, name='model_diagramm'),
 ]
 
 if settings.DEBUG:
