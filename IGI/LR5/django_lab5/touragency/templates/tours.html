@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<head>
+    {% extends "base.html" %}
+    <meta charset="UTF-8">
+    <title>{% block title %}Tours</title>{% endblock title %}
+</head>
+<body>
+    {% block header %}<h1>Tours</h1>{% endblock header %}
+
+    {% block content%}
+    {% for tour in tours %}
+        <div>
+            <h2>{{ tour.name }}</h2>
+            <p>Price: <b>{{ tour.price }}$</b></p>
+            <p>Country: {{ tour.country.name }}</p>
+            <p>Hotel: {{ tour.hotel.name }}</p>
+            <p>Duration: {{ tour.duration }} week</p>
+            <form action="{% url 'create_order' pk=tour.pk%}" method="get">
+                <button type="submit">Make order</button>
+            </form>
+        </div>
+    {% endfor %}
+    {% endblock content%}
+</body>
+</html>

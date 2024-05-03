@@ -24,6 +24,7 @@ from django.conf.urls.static import static
 user_patterns = [
     re_path(r'orders', views.UserOrderView.as_view(), name='user_orders'),
     re_path(r'order/(?P<jk>\d+)', views.SpecificOrderView.as_view(), name='user_spec_order'),
+    re_path(r'review/', views.UserReviewList.as_view(), name='user_review'),
     re_path(r'review/(?P<jk>\d+)', views.ReviewEditView.as_view(), name='edit_review'),
 ]
 

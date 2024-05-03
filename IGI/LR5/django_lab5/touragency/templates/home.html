@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
+    {% extends "base.html" %}    
 <head>
-    <title>HOME</title>
+    {% block title %} <title>HOME</title> {% endblock title %}
 </head>
 <body>
     
-    <h2>{{ latest_article.title }}</h2>
-    <p>{{ latest_article.content }}</p>
+    {% block header %}<h2>{{ latest_article.title }}</h2>{% endblock header %}
+
+   {% block content %} <p>{{ latest_article.content }}</p>
     <p>Posted: {{ latest_article.date }}</p>
-    <img src="{{ latest_article.image.url }}">
+    <img src="{{ latest_article.image.url }}">{% endblock content %}
 </body>
 </html>

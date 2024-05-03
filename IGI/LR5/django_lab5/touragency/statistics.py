@@ -73,44 +73,44 @@ def sales(request):
         median_sales = round(median(prices), 2)
         mode_sales = round(mode(prices), 2)
 
-        url, yearly_sales_data = linear_sales_trend()
-        image_urls = year_sales_volume()
+        url, yearly_salesdata = plot_sales()
+        image_urls = diagramm_sales()
 
         return render(request, 'sales_stat.html', {'general_sales': general_sales,
                                                 'average_sales': average_sales,
                                                 'median_sales': median_sales,
                                                 'mode_sales': mode_sales,
                                                 'image': url, 
-                                                'yearly_sales_data': yearly_sales_data,
+                                                'yearly_salesdata': yearly_salesdata,
                                                 'image_urls': image_urls,
                                                 })
     return HttpResponseNotFound("Page not found")
 
 
-def yearly_sales_report(year):
+def yearly_salesreport(year):
     orders = Order.objects.filter(date__year=year)
-    total_sales_per_purchase = orders.annotate(total_sales=Sum('price')).values_list('total_sales', flat=True)
-    total_sales_for_year = sum(total_sales_per_purchase)
+    total_sales_per_order = orders.annotate(total_sales=Sum('price')).values_list('total_sales', flat=True)
+    total_sales_for_year = sum(total_sales_per_order)
     return total_sales_for_year
 
 
-def yearly_sales_trend():
+def yearly_salestrend():
     current_year = datetime.datetime.now().year
     last_three_years = range(current_year - 2, current_year + 1)
-    yearly_sales_ = []
+    yearly_sales = []
 
     for year in last_three_years:
-        sales = yearly_sales_report(year)
-        yearly_sales_.append(round(sales, 2))
+        sales = yearly_salesreport(year)
+        yearly_sales.append(round(sales, 2))
 
-    return list(last_three_years), yearly_sales_
+    return list(last_three_years), yearly_sales
 
 
-def linear_sales_trend():
+def plot_sales():
 
     matplotlib.use('Agg')
 
-    years, sales = yearly_sales_trend()
+    years, sales = yearly_salestrend()
 
     plt.figure(figsize=(14, 6))
 
@@ -129,15 +129,15 @@ def linear_sales_trend():
     string = base64.b64encode(buf.read())
     url = parse.quote(string)
 
-    yearly_sales_data = list(zip(years, sales))
+    yearly_salesdata = list(zip(years, sales))
 
-    return url, yearly_sales_data
+    return url, yearly_salesdata
 
 
-def year_sales_volume():
+def diagramm_sales():
     matplotlib.use('Agg')
 
-    years, sales = yearly_sales_trend()
+    years, sales = yearly_salestrend()
 
     image_urls = []
 
