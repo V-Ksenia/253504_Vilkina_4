@@ -13,6 +13,7 @@
         <p>duration: {{ tour.duration }}</p>
         <p>price: ${{ tour.price }}</p>
         <p>amount of trips: {{ tour.amount_of_trips }}</p>
+        <a href="{%url 'create_order' pk=tour.id %}">Make an order</a
     </div>
 {% endfor %}
 {% endblock content %}
