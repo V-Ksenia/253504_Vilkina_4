@@ -24,3 +24,7 @@ class ReviewForm(forms.ModelForm):
         model = Review
         fields = ['title', 'rating','text']
 
+class ReviewUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ['text']

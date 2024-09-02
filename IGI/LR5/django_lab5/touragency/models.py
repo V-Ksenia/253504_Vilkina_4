@@ -23,7 +23,7 @@ class User(AbstractUser):
     timezone = get_localzone_name()
 
     def save(self, *args, **kwargs):
-        phone_number_pattern = re.compile(r'\+375\((25|29|33)\)\d{7}')
+        phone_number_pattern = re.compile(r'\+375(25|29|33)\d{7}')
         if not re.fullmatch(phone_number_pattern, str(self.phone_number)) or self.age < 18 or self.age > 100:
 
             logging.exception(f"ValidationError, {self.phone_number} is in incorrect format OR 18 < {self.age} < 100")
@@ -68,11 +68,11 @@ class Hotel(models.Model):
 
 class Tour(models.Model):
     name = models.CharField(max_length=255)
-    DURATION_CHOICES = {
-        1: "One week",
-        2: "Two weeks",
-        4: "Four weeks",
-    }
+    DURATION_CHOICES = (
+        (1, "One week"),
+        (2, "Two weeks"),
+        (4, "Four weeks"),
+    )
     duration = models.IntegerField(choices=DURATION_CHOICES)
     trips = models.PositiveSmallIntegerField()
 

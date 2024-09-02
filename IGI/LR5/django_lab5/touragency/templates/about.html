@@ -1,14 +1,7 @@
-<!DOCTYPE html>
-<html>
 {% extends "base.html" %}
-<head>
-    <title>ABOUT COMPANY</title>
-</head>
-<body>
-    <center><img src="{{ company_info.logo.url }}" height="70" width="70">
-    <h1><center>TOURAGENCY</center></h1>
-    <h3>Hii there ^^ </h3>
-    <p>{{ company_info.text }} ❤️</p></center>
-    
-</body>
-</html>
+{% block title %}Company info{% endblock title %}
+{% block header %}Company info{% endblock header %}
+
+{% block content %}
+    <p>{{ company_info.text }}</p>
+{% endblock content %}

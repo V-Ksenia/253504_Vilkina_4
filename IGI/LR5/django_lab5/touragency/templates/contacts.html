@@ -1,12 +1,9 @@
-<!DOCTYPE html>
 {% extends "base.html" %}
-<html lang="en">
-<head>
-    {% block title %} <title>Contacts</title>{% endblock title %}
-</head>
-<body>
-    {% block header %}<h1>Contacts</h1>{% endblock header %}
-    {% block content%}
+{% block title %}Contacts{% endblock title %}
+{% block header %}Contacts{% endblock header %}
+
+{% block content %}
+
     {% for contact in contacts %}
         <div>
             <h2>{{ contact.user.first_name }} {{ contact.user.last_name}}</h2>
@@ -16,6 +13,4 @@
             <img src="{{ contact.photo.url }}" height="180" width="180">
         </div>
     {% endfor %}
-    {% endblock content%}
-</body>
-</html>
+{% endblock content %}

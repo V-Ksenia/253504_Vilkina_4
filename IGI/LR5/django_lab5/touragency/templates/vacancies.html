@@ -1,16 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Vacancy</title>
-</head>
-<body>
-    <h1>Vacancy</h1>
+{% extends "base.html" %}
+{% block title %}Vacancies{% endblock title %}
+{% block header %}Vacancies{% endblock header %}
+
+{% block content %}
     {% for vac in vacancies %}
         <div>
             <h2>{{ vac.name }}</h2>
             <p>{{ vac.description }}</p>
         </div>
     {% endfor %}
-</body>
-</html>
+{% endblock content %}
+
+

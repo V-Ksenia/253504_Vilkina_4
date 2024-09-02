@@ -17,7 +17,7 @@ import logging
 logging.basicConfig(level=logging.INFO, filename='logging.log', filemode='a', format='%(asctime)s %(levelname)s %(message)s')
 
 
-class UserRegistrationView(View):
+class UserRegistrationView(CreateView):
     def post(self, request, *args, **kwargs):
         form = RegistrationForm(request.POST)
         if form.is_valid():
@@ -25,7 +25,7 @@ class UserRegistrationView(View):
             user = form.save(commit=False)
             user.save()
 
-            logging.info(f"{user.username} REGISTER (status: {user.status})")
+            logging.info(f"{user.username} REGISTER (status: {user.status}) | user's Timezone: {user.timezone}")
             return redirect('login')
         else:
             logging.warning("Registration form is invalid")
@@ -39,6 +39,7 @@ class UserRegistrationView(View):
 class UserLoginView(LoginView):
     redirect_authenticated_user = True
     template_name = 'login_form.html'
+
     def get_success_url(self):  
         logging.info("User LOGIN")
         return reverse_lazy('home')
@@ -75,7 +76,8 @@ class TourListView(View):
                 'duration_weeks': tour.duration,
                 'price': tour.get_price(),
             })
-        return render(request, 'tours.html', context={'tours': tours})
+        return render(request, 'tours.html', {'tours': tours})
+        #return JsonResponse(tours_data, safe=False)
 
     @staticmethod
     def filter_tours(min_price=None, max_price=None, country=None, hotel=None, duration=None):
@@ -102,23 +104,26 @@ class TourListView(View):
         return tours
 
 
-class SpecificTourList(DetailView):
+class SpecificTourList(View):
     model = Tour
-    def get(self, request, *args, **kwargs):
-        tour = self.get_object()
+
+    def get(self, request, pk, *args, **kwargs):
+        tour = Tour.objects.filter(pk=pk)[0]
         tours_data = []
-        tours_data.append({
-            'id': tour.id,
-            'name': tour.name,
-            'country': tour.country.name,
-            'country_climate': list(tour.country.climate.all().values_list('climate', flat=True)),
-            'hotel': tour.hotel.name,
-            'hotel_stars': tour.hotel.stars,
-            'duration_weeks': tour.duration,
-            'price': tour.price,
-            'amount_of_trips': tour.trips,
-        })
-        return JsonResponse(tours_data, safe=False)
+        if tour:
+            tours_data.append({
+                'id': tour.id,
+                'name': tour.name,
+                'country': tour.country.name,
+                'country_climate': list(tour.country.climate.all().values_list('climate', flat=True)),
+                'hotel': tour.hotel.name,
+                'hotel_stars': tour.hotel.stars,
+                'duration_weeks': tour.duration,
+                'price': tour.price,
+                'amount_of_trips': tour.trips,
+            })
+        #return JsonResponse(tours_data, safe=False)
+        return render(request, 'specific_tour.html', {'tours': tours_data})
 
 
 class HotelListView(View):
@@ -132,7 +137,6 @@ class HotelListView(View):
         stars_value = request.GET.get('stars')
 
         hotels = self.filter_hotels(min_price, max_price, country_id, stars_value)
-
         hotels_data = []
         for hotel in hotels:
             hotels_data.append({
@@ -142,7 +146,8 @@ class HotelListView(View):
                 'country': hotel.country.name,
                 'price_per_night': hotel.price_per_night,
             })
-        return render(request, 'hotels.html', context={'hotels': hotels})
+        #return JsonResponse(hotels_data, safe=False)
+        return render(request, 'hotels.html', {'hotels': hotels_data})
 
     @staticmethod
     def filter_hotels(min_price=None, max_price=None, country=None, stars=None):
@@ -180,8 +185,9 @@ class CountryListView(View):
                 'name': country.name,
                 'climate': climates,
             })
-        return JsonResponse(countries_data, safe=False)
-    
+        #return JsonResponse(countries_data, safe=False)
+        return render(request, 'countries.html', {'countries': countries_data})
+
 
 class UserListView(View):
     def get(self, request, *args, **kwargs):
@@ -199,7 +205,8 @@ class UserListView(View):
                     "age": user.age,
                     "phone_number": user.phone_number,
                 })
-            return JsonResponse(users_data, safe=False)
+            #return JsonResponse(users_data, safe=False)
+            return render(request, 'users.html', {'users': users_data})
         logging.error(f"{request.user.username} tried to call UserListView (status: {request.user.status})")
         return HttpResponseNotFound("For staff only")
 
@@ -259,7 +266,7 @@ class OrderCreateView(View):
 class UserOrderView(View):
     def get(self, request, pk, *args, **kwargs):
 
-        if request.user.is_authenticated and request.user.id==int(pk):
+        if request.user.is_authenticated and request.user.id == int(pk):
             logging.info(f"{request.user.username} called UserOrderView | user's Timezone: {request.user.timezone}")
             orders = Order.objects.filter(user_id=pk)
 
@@ -275,27 +282,18 @@ class UserOrderView(View):
                     "creation_date": order.date,
                 })
 
-            return JsonResponse(orders_data, safe=False)
+            #return JsonResponse(orders_data, safe=False)
+            return render(request, 'user_orders.html', {'orders': orders_data})
         logging.error(f"Call failed UserOrderView")
         return HttpResponseNotFound("Page not found")
     
-
-class UserReviewList(View):
-    def get(self, request, pk, *args, **kwargs):
-        if request.user.is_authenticated and request.user.id==int(pk):
-            logging.info(f"{request.user.username} called UserReviewView | user's Timezone: {request.user.timezone}")
-            reviews = Review.objects.filter(user_id=pk)
-            return render(request, 'user_review.html', context={'reviews': reviews})
-        logging.error(f"Call failed UserOrderView")
-        return HttpResponseNotFound("Page not found")
-
-
+    
 class SpecificOrderView(View):
     def get(self, request, pk, jk, *args, **kwargs):
         if request.user.is_authenticated and request.user.id==int(pk) and Order.objects.filter(user_id=int(pk), number=int(jk)).exists():
             logging.info(f"{request.user.username} called SpecificOrderView | user's Timezone: {request.user.timezone}")
 
-            order = Order.objects.get(user_id=pk, number=jk)
+            order = Order.objects.filter(user_id=pk, number=jk).first()
 
             form = OrderDeleteForm()
             return render(request, 'order_delete_form.html', {'form': form, 'order': order})
@@ -307,7 +305,7 @@ class SpecificOrderView(View):
             if form.is_valid():
                 logging.info(f"OrderDeleteForm has no errors")
 
-                order = Order.objects.get(number=jk, user_id=pk)
+                order = Order.objects.filter(number=jk, user_id=pk).first()
 
                 order.tour.trips += order.amount
                 order.tour.save()
@@ -343,7 +341,8 @@ class OrderListView(View):
                     "departure_date": order.departure_date,
                     "creation_date": order.date,
                 })
-            return JsonResponse(orders_data, safe=False)  
+            #return JsonResponse(orders_data, safe=False)
+            return render(request, 'user_orders.html', {'orders': orders_data})
         logging.error(f"{request.user.username} has status {request.user.status}") 
         return HttpResponseNotFound("Page not found")
 
@@ -370,9 +369,7 @@ class ReviewCreateView(View):
 
                 review = Review.objects.create(title=title, rating=rating, text=text, user=request.user)
                 logging.info(f"Review '{review.title}' was created by {request.user.username} ")
-
-                url = reverse('edit_review', kwargs={"pk": review.user_id, "jk": review.id})
-                return redirect(url)
+                return redirect('reviews')
         logging.warning("User is not authenticated")
         return redirect('login')
 
@@ -383,26 +380,23 @@ class ReviewEditView(View):
 
             logging.info(f"{request.user.username} called ReviewEditView (status: {request.user.status}) | user's Timezone: {request.user.timezone}")
 
-            review = Review.objects.get(user_id=pk, id=jk)
-            form = ReviewForm()
+            review = Review.objects.filter(user_id=pk, id=jk).first()
+            form = ReviewUpdateForm()
             return render(request, 'review_edit_form.html', {'form': form, 'review': review})
         logging.error(f"Call failed ReviewEditPage")
         return HttpResponseNotFound("Page not found")
      
     def post(self, request, pk, jk, *args, **kwargs):
         if request.user.is_authenticated and request.user.id==int(pk) and Review.objects.filter(user_id=int(pk), id=int(jk)).exists():
-            form = ReviewForm(request.POST)
+            form = ReviewUpdateForm(request.POST)
             if form.is_valid():
                 logging.info(f"ReviewForm has no errors)")
 
-                review = Review.objects.get(user_id=pk, id=jk)
-                title = form.cleaned_data['title']
-                rating = form.cleaned_data['rating']
+                review = Review.objects.filter(user_id=pk, id=jk).first()
+                
                 text = form.cleaned_data['text']
 
-                review.title = title
                 review.text = text
-                review.rating = rating
 
                 review.save()  
 

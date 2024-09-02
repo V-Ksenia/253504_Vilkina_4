@@ -1,12 +1,8 @@
-<!DOCTYPE html>
 {% extends "base.html" %}
-<head>
-    <meta charset="UTF-8">
-    <title>{% block title %}News{% endblock title %}</title>
-</head>
-<body>
-    <h1>{% block header %}News{% endblock header %}</h1>
-    {% block content %}
+{% block title %}News{% endblock title %}
+{% block header %}News{% endblock header %}
+
+{% block content %}
     {% for new in news %}
         <div>
             <h2>{{ new.title }}</h2>
@@ -15,6 +11,4 @@
             <p>Posted: {{ new.date }}</p>
         </div>
     {% endfor %}
-    {% endblock content %}
-</body>
-</html>
+{% endblock content %}

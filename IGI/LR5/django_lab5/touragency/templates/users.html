@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Users{% endblock title %}
+{% block header %}Users{% endblock header %}
+
+{% block content %}
+    {% for user in users %}
+    <div>
+        <p>id: {{ user.id }}</p>
+        <p>username: {{ user.username }}</p>
+        <p>first name: {{ user.first_name }}</p>
+        <p>last name: {{ user.last_name }}</p>
+        <p>age: {{ user.age }}</p>
+        <p>phone number: {{ user.phone_number }}</p>
+    </div>
+{% endfor %}
+{% endblock content %}

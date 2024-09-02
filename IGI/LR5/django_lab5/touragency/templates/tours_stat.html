@@ -1,15 +1,13 @@
-<!DOCTYPE html>
-<head>
-    <meta charset="UTF-8">
-    <title>Tours</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Tours Statistic{% endblock title %}
+{% block header %}Tours Statistic{% endblock header %}
+
+{% block content %}
     <h1>Tours</h1>
     <h3>A-Z</h3>
     {% for tour in tours%}
         <p>{{ tour.name }}, price: {{ tour.price }}$<p>
     {% endfor %}
-    
+
     <h3>Most popular: {{ most_popular_tour.tour__name }}, Orders: {{ most_popular_tour.order_count}} </h3>
-</body>
-</html>
+{% endblock content %}

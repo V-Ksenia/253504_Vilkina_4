@@ -1,21 +1,15 @@
-<!DOCTYPE html>
-<head>
-    {% extends "base.html" %}
-    <meta charset="UTF-8">
-    <title>{% block title %}Hotels</title>{% endblock title %}
-</head>
-<body>
-    {% block header %}<h1>Hotels</h1>{% endblock header %}
+{% extends "base.html" %}
+{% block title %}Hotels{% endblock title %}
+{% block header %}Hotels{% endblock header %}
 
-    {% block content%}
+{% block content %}
     {% for hotel in hotels %}
-        <div>
-            <h2>{{ hotel.name }}</h2>
-            <p>Price per night: <b>{{ hotel.price_per_night }}$</b></p>
-            <p>Country: {{ hotel.country.name }}</p>
-            <p>Stars: {{ hotel.stars }}/5</p>
-        </div>
-    {% endfor %}
-    {% endblock content%}
-</body>
-</html>
+    <div>
+        <p>id: {{ hotel.id }}</p>
+        <p>name: {{ hotel.name }}</p>
+        <p>country: {{ hotel.country.name }}</p>
+        <p>stars: {{ hotel.stars }}</p>
+        <p>price per night: {{ hotel.price_per_night }}</p>
+    </div>
+{% endfor %}
+{% endblock content %}

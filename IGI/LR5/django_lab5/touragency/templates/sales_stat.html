@@ -1,9 +1,7 @@
-<!DOCTYPE html>
-<head>
-    <meta charset="UTF-8">
-    <title>Sales</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Sales{% endblock title %}
+
+{% block content %}
     <h1><center>Sales Statistic</center></h1>
     <h3>General sales: {{ general_sales }}$</h3>
     <h3>Average sales: {{ average_sales }}$</h3>
@@ -12,7 +10,7 @@
 
     <h2>Yearly sales</h2>
     {% for year, sales in yearly_sales_data %}
-        <p><b>{{ year }}</b>: {{ sales }}$</p> 
+        <p><b>{{ year }}</b>: {{ sales }}$</p>
     {% endfor %}
 
     <h2>Three Years sales plot</h2>
@@ -23,6 +21,4 @@
         <img src="data:image/png;base64,{{ image }}" height="700" width="700">
     {% endfor %}
     </table>
-
-</body>
-</html>
+{% endblock content %}

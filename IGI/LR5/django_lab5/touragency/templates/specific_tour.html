@@ -1,17 +1,18 @@
 {% extends "base.html" %}
-{% block title %}Tours{% endblock title %}
-{% block header %}Tours{% endblock header %}
+{% block title %}Tour{% endblock title %}
 
 {% block content %}
-{% for tour in tours %}
+    {% for tour in tours %}
     <div>
-        <a href="{% url 'tour' pk=tour.id %}" class="button">{{ tour.name }}</a>
         <p>id: {{ tour.id }}</p>
         <p>name: {{ tour.name }}</p>
         <p>country: {{ tour.country }}</p>
-        <p>hotel: {{ tour.hotel.name }}</p>
+        <p>country climate: {{ tour.country_climate }}</p>
+        <p>hotel: {{ tour.hotel }}</p>
+        <p>hotel stars: {{ tour.hotel_stars }}</p>
         <p>duration: {{ tour.duration }}</p>
         <p>price: ${{ tour.price }}</p>
+        <p>amount of trips: {{ tour.amount_of_trips }}</p>
     </div>
 {% endfor %}
 {% endblock content %}
