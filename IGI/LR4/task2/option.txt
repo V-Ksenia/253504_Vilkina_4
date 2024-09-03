@@ -1,0 +1,6 @@
+Spaces replaced with ~: ~Xbcmncx~Z~njczhcxhb.~AUgiuhiuh~:)~iuhiuHiu!~aBubububiubuiubi~kjhijb?~:---[[~;-(~~vhGvgvghv.~jahvu~;))~vuy!
+Amount of capital letters: 7
+and lowercase letters: 66
+First word with 'z' and index: ('Z', 2)
+Words that start with 'a' removed:  Xbcmncx Z njczhcxhb. :) iuhiuHiu! kjhijb? :---[[ ;-(  vhGvgvghv. jahvu ;)) vuy!
+GUID without brackets
