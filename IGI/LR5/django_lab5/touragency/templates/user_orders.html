@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Orders{% endblock title %}
+{% block header %}Your Orders{% endblock header %}
+
+{% block content %}
+    {% for order in orders %}
+    <div>
+        <p>user: {{ order.user }}</p>
+        <p>number: {{ order.number }}</p>
+        <p>tour name: {{ order.tour_name }}</p>
+        <p>price: {{ order.price }}</p>
+        <p>amount: {{ order.amount }}</p>
+        <p>departure date: {{ order.departure_date }}</p>
+        <p>creation date: {{ order.creation_date }}</p>
+    </div>
+{% endfor %}
+{% endblock content %}

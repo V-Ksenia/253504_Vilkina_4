@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Tours{% endblock title %}
+{% block header %}Tours{% endblock header %}
+
+{% block content %}
+{% for tour in tours %}
+    <div>
+        <a href="{% url 'tour' pk=tour.id %}" class="button">{{ tour.name }}</a>
+        <p>id: {{ tour.id }}</p>
+        <p>name: {{ tour.name }}</p>
+        <p>country: {{ tour.country }}</p>
+        <p>hotel: {{ tour.hotel.name }}</p>
+        <p>duration: {{ tour.duration }}</p>
+        <p>price: ${{ tour.price }}</p>
+        
+    </div>
+{% endfor %}
+{% endblock content %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}FAQs{% endblock title %}
+{% block header %}FAQs{% endblock header %}
+
+{% block content %}
+    {% for faq in faqs %}
+        <div>
+            <h2>{{ faq.question }}</h2>
+            <p>{{ faq.answer }}</p>
+            <p>Asked: {{ faq.date }}</p>
+        </div>
+    {% endfor %}
+{% endblock content %}

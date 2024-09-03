@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Detail</title>
+</head>
+<body>
+    <h1>Order Detail</h1>
+    <p>Number: {{ order.number }}</p>
+    <p>Tour name: {{ order.tour.name }}</p>
+    <p>Price: {{ order.price }}$</p>
+    <p>Amount: {{ order.amount }}</p>
+    <p>Date: {{ order.departure_date }}</p>
+    <p>Created on: {{ order.date }}</p>
+
+    {% if form %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Delete</button> <a href="{% url 'user_orders' pk=user.pk %}"> My orders</a>
+    </form>
+    {% endif %}
+</body>
+</html>

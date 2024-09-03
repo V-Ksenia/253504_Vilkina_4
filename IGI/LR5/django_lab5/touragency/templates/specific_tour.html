@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Tour{% endblock title %}
+
+{% block content %}
+    {% for tour in tours %}
+    <div>
+        <p>id: {{ tour.id }}</p>
+        <p>name: {{ tour.name }}</p>
+        <p>country: {{ tour.country }}</p>
+        <p>country climate: {{ tour.country_climate }}</p>
+        <p>hotel: {{ tour.hotel }}</p>
+        <p>hotel stars: {{ tour.hotel_stars }}</p>
+        <p>duration: {{ tour.duration }}</p>
+        <p>price: ${{ tour.price }}</p>
+        <p>amount of trips: {{ tour.amount_of_trips }}</p>
+        <a href="{%url 'create_order' pk=tour.id %}">Make an order</a
+    </div>
+{% endfor %}
+{% endblock content %}

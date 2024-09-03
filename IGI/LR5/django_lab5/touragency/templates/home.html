@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Home page{% endblock title %}
+{% block header %}Home page{% endblock header %}
+
+{% block content %}
+    <h2>{{ latest_article.title }}</h2>
+    <p>{{ latest_article.content }}</p>
+    <p>Posted: {{ latest_article.date }}</p>
+    <img src="{{ latest_article.image.url }}">
+{% endblock content %}
+    
