@@ -220,7 +220,7 @@ class OrderCreateView(View):
             
             return render(request, 'order_create_form.html', {'form': form, 'tour': tour})
         logging.error(f"Call failed OrderCreateView")
-        return HttpResponseNotFound('page not found')
+        return redirect('login')
     
     def post(self, request, pk, *args, **kwargs):
         if request.user.is_authenticated and request.user.status == "client":
@@ -260,7 +260,7 @@ class OrderCreateView(View):
             return HttpResponseNotFound("For clients only")
         else:
             logging.error(f"User is not authenticated")
-            return HttpResponse('Sign in to make an order')
+            return redirect('login')
 
 
 class UserOrderView(View):
