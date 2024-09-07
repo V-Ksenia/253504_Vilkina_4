@@ -3,11 +3,11 @@
 {% block header %}Countries{% endblock header %}
 
 {% block content %}
+<article>
     {% for country in countries %}
-    <div>
-        <p>id: {{ country.id }}</p>
-        <p>name: {{ country.name }}</p>
-        <p>country: {{ country.climate }}</p>
-    </div>
-{% endfor %}
+    <p>id: {{ country.id }}</p>
+    <p>name: {{ country.name }}</p>
+    <p>country: {{ country.climate }}</p>
+    {% endfor %}
+</article>
 {% endblock content %}

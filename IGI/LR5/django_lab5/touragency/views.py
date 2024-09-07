@@ -50,7 +50,7 @@ class UserLogoutView(View):
         if request.user.is_authenticated:
             logging.info(f"{request.user.username} LOGOUT (status: {request.user.status}) | user's Timezone: {request.user.timezone}")
             auth.logout(request)
-        return redirect('tours')
+        return redirect('home')
 
 
 class TourListView(View):
@@ -443,7 +443,21 @@ def world_languages(request):
 #ADDITIONAL PAGES
 def home(request):
     latest_article = Article.objects.latest('date')
-    return render(request, 'home.html', {'latest_article': latest_article})
+    partners = Partners.objects.all()
+    tours = Tour.objects.all()
+    tours_data = []
+    for tour in tours:
+        tours_data.append({
+            'id': tour.id,
+            'name': tour.name,
+            'country': tour.country.name,
+            'hotel': tour.hotel.name,
+            'duration_weeks': tour.duration,
+            'price': tour.get_price(),
+        })
+    return render(request, 'home.html', {'latest_article': latest_article,
+                                         'tours': tours_data,
+                                         'partners': partners})
 
 def about_company(request):
     info = CompanyInfo.objects.first()

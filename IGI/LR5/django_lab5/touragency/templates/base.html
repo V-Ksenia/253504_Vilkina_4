@@ -4,41 +4,50 @@
     <meta charset="UTF-8">
     <title>{% block title %}Default title{% endblock title %}</title>
 </head>
+
 <body>
-    
+    <header>{% block header %}{% endblock header %}</header>
+    <navbar>
+    <ul>
     {% if not request.user.is_authenticated  %}
-    <a href="{%url 'register' %}">register</a>
-    <a href="{%url 'login' %}">login</a>
+    <li><a href="{%url 'register' %}">register</a></li>
+    <li><a href="{%url 'login' %}">login</a></li>
     {% endif %}
     {% if request.user.is_authenticated  %}
-    <a href="{%url 'logout' %}">logout</a>
+    <li><a href="{%url 'logout' %}">logout</a></li>
     {% endif %}
-    <a href="{%url 'home' %}">home</a>
-    <a href="{%url 'about' %}">about</a>
-    <a href="{%url 'news' %}">news</a>
-    <a href="{%url 'terms' %}">terms</a>
-    <a href="{%url 'contacts' %}">contacts</a>
-    <a href="{%url 'vacancies' %}">vacancies</a>
-    <a href="{%url 'reviews' %}">reviews</a>
-    <a href="{%url 'privacy_policy' %}">privacy policy</a>
-    <a href="{%url 'tours' %}">tours</a>
-    <a href="{%url 'hotels' %}">hotels</a>
-    <a href="{%url 'countries' %}">countries</a>
-    {% if request.user.is_authenticated  %}
-    <a href="{%url 'user_orders' pk=request.user.id %}">your orders</a>
+    <li><a href="{%url 'home' %}">home</a></li>
+    <li><a href="{%url 'about' %}">about</a></li>
+    <li><a href="{%url 'news' %}">news</a></li>
+    <li><a href="{%url 'terms' %}">terms</a></li>
+    <li><a href="{%url 'contacts' %}">contacts</a></li>
+    <li><a href="{%url 'vacancies' %}">vacancies</a></li>
+    <li><a href="{%url 'reviews' %}">reviews</a></li>
+    <li><a href="{%url 'privacy_policy' %}">privacy policy</a></li>
+    <li><a href="{%url 'tours' %}">tours</a></li>
+    <li><a href="{%url 'hotels' %}">hotels</a></li>
+    <li><a href="{%url 'countries' %}">countries</a></li>
+    {% if request.user.is_authenticated  and request.user.status == 'client '%}
+    <li><a href="{%url 'user_orders' pk=request.user.id %}">your orders</a></li>
     {% endif %}
     {% if request.user.is_authenticated and request.user.status == 'staff' %}
-        <a href="{% url 'users' %}">users</a>
-        <a href="{% url 'orders' %}">orders</a>
+    <li><a href="{% url 'users' %}">users</a></li>
+    <li><a href="{% url 'orders' %}">orders</a></li>
     {% endif %}
     {% if request.user.is_authenticated and request.user.is_superuser %}
-        <a href="{% url 'clients' %}">clients</a>
-        <a href="{% url 'sales' %}">sales</a>    
-        <a href="{% url 'tours_stat' %}">tours_stat</a>
-        <a href="{% url 'hotels_stat' %}">hotels_stat</a>
-        <a href="{% url 'model_diagramm' %}">model_diagramm</a>
+    <li><a href="{% url 'clients' %}">clients</a></li>
+    <li><a href="{% url 'sales' %}">sales</a></li>  
+    <li><a href="{% url 'tours_stat' %}">tours_stat</a></li>
+    <li><a href="{% url 'hotels_stat' %}">hotels_stat</a></li>
+    <li><a href="{% url 'model_diagramm' %}">model_diagramm</a></li>
     {% endif %}
-    <h1>{% block header %}{% endblock header %}</h1>
-    <div>{% block content%}{% endblock content %}</div>
+</ul>
+</navbar>
+<main>
+    {% block content%}{% endblock content %}
+</main>
+<footer>
+    <p>©2024</p>
+</footer>
 </body>
 </html>

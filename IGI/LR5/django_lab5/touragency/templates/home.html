@@ -3,9 +3,36 @@
 {% block header %}Home page{% endblock header %}
 
 {% block content %}
+<section>
+    <img src=" /media/images/logo2.jpg " alt="logo"
+    style="
+    width: 100px;
+    ">
+</section>
+<section>
+    <h3>ad image</h3>
+    <h3>ad image</h3>
+    <h3>ad image</h3>
+</section>
+<aside>
+    <h3>Here you can find</h3>
+    {% for tour in tours %}
+    <ul>
+    <li><a href="{% url 'tour' pk=tour.id %}">{{ tour.name }}</a> {{ tour.price }}$</li>
+    </ul>
+    {% endfor %}
+</aside>
+<section>
     <h2>{{ latest_article.title }}</h2>
     <p>{{ latest_article.content }}</p>
     <p>Posted: {{ latest_article.date }}</p>
     <img src="{{ latest_article.image.url }}">
+</section>
+<section>
+    <h3>Partners</h3>
+    {% for partner in partners %}
+    <a href="{{ partner.link}}">{{ partner.title }}</a>
+    {% endfor %}
+</section>
 {% endblock content %}
     

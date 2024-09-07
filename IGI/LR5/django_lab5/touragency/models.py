@@ -150,6 +150,12 @@ class CompanyInfo(models.Model):
     logo = models.ImageField(upload_to='images/')
 
 
+class Partners(models.Model):
+    title = models.TextField()
+    logo = models.ImageField(upload_to='images/')
+    link = models.URLField(max_length=200)
+
+
 class FAQ(models.Model):
     question = models.CharField(max_length=255)
     answer = models.TextField()
