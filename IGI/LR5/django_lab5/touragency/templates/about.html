@@ -5,5 +5,19 @@
 {% block content %}
 <article>
     <p>{{ company_info.text }}</p>
+    <div class="certificate">
+        <h1>Certificate of Excellence</h1>
+        <h2>Presented to</h2>
+        <h3>Creator of project</h3>
+        <p>This certificate is awarded to <strong>Creator of project</strong> for their exceptional performance and contributions to the success of Company name.</p>
+        <p>We commend your dedication and professionalism in providing top-tier service, ensuring unforgettable travel experiences for our valued clients.</p>
+        <p>Given this day, <time datetime="2024-09-12"> September 12, 2024 </time></p>
+        <p>____________________________</p>
+        <p>by <abbr title="Company That Gives Certificates">CTGC</abbr></p>
+        <p>Creator, Company Name</p>
+    </div>
+    <a href="/media/certificate_strweb.txt" download="Certificate of Excellence.txt">
+        Download certificate
+    </a>
 </article>
 {% endblock content %}

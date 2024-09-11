@@ -5,9 +5,9 @@
 {% block content %}
 <article>
     {% for country in countries %}
-    <p>id: {{ country.id }}</p>
-    <p>name: {{ country.name }}</p>
-    <p>country: {{ country.climate }}</p>
+    <p><b>{{ country.name }}</b></p>
+    <p>climate: {{ country.climate }}</p>
+    <hr>
     {% endfor %}
 </article>
 {% endblock content %}

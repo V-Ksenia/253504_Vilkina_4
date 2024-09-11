@@ -145,6 +145,7 @@ class HotelListView(View):
                 'stars': hotel.stars,
                 'country': hotel.country.name,
                 'price_per_night': hotel.price_per_night,
+                'stars_sign': hotel.stars * '★'
             })
         #return JsonResponse(hotels_data, safe=False)
         return render(request, 'hotels.html', {'hotels': hotels_data})
@@ -469,7 +470,10 @@ def news(request):
 
 def promocodes(request):
     promocodes = Promocode.objects.all()
-    return render(request, 'promocodes.html', {'promocodes': promocodes})
+    usedpromos = UsedDiscounts.objects.all()
+    return render(request, 'promocodes.html', {'promocodes': promocodes,
+                                               'usedpromos': usedpromos
+                                               })
 
 def faqs(request):
     faqs = FAQ.objects.all()

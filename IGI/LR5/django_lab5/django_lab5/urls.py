@@ -48,6 +48,7 @@ urlpatterns = [
 
 
     #ADDITIONAL PAGES
+    path('', views.home, name='home'),
     path('home/', views.home, name='home'),
     path('about/', views.about_company, name='about'),
     path('news/', views.news, name='news'),

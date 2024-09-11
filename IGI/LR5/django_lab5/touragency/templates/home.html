@@ -3,18 +3,25 @@
 {% block header %}Home page{% endblock header %}
 
 {% block content %}
-<section>
+<nav>
+    <a href="#catalog">Catalog</a>
+    <a href="#news">Latest news</a>
+    <a href="#partners">Our partners</a>
+</nav>
+<section id="top">
     <img src=" /media/images/logo2.jpg " alt="logo"
     style="
     width: 100px;
-    ">
+    "><b>Company name</b>
 </section>
+<hr>
 <section>
-    <h3>ad image</h3>
-    <h3>ad image</h3>
-    <h3>ad image</h3>
+    <img src=" /media/images/ad1.jpg " alt="ad1">
+    <img src=" /media/images/ad2.jpg " alt="ad2">
+    <img src=" /media/images/ad3.jpg " alt="ad3">
 </section>
-<aside>
+<hr>
+<aside id="catalog">
     <h3>Here you can find</h3>
     {% for tour in tours %}
     <ul>
@@ -22,16 +29,24 @@
     </ul>
     {% endfor %}
 </aside>
-<section>
+<hr>
+<section id="news">
     <h2>{{ latest_article.title }}</h2>
     <p>{{ latest_article.content }}</p>
     <p>Posted: {{ latest_article.date }}</p>
     <img src="{{ latest_article.image.url }}">
 </section>
-<section>
+<hr>
+<section id="partners">
     <h3>Partners</h3>
     {% for partner in partners %}
-    <a href="{{ partner.link}}">{{ partner.title }}</a>
+    <img src="{{ partner.logo.url }}"
+        style="
+        width: 30px;
+        ">
+    <a href="{{ partner.link}}">{{ partner.title }}
+
+    </a>
     {% endfor %}
 </section>
 {% endblock content %}

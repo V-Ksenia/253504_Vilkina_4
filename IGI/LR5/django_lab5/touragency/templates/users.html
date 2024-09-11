@@ -3,14 +3,15 @@
 {% block header %}Users{% endblock header %}
 
 {% block content %}
+<section>
     {% for user in users %}
-    <div>
         <p>id: {{ user.id }}</p>
         <p>username: {{ user.username }}</p>
         <p>first name: {{ user.first_name }}</p>
         <p>last name: {{ user.last_name }}</p>
         <p>age: {{ user.age }}</p>
         <p>phone number: {{ user.phone_number }}</p>
-    </div>
-{% endfor %}
+        <hr>
+    {% endfor %}
+</section>
 {% endblock content %}

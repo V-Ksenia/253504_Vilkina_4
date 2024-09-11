@@ -1,16 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Discounts</title>
-</head>
-<body>
-    <h2>Promocodes</h2>
+{% extends "base.html" %}
+{% block header %}Promocodes{% endblock header %}
+{% block title %}Promocodes{% endblock title %}
+
+{% block content %}
+<section>
     {% for promo in promocodes %}
-        <div>
-            <h3>{{ promo.discount }}% discount!</h3>
-            <p>Code for discount ↪ <b>{{ promo.code }}</b></p>
-        </div>
+        <h3>{{ promo.discount }}% discount!</h3>
+        <p>Code for discount ↪ <b>{{ promo.code }}</b></p>
+        <hr>
     {% endfor %}
-</body>
-</html>
+</section>
+<section>
+    <h2>Used discounts</h2>
+    <ul>
+    {% for used in usedpromos %}
+        {% if used.user_id == request.user.id %}
+            <li>{{ used.promocode.code}}</li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+</section>
+{% endblock content %}

@@ -116,15 +116,17 @@ class Order(models.Model):
     def save(self, *args, **kwargs):
         departure_date_pattern = re.compile(r'^\d{4}-\d{2}-\d{2}$')
 
-        self.date = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d')
+        self.date = datetime.date.today()
 
-        if not re.fullmatch(departure_date_pattern, str(self.departure_date)) or \
-          datetime.datetime.strptime(self.departure_date, '%Y-%m-%d') < datetime.datetime.now() + datetime.timedelta(days=5):   
-            logging.exception(f"ValidationError, {self.departure_date} is in incorrect format")
+        if not re.fullmatch(departure_date_pattern, str(self.departure_date)):
+            logging.exception(f"ValidationError: {self.departure_date} is in incorrect format")
+            raise ValidationError("Error while creating order (Check departure date format!)")
 
-            raise ValidationError("Error while creating order (Check departure date!)")
+        if self.departure_date < datetime.date.today() + datetime.timedelta(days=5):
+            logging.exception(f"ValidationError: {self.departure_date} is too soon")
+            raise ValidationError("Error while creating order (Departure date must be at least 5 days from today!)")
+        
         super().save(*args, **kwargs)
-
 
 class UsedDiscounts(models.Model):
     promocode = models.ForeignKey('Promocode', on_delete=models.CASCADE)

@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="/media/images/logo2.jpg">
     <title>{% block title %}Default title{% endblock title %}</title>
 </head>
 
 <body>
     <header>{% block header %}{% endblock header %}</header>
-    <navbar>
+    <nav>
     <ul>
     {% if not request.user.is_authenticated  %}
     <li><a href="{%url 'register' %}">register</a></li>
@@ -27,7 +28,8 @@
     <li><a href="{%url 'tours' %}">tours</a></li>
     <li><a href="{%url 'hotels' %}">hotels</a></li>
     <li><a href="{%url 'countries' %}">countries</a></li>
-    {% if request.user.is_authenticated  and request.user.status == 'client '%}
+    <li><a href="{%url 'promocodes' %}">promocodes</a></li>
+    {% if request.user.is_authenticated  and request.user.status == 'client'%}
     <li><a href="{%url 'user_orders' pk=request.user.id %}">your orders</a></li>
     {% endif %}
     {% if request.user.is_authenticated and request.user.status == 'staff' %}
@@ -42,10 +44,12 @@
     <li><a href="{% url 'model_diagramm' %}">model_diagramm</a></li>
     {% endif %}
 </ul>
-</navbar>
+</nav>
+<hr>
 <main>
     {% block content%}{% endblock content %}
 </main>
+<hr>
 <footer>
     <p>©2024</p>
 </footer>

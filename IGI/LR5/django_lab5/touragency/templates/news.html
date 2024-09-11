@@ -3,12 +3,16 @@
 {% block header %}News{% endblock header %}
 
 {% block content %}
+<article>
     {% for new in news %}
-        <div>
             <h2>{{ new.title }}</h2>
             <p>{{ new.content }}</p>
+            <details>
+                <summary>Читать дальше</summary>
+                <p>Это краткое содержание статьи 3. Оно описывает основную идею в одном предложении.</p>               
+            </details>
             <img src="{{ new.image.url }}">
             <p>Posted: {{ new.date }}</p>
-        </div>
     {% endfor %}
+</article>
 {% endblock content %}

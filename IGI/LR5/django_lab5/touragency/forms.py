@@ -11,7 +11,7 @@ class RegistrationForm(UserCreationForm):
 class OrderForm(forms.Form):
     amount = forms.IntegerField(min_value=1)
     promocode = forms.CharField(max_length=10, required=False)
-    departure_date = forms.CharField()
+    departure_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
 
 
 class OrderDeleteForm(forms.Form):

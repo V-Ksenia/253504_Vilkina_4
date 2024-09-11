@@ -3,6 +3,7 @@
 {% block header %}Hotels Statistic{% endblock header %}
 
 {% block content %}
+<article>
     <h1>Hotels</h1>
     <h3>country A-Z</h3>
     {% for hotel in hotels%}
@@ -13,7 +14,10 @@
                 {% endfor %}
             </i>, {{ hotel.price_per_night }}$</p>
     {% endfor %}
-
+</article>
+<hr>
+<article>
     <h3>Average Price: {{ average_price }} $</h3>
     <h3>Median Price: {{ median_price }} $</h3>
+</article>
 {% endblock content %}

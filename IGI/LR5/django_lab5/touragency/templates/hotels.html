@@ -3,13 +3,13 @@
 {% block header %}Hotels{% endblock header %}
 
 {% block content %}
+<section>
     {% for hotel in hotels %}
-    <div>
-        <p>id: {{ hotel.id }}</p>
-        <p>name: {{ hotel.name }}</p>
+        <p>name: <b>{{ hotel.name }}</b></p>
         <p>country: {{ hotel.country.name }}</p>
-        <p>stars: {{ hotel.stars }}</p>
-        <p>price per night: {{ hotel.price_per_night }}</p>
-    </div>
-{% endfor %}
+        <p>{{ hotel.stars_sign}}</p>
+        <p>price per night: {{ hotel.price_per_night }}$</p>
+        <hr>
+    {% endfor %}
+</section>
 {% endblock content %}
