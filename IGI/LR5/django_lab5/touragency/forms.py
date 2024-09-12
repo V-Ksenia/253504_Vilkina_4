@@ -14,10 +14,6 @@ class OrderForm(forms.Form):
     departure_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
 
 
-class OrderDeleteForm(forms.Form):
-    confirm_delete = forms.BooleanField(label='Confirm delete', required=True)
-
-
 class ReviewForm(forms.ModelForm):
     rating = forms.IntegerField(min_value=1, max_value=5)
     class Meta:

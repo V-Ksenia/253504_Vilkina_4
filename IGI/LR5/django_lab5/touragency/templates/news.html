@@ -3,16 +3,20 @@
 {% block header %}News{% endblock header %}
 
 {% block content %}
-<article>
+<section>
     {% for new in news %}
+        <article>
             <h2>{{ new.title }}</h2>
             <p>{{ new.content }}</p>
             <details>
                 <summary>Читать дальше</summary>
-                <p>Это краткое содержание статьи 3. Оно описывает основную идею в одном предложении.</p>               
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. <br>
+                    Sequi at tempora doloremque similique adipisci atque, saepe sed nobis,<br>
+                    iste recusandae nesciunt quis ducimus magnam modi. Laborum doloremque saepe ipsum recusandae?</p>               
             </details>
             <img src="{{ new.image.url }}">
             <p>Posted: {{ new.date }}</p>
+        </article>
     {% endfor %}
-</article>
+</section>
 {% endblock content %}

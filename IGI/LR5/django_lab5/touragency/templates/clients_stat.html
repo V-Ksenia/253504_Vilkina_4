@@ -6,8 +6,10 @@
 <article>
     <h3>A-Z</h3>
     {% for client in clients%}
+    <div>
         <p><b>{{ client.first_name }} {{ client.last_name }}</b>, {{ client.age }} years<p>
         <p>{{ client.address}}, {{ client.phone_number }}</p>
+    </div>
     {% endfor %}
 </article>
 <hr>

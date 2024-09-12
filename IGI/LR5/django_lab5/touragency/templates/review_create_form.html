@@ -1,15 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Add review</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Review Create{% endblock title %}
+{% block header %}Review Create{% endblock header %}
+
+{% block content %}
+<section>
     <h1>Add review</h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Save</button><a href="{%url 'reviews' %}">Or go to reviews page</a>
     </form>
-</body>
-</html>
+</section>
+{% endblock content %}

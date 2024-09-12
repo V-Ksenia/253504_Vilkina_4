@@ -296,27 +296,22 @@ class SpecificOrderView(View):
 
             order = Order.objects.filter(user_id=pk, number=jk).first()
 
-            form = OrderDeleteForm()
-            return render(request, 'order_delete_form.html', {'form': form, 'order': order})
+            return render(request, 'order_delete_form.html', {'order': order})
         return HttpResponseNotFound("Page not found")
     
     def post(self, request, pk, jk, *args, **kwargs):
         if request.user.is_authenticated and request.user.id==int(pk) and Order.objects.filter(user_id=int(pk), number=int(jk)).exists():
-            form = OrderDeleteForm(request.POST)
-            if form.is_valid():
-                logging.info(f"OrderDeleteForm has no errors")
+            order = Order.objects.filter(number=jk, user_id=pk).first()
 
-                order = Order.objects.filter(number=jk, user_id=pk).first()
+            order.tour.trips += order.amount
+            order.tour.save()
+            d = order.number
+            order.delete()
 
-                order.tour.trips += order.amount
-                order.tour.save()
-                d = order.number
-                order.delete()
+            logging.info(f"order number {d} was deleted")
 
-                logging.info(f"order number {d} was deleted")
-
-                url = reverse('user_orders', kwargs={"pk": order.user_id})
-                return redirect(url)
+            url = reverse('user_orders', kwargs={"pk": order.user_id})
+            return redirect(url)
         logging.error(f"{request.user.username} doesn't own this order")            
         return HttpResponseNotFound("Page not found")
     

@@ -1,11 +1,9 @@
 {% block content %}
-
 <form method="POST" novalidate>
 	{% csrf_token %}
-	<center><h2>Sign in</h2>
-	<b>{{ form.as_p }}</b>
+	<h2>Sign in</h2>
+	<p>{{ form.as_p }}</p>
 	<button type="submit" >Login</button>
-	<p>Don't have an account? <a href="{%url 'register' %}">Sign up</a></p></center>
+	<p>Don't have an account? <a href="{%url 'register' %}">Sign up</a></p>
 </form>
-
 {% endblock content%}

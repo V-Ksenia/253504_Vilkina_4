@@ -2,23 +2,49 @@
 {% block title %}Sales{% endblock title %}
 
 {% block content %}
-    <h1><center>Sales Statistic</center></h1>
-    <h3>General sales: {{ general_sales }}$</h3>
-    <h3>Average sales: {{ average_sales }}$</h3>
-    <h3>Median sales: {{ median_sales }}$</h3>
-    <h3>Mode sales: {{ mode_sales }}$</h3>
-
-    <h2>Yearly sales</h2>
-    {% for year, sales in yearly_sales_data %}
-        <p><b>{{ year }}</b>: {{ sales }}$</p>
-    {% endfor %}
-
-    <h2>Three Years sales plot</h2>
-    <img src="data:image/png;base64,{{ image }}" height="400" width="1000">
-
-    <h2>Three Years sales diagramm</h2>
-    {% for image in image_urls %}
-        <img src="data:image/png;base64,{{ image }}" height="700" width="700">
-    {% endfor %}
+<section>
+    <h1>Sales Statistic</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th id="metric">Metric</th>
+                <th id="value">Value ($)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th headers="metric">General sales</th>
+                <td headers="value">{{ general_sales }}</td>
+            </tr>
+            <tr>
+                <th headers="metric">Average sales</th>
+                <td headers="value">{{ average_sales }}</td>
+            </tr>
+            <tr>
+                <th headers="metric">Median sales</th>
+                <td headers="value">{{ median_sales }}</td>
+            </tr>
+            <tr>
+                <th headers="metric">Mode sales</th>
+                <td headers="value">{{ mode_sales }}</td>
+            </tr>
+        </tbody>
     </table>
+    <figure>
+        <figcaption>Yearly sales</figcaption>
+        {% for year, sales in yearly_sales_data %}
+            <p><b>{{ year }}</b>: {{ sales }}$</p>
+        {% endfor %}
+    </figure>
+    <figure>
+        <img src="data:image/png;base64,{{ image }}" height="400" width="1000">
+        <figcaption>Three Years sales plot</figcaption>
+    </figure>
+    <figure>
+        {% for image in image_urls %}
+            <img src="data:image/png;base64,{{ image }}" height="700" width="700">
+        {% endfor %}
+        <figcaption>Three Years sales diagramm</figcaption>
+    </figure>
+</section>
 {% endblock content %}

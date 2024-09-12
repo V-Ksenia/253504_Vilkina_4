@@ -3,12 +3,14 @@
 {% block header %}Vacancies{% endblock header %}
 
 {% block content %}
+<section>
     {% for vac in vacancies %}
         <div>
             <h2>{{ vac.name }}</h2>
             <p>{{ vac.description }}</p>
         </div>
     {% endfor %}
+</section>
 {% endblock content %}
 
 

@@ -5,9 +5,11 @@
 {% block content %}
 <section>
     {% for promo in promocodes %}
+    <div>
         <h3>{{ promo.discount }}% discount!</h3>
         <p>Code for discount ↪ <b>{{ promo.code }}</b></p>
         <hr>
+    </div>
     {% endfor %}
 </section>
 <section>

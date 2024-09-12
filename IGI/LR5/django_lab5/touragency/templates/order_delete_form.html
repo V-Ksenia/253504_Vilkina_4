@@ -4,19 +4,17 @@
 
 {% block content %}
 <section>
-    <p>Number: {{ order.number }}</p>
+    <h1>Number: {{ order.number }}</h1>
     <p>Tour name: {{ order.tour.name }}</p>
     <p>Price: {{ order.price }}$</p>
     <p>Amount: {{ order.amount }}</p>
     <p>Date: {{ order.departure_date }}</p>
     <p>Created on: {{ order.date }}</p>
 
-    {% if form %}
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Delete</button> <a href="{% url 'user_orders' pk=user.pk %}"> My orders</a>
+        <input type="checkbox" name="confirmation" value="delete" required> Confirm delete <br>
+        <button type="submit">Delete</button> <a href="{% url 'user_orders' pk=user.pk %}">My orders</a>
     </form>
-    {% endif %}
 </section>
 {% endblock content %}

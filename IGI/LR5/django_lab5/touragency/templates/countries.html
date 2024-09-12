@@ -5,9 +5,11 @@
 {% block content %}
 <article>
     {% for country in countries %}
-    <p><b>{{ country.name }}</b></p>
-    <p>climate: {{ country.climate }}</p>
-    <hr>
+    <div>
+        <p><b>{{ country.name }}</b></p>
+        <p>climate: {{ country.climate }}</p>
+        <hr>
+    </div>
     {% endfor %}
 </article>
 {% endblock content %}
