@@ -8,12 +8,7 @@
         <article>
             <h2>{{ new.title }}</h2>
             <p>{{ new.content }}</p>
-            <details>
-                <summary>Читать дальше</summary>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. <br>
-                    Sequi at tempora doloremque similique adipisci atque, saepe sed nobis,<br>
-                    iste recusandae nesciunt quis ducimus magnam modi. Laborum doloremque saepe ipsum recusandae?</p>               
-            </details>
+            <a href="{% url 'news' %}" target="_blank">Читать далее</a>
             <img src="{{ new.image.url }}">
             <p>Posted: {{ new.date }}</p>
         </article>

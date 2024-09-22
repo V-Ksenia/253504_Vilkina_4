@@ -2,17 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="/media/images/logo2.jpg">
+    <link rel="icon" href="/media/images/logo2.png">
+    <link rel="stylesheet" href="/static/css/styles.css" type="text/css">
     <title>{% block title %}Default title{% endblock title %}</title>
 </head>
 
 <body>
-    <header>{% block header %}{% endblock header %}</header>
-    <nav>
-        {% if request.user.is_authenticated  %}
+    <nav class="navbar">
+        <header>TripVoyage</header>
+        {% if request.user.is_authenticated %}
         <p>Welcome, <strong>{{ request.user.username }}</strong></p>
         {% endif %}
-        <ul>
+        <ul class="nav-list">
+            <!-- Первые 5 ссылок -->
             {% if not request.user.is_authenticated  %}
             <li><a href="{%url 'register' %}">register</a></li>
             <li><a href="{%url 'login' %}">login</a></li>
@@ -20,41 +22,32 @@
             {% if request.user.is_authenticated  %}
             <li><a href="{%url 'logout' %}">logout</a></li>
             {% endif %}
-            <li><a href="{%url 'home' %}">home</a></li>
-            <li><a href="{%url 'about' %}">about</a></li>
-            <li><a href="{%url 'news' %}">news</a></li>
-            <li><a href="{%url 'terms' %}">terms</a></li>
-            <li><a href="{%url 'contacts' %}">contacts</a></li>
-            <li><a href="{%url 'vacancies' %}">vacancies</a></li>
-            <li><a href="{%url 'reviews' %}">reviews</a></li>
-            <li><a href="{%url 'privacy_policy' %}">privacy policy</a></li>
-            <li><a href="{%url 'tours' %}">tours</a></li>
-            <li><a href="{%url 'hotels' %}">hotels</a></li>
-            <li><a href="{%url 'countries' %}">countries</a></li>
-            <li><a href="{%url 'promocodes' %}">promocodes</a></li>
-            {% if request.user.is_authenticated  and request.user.status == 'client'%}
-            <li><a href="{%url 'user_orders' pk=request.user.id %}">your orders</a></li>
-            {% endif %}
-            {% if request.user.is_authenticated and request.user.status == 'staff' %}
-            <li><a href="{% url 'users' %}">users</a></li>
-            <li><a href="{% url 'orders' %}">orders</a></li>
+            <li><a href="{% url 'home' %}">home</a></li>
+            <li><a href="{% url 'about' %}">about</a></li>
+            <li><a href="{% url 'news' %}">news</a></li>
+            <li><a href="{% url 'terms' %}">terms</a></li>
+            <li><a href="{% url 'contacts' %}">contacts</a></li>
+            <li><a href="{% url 'vacancies' %}">vacancies</a></li>
+            <li><a href="{% url 'reviews' %}">reviews</a></li>
+            <li><a href="{% url 'privacy_policy' %}">privacy policy</a></li>
+            <li><a href="{% url 'tours' %}">tours</a></li>
+            <li><a href="{% url 'promocodes' %}">promocodes</a></li>
+            {% if request.user.is_authenticated and request.user.status == 'client' %}
+            <li><a href="{% url 'user_orders' pk=request.user.id %}">your orders</a></li>
             {% endif %}
             {% if request.user.is_authenticated and request.user.is_superuser %}
-            <li><a href="{% url 'clients' %}">clients</a></li>
-            <li><a href="{% url 'sales' %}">sales</a></li>  
-            <li><a href="{% url 'tours_stat' %}">tours_stat</a></li>
-            <li><a href="{% url 'hotels_stat' %}">hotels_stat</a></li>
-            <li><a href="{% url 'model_diagramm' %}">model_diagramm</a></li>
+            <li><a href="{% url 'sales' %}">sales</a></li>
             {% endif %}
-    </ul>
-</nav>
-<hr>
+        </ul>
+    </nav>
 <main>
     {% block content%}{% endblock content %}
 </main>
-<hr>
 <footer>
-    <p>©2024</p>
+    <i style="
+        font-size: 18px;
+        padding: 10px;
+    ">© 2024 TripVoyage. All rights reserved.</i>
 </footer>
 </body>
 </html>

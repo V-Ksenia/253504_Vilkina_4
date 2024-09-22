@@ -64,6 +64,11 @@ class TourListView(View):
         country_id = request.GET.get('country_id')
         duration = request.GET.get('duration')
 
+        min_price = int(min_price) if min_price and min_price.isdigit() else None
+        max_price = int(max_price) if max_price and max_price.isdigit() else None
+        
+        countries = Country.objects.all()
+
         tours = self.filter_tours(min_price, max_price, country_id, hotel_id, duration)
 
         tours_data = []
@@ -76,7 +81,7 @@ class TourListView(View):
                 'duration_weeks': tour.duration,
                 'price': tour.get_price(),
             })
-        return render(request, 'tours.html', {'tours': tours})
+        return render(request, 'tours.html', {'tours': tours, 'countries': countries})
         #return JsonResponse(tours_data, safe=False)
 
     @staticmethod

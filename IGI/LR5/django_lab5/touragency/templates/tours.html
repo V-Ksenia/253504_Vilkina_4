@@ -3,18 +3,36 @@
 {% block header %}Tours{% endblock header %}
 
 {% block content %}
-<section>
+<section style="
+    display: flex;
+    flex-direction: column;
+">
+<form class="filter-form" action="{% url 'tours' %}" method="get">
+    <label for="min_price">Min price</label>
+    <input type="number" id="min_price" name="min_price" value="{{request.GET.min_price|default_if_none:0}}">
+    <label for="max_price">Max price</label>
+    <input type="number" id="max_price" name="max_price" value="{{request.GET.max_price|default_if_none:100000}}">
+    <select name="country_id">
+        <option disabled selected>Choose a country:</option>
+        {% for country in countries %}
+            <option value="{{ country.id }}">{{ country.name }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Search</button>
+    <a href="{% url 'tours' %}">Reset</a>
+</form>
+<section class="tour-wrapper">
     {% for tour in tours %}
-        <div class="container">
-            <a href="{% url 'tour' pk=tour.id %}"><strong>{{ tour.name }}</strong></a>
-            <p>id: {{ tour.id }}</p>
-            <p>name: {{ tour.name }}</p>
-            <p>country: {{ tour.country }}</p>
-            <p>hotel: {{ tour.hotel.name }}</p>
-            <p>duration: {{ tour.duration }}</p>
-            <p>price: ${{ tour.price }}</p>
+        <a href="{% url 'tour' pk=tour.id %}" class="tour-container" >
+            <strong>{{ tour.name }}</strong>
             <hr>
-        </div>
+            <p>Visit a {{ tour.country }}</p>
+            <p>Stay in a {{ tour.hotel.name }} hotel with {{ tour.hotel.stars }}★</p>
+            <p>Duration is {{ tour.duration }} weeks</p>
+            <p>For ${{ tour.price }} / person</p>
+        </a>
     {% endfor %}
+</section>
 </section>
 {% endblock content %}

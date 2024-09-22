@@ -3,49 +3,62 @@
 {% block header %}Home page{% endblock header %}
 
 {% block content %}
-<nav>
-    <a href="#catalog">Catalog</a>
-    <a href="#news">Latest news</a>
-    <a href="#partners">Our partners</a>
-</nav>
-<section id="top">
-    <img src=" /media/images/logo2.jpg " alt="logo"
-    style="
-    width: 100px;
-    "><b>Company name</b>
+
+<div class="top-menu">
+    <b>Travelling is interesting <br> with us.</b>
+    <nav>
+        <a href="#catalog">Catalog</a>
+        <a href="#news">Latest news</a>
+        <a href="#partners">Our partners</a>
+    </nav>
+</div>
+
+<div class="ad-container">
+    <img src=" /media/images/ad1.png " alt="ad1">
+    <img src=" /media/images/ad2.png " alt="ad2">
+    <img src=" /media/images/ad3.png " alt="ad3">
+</div>
+
+<section id="catalog" class="fade-in">
+    <aside>
+        <h3 style="font-size: 30px;">Start your travelling here</h3>
+        <hr>
+        {% for tour in tours|slice:":6"%}
+        <ul>
+        <li><a href="{% url 'tour' pk=tour.id %}">{{ tour.name }}</a></li>
+        </ul>
+        {% endfor %}
+        <a href="{% url 'tours' %}" style="
+            background-color: rgb(59, 65, 54);
+            border-radius: 20px;
+            color: rgb(184, 202, 188);
+            font-size: 20px;
+        ">Find more</a>
+    </aside>
 </section>
-<hr>
-<section>
-    <img src=" /media/images/ad1.jpg " alt="ad1">
-    <img src=" /media/images/ad2.jpg " alt="ad2">
-    <img src=" /media/images/ad3.jpg " alt="ad3">
-</section>
-<hr>
-<aside id="catalog">
-    <h3>Here you can find</h3>
-    {% for tour in tours %}
-    <ul>
-    <li><a href="{% url 'tour' pk=tour.id %}">{{ tour.name }}</a> {{ tour.price }}$</li>
-    </ul>
-    {% endfor %}
-</aside>
-<hr>
+
 <section id="news">
+    <div class="news_text">
     <h2>{{ latest_article.title }}</h2>
     <p>{{ latest_article.content }}</p>
     <p>Posted: {{ latest_article.date }}</p>
+    </div>
+    <hr style="
+    height: 600px;
+    color: rgb(68, 68, 68);
+    ">
     <img src="{{ latest_article.image.url }}">
 </section>
-<hr>
+
 <section id="partners">
-    <h3>Partners</h3>
-    {% for partner in partners %}
-    <img src="{{ partner.logo.url }}"
-        style="
-        width: 30px;
-        ">
-    <a href="{{ partner.link}}">{{ partner.title }}</a>
-    {% endfor %}
+    <h3>Our dearest partners</h3>
+    <div class="partner-list">
+        {% for partner in partners %}
+        <div class="partner-card">     
+            <a href="{{ partner.link }}" alt="{{ partner.name }}" target="_blank"><img src="{{ partner.logo.url }}"></a>
+        </div>
+        {% endfor %}
+    </div>
 </section>
 {% endblock content %}
     
