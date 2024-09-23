@@ -3,16 +3,16 @@
 {% block title %}Promocodes{% endblock title %}
 
 {% block content %}
-<section>
+<section id="promocodes">
     {% for promo in promocodes %}
-    <div>
+    <div class="promo">
         <h3>{{ promo.discount }}% discount!</h3>
         <p>Code for discount ↪ <b>{{ promo.code }}</b></p>
         <hr>
     </div>
     {% endfor %}
 </section>
-<section>
+<section id="user-promocodes">
     <h2>Used discounts</h2>
     <ul>
     {% for used in usedpromos %}

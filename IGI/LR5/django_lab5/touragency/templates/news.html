@@ -3,15 +3,20 @@
 {% block header %}News{% endblock header %}
 
 {% block content %}
-<section>
+<section style="display: flex; flex-direction: column; align-items: center;">
+    <h1 style="color: rgb(240,239,239); font-size: 40px;">News</h1>
+<section class="news-list">
     {% for new in news %}
-        <article>
+    <article class="news-item">
+        <img src="{{ new.image.url }}" alt="{{ new.title }}" class="news-image">
+        <div class="news-content">
             <h2>{{ new.title }}</h2>
-            <p>{{ new.content }}</p>
-            <a href="{% url 'news' %}" target="_blank">Читать далее</a>
-            <img src="{{ new.image.url }}">
-            <p>Posted: {{ new.date }}</p>
-        </article>
+            <p class="news-summary">{{ new.content }}</p>
+            <p><a href="{% url 'news_detail' pk=new.id %}" target="_blank" class="read-more">Читать далее</a></p>
+            <p class="news-date">Posted: {{ new.date }}</p>
+        </div>
+    </article>
     {% endfor %}
+</section>
 </section>
 {% endblock content %}

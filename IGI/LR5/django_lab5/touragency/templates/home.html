@@ -23,9 +23,12 @@
     <aside>
         <h3 style="font-size: 30px;">Start your travelling here</h3>
         <hr>
-        {% for tour in tours|slice:":6"%}
+        {% for tour in tours|slice:":1" %}
         <ul>
-        <li><a href="{% url 'tour' pk=tour.id %}">{{ tour.name }}</a></li>
+        <li><a href="{% url 'tour' pk=tour.id %}" style="font-weight: bold;">{{ tour.name }}</a>
+            <p><span style="font-weight: bold; font-size: 30px;">{{ tour.price }}$</span> / person</p>
+            <img src="{{ tour.photo.url }}" width="80%" style="border-radius: 20px;">
+        </li>
         </ul>
         {% endfor %}
         <a href="{% url 'tours' %}" style="

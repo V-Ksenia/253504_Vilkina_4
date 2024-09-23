@@ -25,11 +25,9 @@
             <li><a href="{% url 'home' %}">home</a></li>
             <li><a href="{% url 'about' %}">about</a></li>
             <li><a href="{% url 'news' %}">news</a></li>
-            <li><a href="{% url 'terms' %}">terms</a></li>
-            <li><a href="{% url 'contacts' %}">contacts</a></li>
+            <li><a href="{% url 'terms' %}">faq</a></li>
             <li><a href="{% url 'vacancies' %}">vacancies</a></li>
             <li><a href="{% url 'reviews' %}">reviews</a></li>
-            <li><a href="{% url 'privacy_policy' %}">privacy policy</a></li>
             <li><a href="{% url 'tours' %}">tours</a></li>
             <li><a href="{% url 'promocodes' %}">promocodes</a></li>
             {% if request.user.is_authenticated and request.user.status == 'client' %}
@@ -43,11 +41,26 @@
 <main>
     {% block content%}{% endblock content %}
 </main>
-<footer>
-    <i style="
+<footer style="position: relative;">
+    <img src="/media/images/stonepng.png" style="
+            position: absolute;
+            bottom: 0px;
+            left: 0;
+            z-index: 20;
+        ">
+    <img src="/media/images/stonepng2.png" style="
+        position: absolute;
+        bottom: 0px;
+        right: 0;
+        z-index: 20;
+    ">
+    <b style="
         font-size: 18px;
         padding: 10px;
-    ">© 2024 TripVoyage. All rights reserved.</i>
+    ">© 2024 TripVoyage. All rights reserved.
+    <a href="{% url 'privacy_policy' %}">privacy policy</a>|
+    <a href="{% url 'contacts' %}">contacts</a>
+</b>
 </footer>
 </body>
 </html>

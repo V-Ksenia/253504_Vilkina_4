@@ -2,15 +2,55 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="/media/images/logo2.jpg">
-    <link rel="stylesheet" href="/static/css/styles.css" type="text/css">
+    <title>Login</title>
+	<link rel="stylesheet" href="/static/css/reglogin.css">
 </head>
+<body>
 {% block content %}
-<form method="POST" novalidate>
-	{% csrf_token %}
-	<h2>Sign in</h2>
-	<p>{{ form.as_p }}</p>
-	<button type="submit" >Login</button>
-	<p>Don't have an account? <a href="{%url 'register' %}">Sign up</a></p>
-</form>
-{% endblock content%}
+<section class="form-wrapper">
+    <form method="POST" novalidate>
+        {% csrf_token %}
+        <h2>Sign in</h2>
+        
+        <div class="form-group">
+            <label for="username">Username:</label>
+            {{ form.username }}
+            <!-- Check for errors in username field -->
+            {% if form.username.errors %}
+                <ul class="error-list">
+                    {% for error in form.username.errors %}
+                        <li class="error">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Password:</label>
+            {{ form.password }}
+            <!-- Check for errors in password field -->
+            {% if form.password.errors %}
+                <ul class="error-list">
+                    {% for error in form.password.errors %}
+                        <li class="error">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        
+        <!-- Non-field errors (errors not tied to a specific field) -->
+        {% if form.non_field_errors %}
+            <ul class="non-field-errors">
+                {% for error in form.non_field_errors %}
+                    <li class="error">{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <button type="submit">Login</button>
+    </form>
+	<p>Don't have an account? <a href="{% url 'register' %}">Sign up</a></p>
+</section>
+{% endblock content %}
+</body>
+</html>

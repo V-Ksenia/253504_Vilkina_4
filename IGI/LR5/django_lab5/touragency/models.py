@@ -81,6 +81,9 @@ class Tour(models.Model):
 
     price = models.PositiveIntegerField(default=1)
 
+    photo = models.ImageField(upload_to='images/')
+    description = models.TextField()
+
     def get_price(self):
         self.price = self.hotel.price_per_night * int(self.duration * 7)
         self.save()

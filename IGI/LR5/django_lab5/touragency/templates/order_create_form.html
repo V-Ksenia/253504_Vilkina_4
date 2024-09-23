@@ -3,11 +3,11 @@
 {% block header %}Order create{% endblock header %}
 
 {% block content %}
-<section>
-    <p>Name: {{ tour.name }}</p>
-    <p>Price: {{ tour.price }}$</p>
-
-    <form method="post" action="{% url 'create_order' pk=tour.pk %}">
+<section id="tour-create">
+    <form class="tour-form" method="post" action="{% url 'create_order' pk=tour.pk %}">
+    <p style="font-weight: bold; font-size: 28px; color: #333">{{ tour.name }}</p>
+    <hr style="width: 80%; color: #333;">
+    <p><span style="font-weight: bold; font-size: 26px; color: #333">{{ tour.price }}$ </span>/ person</p>
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Place Order</button>

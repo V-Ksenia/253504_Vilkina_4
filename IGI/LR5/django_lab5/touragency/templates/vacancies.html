@@ -3,9 +3,9 @@
 {% block header %}Vacancies{% endblock header %}
 
 {% block content %}
-<section>
+<section id="vacancies">
     {% for vac in vacancies %}
-        <div>
+        <div class="vac-container">
             <h2>{{ vac.name }}</h2>
             <p>{{ vac.description }}</p>
         </div>

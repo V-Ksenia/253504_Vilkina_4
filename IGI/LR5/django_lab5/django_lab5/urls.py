@@ -52,6 +52,7 @@ urlpatterns = [
     path('home/', views.home, name='home'),
     path('about/', views.about_company, name='about'),
     path('news/', views.news, name='news'),
+    re_path(r'news/(?P<pk>\w+)/$', views.news_detail, name='news_detail'),
     path('promocodes/', views.promocodes, name="promocodes"),
     path('faq/', views.faqs, name='terms'),
     path('contacts/', views.contacts, name='contacts'),

@@ -1,5 +1,6 @@
 import datetime
-from django.shortcuts import redirect, render
+from django.contrib import messages
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import *
 from django.views import View
@@ -17,24 +18,22 @@ import logging
 logging.basicConfig(level=logging.INFO, filename='logging.log', filemode='a', format='%(asctime)s %(levelname)s %(message)s')
 
 
-class UserRegistrationView(CreateView):
-    def post(self, request, *args, **kwargs):
-        form = RegistrationForm(request.POST)
-        if form.is_valid():
-            logging.info("Registration form has no errors")
-            user = form.save(commit=False)
-            user.save()
-
-            logging.info(f"{user.username} REGISTER (status: {user.status}) | user's Timezone: {user.timezone}")
-            return redirect('login')
-        else:
-            logging.warning("Registration form is invalid")
-            return render(request, 'registration_form.html', {'form': form})
-
-    def get(self, request, *args, **kwargs):
+class UserRegistrationView(View):
+    def get(self, request):
         form = RegistrationForm()
         return render(request, 'registration_form.html', {'form': form})
 
+    def post(self, request):
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            try:
+                user = form.save(commit=False)
+                user.set_password(form.cleaned_data['password1'])
+                user.save()
+                return redirect('login')
+            except ValidationError as e:
+                form.add_error(None, e.message)
+        return render(request, 'registration_form.html', {'form': form})
 
 class UserLoginView(LoginView):
     redirect_authenticated_user = True
@@ -70,18 +69,22 @@ class TourListView(View):
         countries = Country.objects.all()
 
         tours = self.filter_tours(min_price, max_price, country_id, hotel_id, duration)
-
+        
         tours_data = []
+
         for tour in tours:
-            tours_data.append({
-                'id': tour.id,
-                'name': tour.name,
-                'country': tour.country.name,
-                'hotel': tour.hotel.name,
-                'duration_weeks': tour.duration,
-                'price': tour.get_price(),
-            })
-        return render(request, 'tours.html', {'tours': tours, 'countries': countries})
+            if tour.trips != 0:
+                tours_data.append({
+                    'id': tour.id,
+                    'name': tour.name,
+                    'country': tour.country.name,
+                    'hotel': tour.hotel.name,
+                    'duration_weeks': tour.duration,
+                    'price': tour.get_price(),
+                    'photo': tour.photo,
+                })
+
+        return render(request, 'tours.html', {'tours': tours_data, 'countries': countries})
         #return JsonResponse(tours_data, safe=False)
 
     @staticmethod
@@ -122,10 +125,12 @@ class SpecificTourList(View):
                 'country': tour.country.name,
                 'country_climate': list(tour.country.climate.all().values_list('climate', flat=True)),
                 'hotel': tour.hotel.name,
-                'hotel_stars': tour.hotel.stars,
+                'stars_sign': tour.hotel.stars * '★',
                 'duration_weeks': tour.duration,
                 'price': tour.price,
                 'amount_of_trips': tour.trips,
+                'description': tour.description,
+                'photo': tour.photo,
             })
         #return JsonResponse(tours_data, safe=False)
         return render(request, 'specific_tour.html', {'tours': tours_data})
@@ -455,6 +460,7 @@ def home(request):
             'hotel': tour.hotel.name,
             'duration_weeks': tour.duration,
             'price': tour.get_price(),
+            'photo': tour.photo,
         })
     return render(request, 'home.html', {'latest_article': latest_article,
                                          'tours': tours_data,
@@ -467,6 +473,10 @@ def about_company(request):
 def news(request):
     news = Article.objects.all().order_by('-date')
     return render(request, 'news.html', {'news': news})
+
+def news_detail(request, pk):
+    news = get_object_or_404(Article, id=pk)
+    return render(request, 'news_detail.html', {'news': news})
 
 def promocodes(request):
     promocodes = Promocode.objects.all()
