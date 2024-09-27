@@ -9,6 +9,8 @@
     <nav>
         <a href="#catalog">Catalog</a>
         <a href="#news">Latest news</a>
+        <a href="#why_us">Why us</a>
+        <a href="#reviews">Reviews</a>
         <a href="#partners">Our partners</a>
     </nav>
 </div>
@@ -19,32 +21,30 @@
     <img src=" /media/images/ad3.png " alt="ad3">
 </div>
 
-<section id="catalog" class="fade-in">
+<section id="catalog">
     <aside>
+        <div style="margin-right: 50px;">
         <h3 style="font-size: 30px;">Start your travelling here</h3>
         <hr>
-        {% for tour in tours|slice:":1" %}
-        <ul>
-        <li><a href="{% url 'tour' pk=tour.id %}" style="font-weight: bold;">{{ tour.name }}</a>
+        <p style="color: rgb(240, 239, 239);">Embark on your next unforgettable adventure and start your journey to explore the world right here!</p>
+        <a href="{% url 'tours' %}" style="border: 1px solid rgb(240, 239, 239); border-radius: 15px;">Find more</a>
+        </div>
+        {% for tour in tours|slice:":3" %}
+        <div class="tourcatal" style="background-color: rgb(240,239,239);">
+            <img src="{{ tour.photo.url }}" width="100%">
+            <a href="{% url 'tour' pk=tour.id %}" style="font-weight: bold; color: rgb(29, 29, 29)">{{ tour.name }}</a>
             <p><span style="font-weight: bold; font-size: 30px;">{{ tour.price }}$</span> / person</p>
-            <img src="{{ tour.photo.url }}" width="80%" style="border-radius: 20px;">
-        </li>
-        </ul>
+        </div>
         {% endfor %}
-        <a href="{% url 'tours' %}" style="
-            background-color: rgb(59, 65, 54);
-            border-radius: 20px;
-            color: rgb(184, 202, 188);
-            font-size: 20px;
-        ">Find more</a>
-    </aside>
+
+</aside>
 </section>
 
 <section id="news">
     <div class="news_text">
     <h2>{{ latest_article.title }}</h2>
     <p>{{ latest_article.content }}</p>
-    <p>Posted: {{ latest_article.date }}</p>
+    <p style="position: relative; top: 150px;">Posted: {{ latest_article.date }}</p>
     </div>
     <hr style="
     height: 600px;
@@ -53,6 +53,37 @@
     <img src="{{ latest_article.image.url }}">
 </section>
 
+<section id="why_us">
+    <div class="about-home">
+        <h2>WHY US?</h2>
+        <p>{{ company_info.text}}</p>
+        <div>
+            <img src="/media/images/earth.png"><p>lots of places to visit</p>
+        </div>
+        <div>
+            <img src="/media/images/mountlogo.png"><p>explore different areas</p>
+        </div>
+        <div>
+            <img src="/media/images/map.png"><p>free travel guides for each tour</p>
+        </div>
+    </div>
+</section>
+
+<section id="reviews" style="text-align: center; gap: 30px; align-items: center;">
+    <h2>What our clients say about us</h2>
+    <div class="review-container" style="justify-content: center;">
+    {% for review in reviews|slice:':5'%}
+    <div style="height: 100px; width: 100px;">
+            <p style="font-size: 20px; font-weight: bold;">{{review.user.username}}</p>
+            <p style="font-size: 20px; font-weight: bold;">{{review.rating}}/5★</p>
+            <p>{{review.title}}</p>
+    </div>
+    {% endfor %}
+</div>
+    <a href="{% url 'reviews' %}" style="margin-top: 30px; width: fit-content;">Read more opinions</a>
+    <hr style="width: 80%; color: rgb(240,239,239)">
+</section>
+<div class="loader"></div>
 <section id="partners">
     <h3>Our dearest partners</h3>
     <div class="partner-list">
@@ -63,5 +94,6 @@
         {% endfor %}
     </div>
 </section>
+
 {% endblock content %}
     

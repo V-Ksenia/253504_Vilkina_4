@@ -12,7 +12,7 @@
         <div class="news-content">
             <h2>{{ new.title }}</h2>
             <p class="news-summary">{{ new.content }}</p>
-            <p><a href="{% url 'news_detail' pk=new.id %}" target="_blank" class="read-more">Читать далее</a></p>
+            <p><a href="{% url 'news_detail' pk=new.id %}" target="_blank" class="read-more">Read more</a></p>
             <p class="news-date">Posted: {{ new.date }}</p>
         </div>
     </article>

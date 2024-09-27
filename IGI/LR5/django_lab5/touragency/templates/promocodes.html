@@ -6,8 +6,8 @@
 <section id="promocodes">
     {% for promo in promocodes %}
     <div class="promo">
-        <h3>{{ promo.discount }}% discount!</h3>
-        <p>Code for discount ↪ <b>{{ promo.code }}</b></p>
+        <h3>{{ promo.discount }}</h3>
+        <p><b>{{ promo.code }}</b></p>
         <hr>
     </div>
     {% endfor %}

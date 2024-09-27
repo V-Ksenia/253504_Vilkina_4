@@ -7,10 +7,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-image: url(/media/images/tourback.jpg);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
 ">
 <form class="filter-form" action="{% url 'tours' %}" method="get">
     <label for="min_price">Min price</label>
@@ -29,14 +25,13 @@
 </form>
 <section class="tour-wrapper">
     {% for tour in tours %}
-        <a href="{% url 'tour' pk=tour.id %}" class="tour-container" >
-            <span style="font-weight: bold; font-size: 20px;">{{ tour.name }}</span>
+        <a href="{% url 'tour' pk=tour.id %}" class="tour-container" style="background-image: url('{{ tour.photo.url }}'); ">
+            <span style="font-weight: bold; font-size: 30px;">{{ tour.name }}</span>
             <hr>
             <p>Visit a {{ tour.country }}</p>
-            <p>Stay in a {{ tour.hotel.name }} hotel with {{ tour.hotel.stars }}★</p>
-            <p>Duration is {{ tour.duration }} weeks</p>
-            <img src="{{ tour.photo.url }}" width="95%" style="border-radius: 20px;">
-            <p>For <span style="font-weight: bold; font-size: 20px;">{{ tour.price }}$</span> / person</p>
+            <p>Stay in a {{ tour.hotel }} hotel with {{ tour.hotel_stars }}★</p>
+            <p>Duration is {{ tour.duration_weeks }} weeks</p>
+            <p style="position: relative; top: 150px; font-size: larger;">For <span style="font-weight: bold; font-size: 20px;">{{ tour.price }}$</span> / person</p>
         </a>
     {% endfor %}
 </section>

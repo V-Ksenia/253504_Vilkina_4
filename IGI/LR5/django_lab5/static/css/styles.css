@@ -9,6 +9,7 @@ body {
     flex-direction: column;
     min-height: 100vh;
     background-color: rgb(190,195,198);
+    
 }
 
 footer {
@@ -27,12 +28,34 @@ footer  a:hover {
     color: #575757;
 }
 
+@media (max-width: 1000px) {
+    footer img:first-child {
+        width: 225px;
+    }
+    footer img {
+        width: 225px;
+    }
+}
+
 main {
     flex: 1; 
     padding-top: 95px;
 }
 
+*::selection {
+    background-color: #a9abaa;
+}
 
+
+
+.company-name {
+    font-size: 35px;
+    font: 'Geramond';
+    font-kerning: normal; 
+    letter-spacing: -3px;
+    font-variant: small-caps; 
+    text-transform: lowercase;
+}
 
 /* НАВБАР ---------------------------------------------------------------------------*/
 
@@ -47,10 +70,6 @@ main {
     width: 100%;
     z-index: 1000;
     height: 75px;
-}
-
-.navbar header {
-    font-size: 30px;
 }
 
 .nav-list {
@@ -87,6 +106,42 @@ a:hover {
 
 
 
+/* ЛОАДЕР ---------------------------------------------------------------------------*/
+
+.loader {
+    width: 50px; 
+    height: 50px;
+    border: 15px solid rgba(0, 0, 0, 0.1); 
+    border-top: 15px solid rgb(48,63,62);
+    border-radius: 50%; 
+    animation: spin 2s linear infinite, grow 1.5s ease-in-out infinite alternate;
+    display: inline-block;
+    position: relative;
+    margin: auto;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes grow {
+    0% {
+        width: 50px;
+        height: 50px;
+    }
+    100% {
+        width: 70px;
+        height: 70px;
+    }
+}
+
+
+
 
 /* МЕНЮ НА ГЛАВНОЙ СТРАНИЦЕ ---------------------------------------------------------------------------*/
 
@@ -119,6 +174,7 @@ main .top-menu {
     text-decoration: none;
     color: rgb(240, 239, 239);
     font-size: 20px;
+    border-radius: 10px;
 }
 
 .top-menu nav a:hover {
@@ -170,40 +226,38 @@ main .top-menu {
 
 #catalog aside {
     display: flex;
-    flex-direction: column; 
     align-items: center; 
-    justify-content: center; 
+    justify-content: space-evenly; 
+    gap: 20px;
     padding: 20px;
-    background-color: rgba(178, 191, 200, 0.51);
-    border: 1px solid rgb(211, 211, 211);
-    border-radius: 10px; 
-    width: 350px; 
+    min-width: 350px; 
     margin: 20px auto; 
+}
+
+#catalog div {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 300px;
+    transition: transform 0.5s ease;
+}
+
+#catalog div.tourcatal:hover {
+    transform: translateY(-10%);
 }
 
 #catalog aside h3 {
     font-size: 30px;
     margin-bottom: 20px; 
-    color: rgb(17, 31, 25);
-    text-align: center;
-}
-
-#catalog aside ul {
-    list-style: none; 
-    padding: 0; 
-    margin: 0; 
-}
-
-#catalog aside li {
-    margin-bottom: 20px; 
-    font-size: 26px;
-    text-align: center;
     color: rgb(240, 239, 239);
+    text-align: center;
 }
 
 #catalog aside hr {
     width: 300px;
-    color: black;
+    color: rgb(240, 239, 239);
     margin-bottom: 15px;
 }
 
@@ -221,6 +275,8 @@ main .top-menu {
     align-items: center;
 }
 #news .news_text {
+    position: relative;
+    left: 50px;
     color: rgb(240, 239, 239);   
     text-align: center; 
     width: 50%;
@@ -233,12 +289,65 @@ main .top-menu {
     font-size: 20px;
 }
 #news img {
+    position: relative;
+    right: 50px;
     border-radius: 20px;
-    height: 90%;
+    height: 90%; 
 }
 
 
 
+
+/* ПОЧЕМУ МЫ? ---------------------------------------------------------------------------*/
+
+#why_us {
+    background-color: rgb(48,63,62);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 20px; 
+    padding: 30px;
+    min-height: 200px;
+}
+
+.about-home {
+    width: 70%;
+    font-size: 20px;
+    color: rgb(240, 239, 239);
+    padding: 10px;
+}
+
+.about-home img {
+    width: 40px;
+    height: 40px;
+    margin: 10px;
+}
+
+.about-home div:hover{
+    transform: scale(1.2);
+}
+
+.about-home div{
+    display: inline-block;
+    margin: 20px 30px 0 30px;
+    font-size: 14px;
+    max-width: 100px;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* ЧТО О НАС ГОВОРЯТ ---------------------------------------------------------------------------*/
+
+#comments {
+    display: flex; 
+    flex-direction: column;
+    background-color: rgb(14, 18, 17);
+    height: 300px;
+    padding: 20px; 
+    align-items: center;
+    justify-content: center;
+    color: rgb(240, 239, 239);
+}
 
 
 /* ПАРТНЕРЫ ---------------------------------------------------------------------------*/
@@ -299,7 +408,6 @@ main .top-menu {
 }
 
 
-
 /* ТУРЫ ---------------------------------------------------------------------------*/
 .tour-wrapper {
     display: grid;
@@ -307,33 +415,44 @@ main .top-menu {
     justify-content: center; 
     align-items: center; 
     gap: 30px;
-    background-color: rgb(161,154,136);
+    background-color: rgb(240, 239, 239);
     border-radius: 20px;
     padding: 20px;
-    text-align: center;
     width: 50%;
     min-height: 440px;
 }
 
 .tour-container {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
     border-radius: 20px;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: #f9f9f975;
-    transition: transform 0.3s ease;
-    color: #464646;
+    background-size:cover;
+    background-color: rgba(65, 65, 65, 0.315); 
+    background-blend-mode: overlay;
+    min-height: 400px;
+    max-height: fit-content;
+    min-width: fit-content;
+    background-position: center;
+    transition: transform 0.6s ease;
+    color: rgb(240, 239, 239);
+    text-shadow: 1px 1px 2px rgba(14, 18, 17, 0.37);
 }
 
 .tour-container:hover {
-    background-color: #c4c4c482;
-    color: #252525;
-    transform: scale(1.05);
+    color: rgb(222, 222, 222);
+    text-transform: uppercase;
+    transform: scale(1.10);
     border-radius: 20px;
+    background-color: rgba(26, 26, 26, 0.574); 
+    background-blend-mode: overlay;
 }
 
 .tour-container > hr {
-    width: 50%;
-    color: #464646;
+    width: 90%;
+    color: rgb(240, 239, 239);
 }
 
 .tour-container > a {
@@ -359,7 +478,7 @@ main .top-menu {
     align-items: center;
     gap: 10px;
     padding: 15px;
-    background-color: rgb(69,69,60);
+    background-color: rgb(48,63,62);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.537);
     z-index: 1;
     border-radius: 20px;
@@ -486,26 +605,11 @@ main .top-menu {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(191, 191, 207, 0.9)); 
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); 
     border-radius: 15px;
-    border: 20px solid transparent;
+    border: 50px solid transparent;
+    border-image: url("/media/images/frame.png") 1000 round round;
     background-clip: padding-box; 
 }
 
-.certificate:before, 
-.certificate:after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: -1;
-    background-image: url('/media/images/frame.png'); /* Границы из графического файла */
-    background-size: 95%;
-    background-position: center;
-    background-repeat: no-repeat; 
-    opacity: 0.3; /* Полупрозрачные границы */
-    border-radius: 15px;
-}
 
 .certificate h2 {
     font-size: 36px;
@@ -574,9 +678,9 @@ main .top-menu {
 /* ЛОГО ---------------------------------------------------------------------------*/
 
 .logo img {
-    width: 150px; /* Устанавливаем начальный размер логотипа */
-    transition: transform 0.9s ease; /* Плавная анимация трансформации */
-    transform-origin: center center; /* Точка вращения — центр */
+    width: 150px; 
+    transition: transform 0.9s ease; 
+    transform-origin: center center; 
 }
 
 .logo img:hover {
@@ -646,9 +750,9 @@ main .top-menu {
 }
 
 .addreview-button {
-    display: flex;               /* Выравнивание содержимого по центру */
-    justify-content: center;     /* Центрирование по горизонтали */
-    margin: 20px 0;             /* Отступы сверху и снизу */
+    display: flex;               
+    justify-content: center;     
+    margin: 20px 0;             
 }
 
 button {
@@ -677,7 +781,7 @@ button:hover {
     background-position: center;
     background-repeat: no-repeat;
     padding: 20px;
-    min-height: 508px;
+    min-height: 100%;
 }
 
 .faq-wrapper {
@@ -770,8 +874,10 @@ button:hover {
 
 
 #vacancies {
-    padding: 20px;
+    padding: auto;
+    margin: auto;
     text-align: center;
+    width: 50%;
 }
 
 #vacancies h2 {
@@ -780,14 +886,24 @@ button:hover {
 }
 
 .vac-container {
-    width: 45%; /* Ширина каждого блока вакансии */
-    float: left; /* Блоки вакансий выстраиваются по горизонтали */
-    margin: 10px 2.5%; /* Отступы между блоками */
+    width: 45%;
+    margin: 30px;
     padding: 15px;
     border: 1px solid #ccc;
     border-radius: 10px;
     background-color: #f9f9f9;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.26);
+    transition: transform 0.3s ease-in-out;
+}
+.vac-container:nth-child(even) {
+    float: left;
+}
+.vac-container:nth-child(odd) {  
+    float: right;
+}
+
+.vac-container:hover {
+    transform: scale(1.2); 
 }
 
 .vac-container h3 {
@@ -826,8 +942,8 @@ button:hover {
     margin: 20px;
 }
 ul {
-    list-style-type: none;         /* Убираем стандартные маркеры списка */
-    padding-left: 0;               /* Убираем отступы слева */
+    list-style-type: none;         
+    padding-left: 0;               
 }
 
 
@@ -849,17 +965,24 @@ ul {
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 300px; /* Ширина каждого промокода */
+    max-width: 300px; 
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+.promo > h3::before {
+    content: "Discount ";
+}
+.promo > h3::after {
+    content: "%";
+}
+
 .promo:hover {
-    transform: translateY(-5px); /* Эффект поднятия при наведении */
+    transform: translateY(-5px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 .promo h3 {
-    color: #ff5733; /* Яркий цвет для скидки */
+    color: #ff5733; 
     margin-bottom: 10px;
     font-size: 24px;
 }
@@ -869,9 +992,13 @@ ul {
     color: #333;
 }
 
+.promo p::before {
+    content: "Code for discount \2939 ";
+}
+
 .promo b {
     font-weight: bold;
-    color: #007bff; /* Цвет для выделения промокода */
+    color: #007bff; 
 }
 
 .promo hr {
@@ -881,8 +1008,9 @@ ul {
     margin: 10px 0;
 }
 
-/* Секция с использованными промокодами */
+
 #user-promocodes {
+    text-align: center;
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
@@ -906,6 +1034,10 @@ ul {
     padding: 10px;
     border-radius: 5px;
     color: #333;
+}
+
+#user-promocodes li::before{
+    content: "\2713";
 }
 
 #user-promocodes li:hover {
@@ -965,14 +1097,10 @@ input:out-of-range {
     color: #721c24;
 }
 
-input[type="checkbox"]:checked + label {
-    color: #28a745;
-    font-weight: bold;
+input[type="checkbox"]{
+    accent-color: #67d57d;
 }
 
-input[type="checkbox"]:not(:checked) + label {
-    color: #6c757d;
-}
 
 #review-edit {
     display: flex;
@@ -1119,6 +1247,23 @@ input[type="checkbox"]:not(:checked) + label {
     max-width: 500px;
     font-size: 24px;
     margin: 20px;
+}
+.news-details > h2 {
+    text-transform: lowercase;
+    font-variant: small-caps;
+}
+.news-details > p {
+    text-indent: 40px;
+    line-height: 1.5;
+    letter-spacing: 0.5px;
+    word-spacing: 2px;
+    word-break: break-all;
+}
+
+.news-details > p::first-letter {
+    color: #333;
+    font-weight: bold;
+    font-size: larger;
 }
 
 .news-details img{

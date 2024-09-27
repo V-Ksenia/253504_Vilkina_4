@@ -17,23 +17,65 @@ import logging
 
 logging.basicConfig(level=logging.INFO, filename='logging.log', filemode='a', format='%(asctime)s %(levelname)s %(message)s')
 
-
-class UserRegistrationView(View):
+class RegistrationStep1View(View):
     def get(self, request):
-        form = RegistrationForm()
-        return render(request, 'registration_form.html', {'form': form})
+        form = RegistrationStep1Form()
+        return render(request, 'registration_step1.html', {'form': form})
 
     def post(self, request):
-        form = RegistrationForm(request.POST)
+        form = RegistrationStep1Form(request.POST)
         if form.is_valid():
             try:
-                user = form.save(commit=False)
-                user.set_password(form.cleaned_data['password1'])
+                request.session['username'] = form.cleaned_data['username']
+                request.session['password1'] = form.cleaned_data['password1']
+                request.session['password2'] = form.cleaned_data['password2']
+                return redirect('registration_step2')
+            except ValidationError as e:
+                form.add_error(None, e.message)
+        return render(request, 'registration_step1.html', {'form': form})
+    
+class RegistrationStep2View(View):
+    def get(self, request):
+        form = RegistrationStep2Form()
+        return render(request, 'registration_step2.html', {'form': form})
+
+    def post(self, request):
+        form = RegistrationStep2Form(request.POST)
+        if form.is_valid():
+            try:
+                user = User(
+                    username=request.session['username'],
+                    password=request.session['password1'],
+                    first_name=form.cleaned_data['first_name'],
+                    last_name=form.cleaned_data['last_name'],
+                    age=form.cleaned_data['age'],
+                    phone_number=form.cleaned_data['phone_number'],
+                    address=form.cleaned_data['address'],
+                )
+                user.set_password(request.session['password1']) 
                 user.save()
                 return redirect('login')
             except ValidationError as e:
                 form.add_error(None, e.message)
-        return render(request, 'registration_form.html', {'form': form})
+        return render(request, 'registration_step2.html', {'form': form})
+
+    
+# class UserRegistrationView(View):
+#     def get(self, request):
+#         form = RegistrationForm()
+#         return render(request, 'registration_form.html', {'form': form})
+
+#     def post(self, request):
+#         form = RegistrationForm(request.POST)
+#         if form.is_valid():
+#             try:
+#                 user = form.save(commit=False)
+#                 user.set_password(form.cleaned_data['password1'])
+#                 user.save()
+#                 return redirect('login')
+#             except ValidationError as e:
+#                 form.add_error(None, e.message)
+#         return render(request, 'registration_form.html', {'form': form})
 
 class UserLoginView(LoginView):
     redirect_authenticated_user = True
@@ -79,6 +121,7 @@ class TourListView(View):
                     'name': tour.name,
                     'country': tour.country.name,
                     'hotel': tour.hotel.name,
+                    'hotel_stars': tour.hotel.stars,
                     'duration_weeks': tour.duration,
                     'price': tour.get_price(),
                     'photo': tour.photo,
@@ -241,7 +284,7 @@ class OrderCreateView(View):
 
             if form.is_valid():
                 logging.info(f"OrderForm has no errors")
-
+                
                 amount = form.cleaned_data['amount']
                 departure_date = form.cleaned_data['departure_date']
                 code = form.cleaned_data['promocode']
@@ -451,6 +494,8 @@ def home(request):
     latest_article = Article.objects.latest('date')
     partners = Partners.objects.all()
     tours = Tour.objects.all()
+    info = CompanyInfo.objects.first()
+    reviews = Review.objects.all()
     tours_data = []
     for tour in tours:
         tours_data.append({
@@ -464,7 +509,9 @@ def home(request):
         })
     return render(request, 'home.html', {'latest_article': latest_article,
                                          'tours': tours_data,
-                                         'partners': partners})
+                                         'partners': partners,
+                                         'company_info': info,
+                                         'reviews': reviews})
 
 def about_company(request):
     info = CompanyInfo.objects.first()

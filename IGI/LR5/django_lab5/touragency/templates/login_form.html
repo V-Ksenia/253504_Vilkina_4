@@ -15,7 +15,6 @@
         <div class="form-group">
             <label for="username">Username:</label>
             {{ form.username }}
-            <!-- Check for errors in username field -->
             {% if form.username.errors %}
                 <ul class="error-list">
                     {% for error in form.username.errors %}
@@ -28,7 +27,6 @@
         <div class="form-group">
             <label for="password">Password:</label>
             {{ form.password }}
-            <!-- Check for errors in password field -->
             {% if form.password.errors %}
                 <ul class="error-list">
                     {% for error in form.password.errors %}
@@ -37,19 +35,10 @@
                 </ul>
             {% endif %}
         </div>
-        
-        <!-- Non-field errors (errors not tied to a specific field) -->
-        {% if form.non_field_errors %}
-            <ul class="non-field-errors">
-                {% for error in form.non_field_errors %}
-                    <li class="error">{{ error }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
 
         <button type="submit">Login</button>
     </form>
-	<p>Don't have an account? <a href="{% url 'register' %}">Sign up</a></p>
+	<p>Don't have an account? <a href="{% url 'registration_step1' %}">Sign up</a></p>
 </section>
 {% endblock content %}
 </body>
