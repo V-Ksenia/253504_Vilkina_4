@@ -15,11 +15,67 @@
     </nav>
 </div>
 
-<div class="ad-container">
+ <!-- <div class="ad-container">
     <img src=" /media/images/ad1.png " alt="ad1">
     <img src=" /media/images/ad2.png " alt="ad2">
     <img src=" /media/images/ad3.png " alt="ad3">
-</div>
+</div>  -->
+
+<div class="slideshow">
+    <div class="slide" href="{% url 'tour' pk=9 %}">
+      <div class="numbertext">1 / 3</div>
+      <a href="{% url 'tour' pk=9 %}">
+        <img src="/media/images/ad1.png" style="width: 300px;">
+      </a>
+      <div class="text">Visit the streets of Germany!</div>
+    </div>
+  
+    <div class="slide" href="{% url 'tour' pk=7 %}">
+      <div class="numbertext">2 / 3</div>
+      <a href="{% url 'tour' pk=7 %}">
+        <img src="/media/images/ad2.png" style="width: 300px;">
+      </a>
+      <div class="text">Take a look at the Swiss mountains!</div>
+    </div>
+  
+    <div class="slide" href="{% url 'tour' pk=5 %}">
+      <div class="numbertext">3 / 3</div>
+      <a href="{% url 'tour' pk=5 %}">
+        <img src="/media/images/ad3.png" style="width: 300px;">
+      </a>
+      <div class="text">Relax at the beach in Spain!</div>
+    </div>
+  
+    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+    <a class="next" onclick="plusSlides(1)">&#10095;</a>
+  </div>
+  <div class="pagination" style="padding: 20px 10px; text-align:center; background-color:  rgb(48,63,62);">
+    <span class="dot" onclick="currentSlide(1)"></span>
+    <span class="dot" onclick="currentSlide(2)"></span>
+    <span class="dot" onclick="currentSlide(3)"></span>
+  </div>
+
+<section id="slide-settings">
+    <label>
+        <input type="checkbox" id="loop">Возможность листать слайдер по кругу
+    </label>
+    <label>
+        <input type="checkbox" id="navs">Hide navigation
+    </label>
+    <label>
+        <input type="checkbox" id="pags">Hide pagination
+    </label>
+    <label>
+        <input type="checkbox" id="auto">Enable auto slideshow (default 5s)
+    </label>
+    <label>
+        <input type="checkbox" id="stopHover">Stop sliding on hover
+    </label>
+    <label>
+        <input type="number" id="delay">Choose a delay
+    </label>
+</section>
+
 
 <section id="catalog">
     <aside>
@@ -94,6 +150,9 @@
         {% endfor %}
     </div>
 </section>
-
 {% endblock content %}
+
+{% block script %}
+    <script src="/static/js/slidescript.js"></script>
+{% endblock script %}
     

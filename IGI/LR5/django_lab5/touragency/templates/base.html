@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <nav class="navbar">
+    <nav class="navbar"> 
         <header class="company-name">TripVoyage</header>
         {% if request.user.is_authenticated %}
         <p>Welcome, <strong>{{ request.user.username }}</strong></p>
@@ -53,6 +53,8 @@
         right: 0;
         z-index: 20;
     ">
+    <div class="countdown" id="countdown" style="font-size: 18px;
+    text-align: center;">Loading...</div>
     <b style="
         font-size: 18px;
         padding: 10px;
@@ -61,5 +63,7 @@
     <a href="{% url 'contacts' %}">contacts</a>
 </b>
 </footer>
+<script src="/static/js/timerscript.js"></script>
+{% block script %}{% endblock script %}
 </body>
 </html>
