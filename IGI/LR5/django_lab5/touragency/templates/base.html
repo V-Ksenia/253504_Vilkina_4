@@ -4,10 +4,15 @@
     <meta charset="UTF-8">
     <link rel="icon" href="/media/images/logo2.png">
     <link rel="stylesheet" href="/static/css/styles.css" type="text/css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <title>{% block title %}Default title{% endblock title %}</title>
+    {% block style %}{% endblock style %}
 </head>
 
 <body>
+    <div id="preloader">
+        <div class="loader"></div>
+    </div>
     <nav class="navbar"> 
         <header class="company-name">TripVoyage</header>
         {% if request.user.is_authenticated %}
@@ -64,6 +69,8 @@
 </b>
 </footer>
 <script src="/static/js/timerscript.js"></script>
+<script src="/static/js/preloader.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 {% block script %}{% endblock script %}
 </body>
 </html>

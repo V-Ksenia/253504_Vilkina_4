@@ -112,11 +112,11 @@ class TourListView(View):
 
         tours = self.filter_tours(min_price, max_price, country_id, hotel_id, duration)
         
-        tours_data = []
+        tours_dataa = []
 
         for tour in tours:
             if tour.trips != 0:
-                tours_data.append({
+                tours_dataa.append({
                     'id': tour.id,
                     'name': tour.name,
                     'country': tour.country.name,
@@ -124,10 +124,11 @@ class TourListView(View):
                     'hotel_stars': tour.hotel.stars,
                     'duration_weeks': tour.duration,
                     'price': tour.get_price(),
-                    'photo': tour.photo,
+                    'photo': tour.photo.url,
                 })
+        tours_data = json.dumps(tours_dataa) 
 
-        return render(request, 'tours.html', {'tours': tours_data, 'countries': countries})
+        return render(request, 'tours.html', {'tours': tours_dataa,'toursjson': tours_data, 'countries': countries})
         #return JsonResponse(tours_data, safe=False)
 
     @staticmethod
@@ -160,9 +161,9 @@ class SpecificTourList(View):
 
     def get(self, request, pk, *args, **kwargs):
         tour = Tour.objects.filter(pk=pk)[0]
-        tours_data = []
+        tours_dataa = []
         if tour:
-            tours_data.append({
+            tours_dataa.append({
                 'id': tour.id,
                 'name': tour.name,
                 'country': tour.country.name,
@@ -173,10 +174,11 @@ class SpecificTourList(View):
                 'price': tour.price,
                 'amount_of_trips': tour.trips,
                 'description': tour.description,
-                'photo': tour.photo,
+                'photo': tour.photo.url,
             })
+        tours_data = json.dumps(tours_dataa) 
         #return JsonResponse(tours_data, safe=False)
-        return render(request, 'specific_tour.html', {'tours': tours_data})
+        return render(request, 'specific_tour.html', {'toursjson': tours_data,'tours': tours_dataa})
 
 
 class HotelListView(View):
@@ -489,6 +491,7 @@ def world_languages(request):
     return HttpResponseNotFound("Page not found")
 
 
+
 #ADDITIONAL PAGES
 def home(request):
     latest_article = Article.objects.latest('date')
@@ -507,6 +510,7 @@ def home(request):
             'price': tour.get_price(),
             'photo': tour.photo,
         })
+
     return render(request, 'home.html', {'latest_article': latest_article,
                                          'tours': tours_data,
                                          'partners': partners,
@@ -538,7 +542,21 @@ def faqs(request):
 
 def contacts(request):
     contacts = Contact.objects.all()
-    return render(request, 'contacts.html', {'contacts': contacts})
+    contacts_json = []
+
+    for contact in contacts:
+        contacts_json.append({
+            'id': contact.id,
+            'first_name': contact.user.first_name,
+            'last_name': contact.user.last_name,
+            'phone_number': contact.user.phone_number,
+            'email': contact.user.email,
+            'description': contact.description,
+            'photo': contact.photo.url if contact.photo else None,
+
+        })
+    
+    return render(request, 'contacts.html', {'contacts': json.dumps(contacts_json)})
 
 def vacancies(request):
     vacancies = Vacancy.objects.all()

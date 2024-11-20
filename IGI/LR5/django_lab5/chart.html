@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>График разложения функции в ряд с Chart.js</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <canvas id="myChart" width="600" height="400"></canvas>
+    <script>
+        let x = parseFloat(prompt("Enter x:"));
+        let eps = parseFloat(prompt("Enter eps:"));
+
+        if (Math.abs(x) >= 1) {
+            alert("Error: |x| should be less than 1.");
+        } else {
+            function calculateSeries(x, eps) {
+                let result = 0.0;
+                let seriesList = [];
+                let n = 0;
+                let diff = Math.abs(result - Math.log(1 - x));
+
+                while (n < 500 && diff > eps) {
+                    n++;
+                    let term = (-1) * Math.pow(x, n) / n;
+                    result += term;
+                    seriesList.push(term);
+                    diff = Math.abs(result - Math.log(1 - x));
+                }
+
+                return { seriesList, result, n };
+            }
+
+            let { seriesList, result, n } = calculateSeries(x, eps);
+
+            const xValues = [];
+            const logValues = [];
+            const seriesValues = [];
+            
+            for (let i = -0.99; i < 1; i += 0.01) {
+                xValues.push(i);
+                logValues.push(Math.log(1 - i));
+                
+                let seriesValue = 0;
+                for (let j = 1; j <= n; j++) {
+                    seriesValue += (-1) * Math.pow(i, j) / j;
+                }
+                seriesValues.push(seriesValue);
+            }
+
+
+            const ctx = document.getElementById('myChart').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'line', 
+                data: {
+                    labels: xValues,
+                    datasets: [
+                        {
+                            label: 'log(1 - x)',
+                            data: logValues,
+                            borderColor: 'rgba(54, 162, 235, 1)', 
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)', 
+                            fill: false,
+                            tension: 0.1
+                        },
+                        {
+                            label: 'Разложение в ряд Тейлора',
+                            data: seriesValues,
+                            borderColor: 'rgba(255, 99, 132, 1)', 
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)', 
+                            fill: false,
+                            tension: 0.1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'x (значение аргумента)'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'F(x) (значение функции)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return `${tooltipItem.dataset.label}: ${tooltipItem.raw.toFixed(4)}`;
+                                }
+                            }
+                        },
+                        annotation: {
+                            annotations: [{
+                                type: 'line',
+                                scaleID: 'x',
+                                value: 0,
+                                borderColor: 'black',
+                                borderWidth: 2,
+                                label: {
+                                    enabled: true,
+                                    content: 'x = 0'
+                                }
+                            }]
+                        }
+                    }
+                }
+            });
+
+            alert(`Для x = ${x}, n = ${n}, ln(1-x) = ${result.toFixed(3)}, Math ln(1-x) = ${Math.log(1 - x).toFixed(3)}, eps = ${eps}`);
+        }
+    </script>
+</body>
+</html>

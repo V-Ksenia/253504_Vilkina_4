@@ -20,6 +20,8 @@ gap: 20px;
         <p>Departure date: {{ order.departure_date }}</p>
         <p>Creation date: {{ order.creation_date }}</p>
     </a>
+    {% empty %}
+        <p>It looks like you haven't made any orders yet :&#40;</p>
     {% endfor %}
 
 </section>

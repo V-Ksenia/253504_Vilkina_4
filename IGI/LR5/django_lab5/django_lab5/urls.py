@@ -48,7 +48,6 @@ urlpatterns = [
     path('users/', views.UserListView.as_view(), name='users'),
     path('orders/', views.OrderListView.as_view(), name='orders'),
 
-
     #ADDITIONAL PAGES
     path('', views.home, name='home'),
     path('home/', views.home, name='home'),

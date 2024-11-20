@@ -1,43 +1,121 @@
 let slideIndex = 1;
-showSlides(slideIndex);
+let autoSlideInterval;
+let isHovered = false;
 
-// Next/previous controls
+const loopCheckbox = document.getElementById("loop");
+const autoCheckbox = document.getElementById("auto");
+const stopHoverCheckbox = document.getElementById("stopHover");
+const delayInput = document.getElementById("delay");
+
 function plusSlides(n) {
-  showSlides(slideIndex += n);
+  const loopEnabled = loopCheckbox.checked;
+  const slides = document.getElementsByClassName("slide");
+
+  if (!loopEnabled) {
+    if (
+      (slideIndex === slides.length && n > 0) ||
+      (slideIndex === 1 && n < 0)
+    ) {
+      return;
+    }
+  }
+
+  showSlides((slideIndex += n));
 }
 
-// Thumbnail image controls
 function currentSlide(n) {
-  showSlides(slideIndex = n);
+  showSlides((slideIndex = n));
 }
 
 function showSlides(n) {
-  let i;
-  let slides = document.getElementsByClassName("slide");
-  let dots = document.getElementsByClassName("dot");
-  if (n > slides.length) {slideIndex = 1}
-  if (n < 1) {slideIndex = slides.length}
-  for (i = 0; i < slides.length; i++) {
+  const slides = document.getElementsByClassName("slide");
+  const dots = document.getElementsByClassName("dot");
+
+  if (n > slides.length) {
+    slideIndex = 1;
+  }
+  if (n < 1) {
+    slideIndex = slides.length;
+  }
+
+  for (let i = 0; i < slides.length; i++) {
     slides[i].style.display = "none";
   }
-  for (i = 0; i < dots.length; i++) {
+  for (let i = 0; i < dots.length; i++) {
     dots[i].className = dots[i].className.replace(" active", "");
   }
-  slides[slideIndex-1].style.display = "block";
-  dots[slideIndex-1].className += " active";
+
+  slides[slideIndex - 1].style.display = "block";
+  dots[slideIndex - 1].className += " active";
 }
 
-const navs = document.getElementById("navs");
+function startAutoSlide() {
+  if (!loopCheckbox.checked) {
+    loopCheckbox.checked = true;
+  }
+  const delay = parseInt(delayInput.value) || 5; //5с дефолт
+  autoSlideInterval = setInterval(() => {
+    if (!isHovered) {
+      plusSlides(1);
+    }
+  }, delay * 1000);
+}
+
+function stopAutoSlide() {
+  clearInterval(autoSlideInterval);
+  loopCheckbox.checked = false;
+  stopHoverCheckbox.checked = false;
+}
+
+autoCheckbox.addEventListener("change", () => {
+  if (autoCheckbox.checked) {
+    startAutoSlide();
+  } else {
+    stopAutoSlide();
+  }
+});
+
+stopHoverCheckbox.addEventListener("change", () => {
+
+  const slides = document.getElementsByClassName("slide");
+
+  if (stopHoverCheckbox.checked) {
+    for (let slide of slides) {
+      slide.addEventListener("mouseenter", () => (isHovered = true));
+      slide.addEventListener("mouseleave", () => (isHovered = false));
+    }
+  } else {
+    for (let slide of slides) {
+      slide.removeEventListener("mouseenter", () => (isHovered = true));
+      slide.removeEventListener("mouseleave", () => (isHovered = false));
+    }
+  }
+});
+
+delayInput.addEventListener("input", () => {
+  if (autoCheckbox.checked) {
+    stopAutoSlide();
+    startAutoSlide();
+  }
+});
+
+showSlides(slideIndex);
+
+const views = document.getElementsByName("view");
+
 const prev = document.querySelector(".prev");
 const next = document.querySelector(".next");
+const dots = document.querySelectorAll(".dot");
 
-const pags = document.getElementById("pags");
-const pagination = document.querySelector(".pagination");
-
-navs.addEventListener("change", () => {
-    prev.style.display = next.style.display = navs.checked ? "none" : "block";
-})
-
-pags.addEventListener("change", () => {
-    pagination.style.display = pags.checked ? "none" : "block";
-})
+Array.from(views).forEach((radio) => {
+  radio.addEventListener("change", (event) => {
+    prev.style.display = next.style.display =
+      event.target.checked && event.target.value == "navs" && event.target.value != "allviews" ? "none" : "block";
+    dots.forEach((dot) => {
+      dot.style.display =
+        event.target.checked && event.target.value == "pags"
+          ? "none"
+          : "inline-block";
+    });
+  });
+});

@@ -5,7 +5,9 @@
 {% block content %}
 
 <div class="top-menu">
-    <b>Travelling is interesting <br> with us.</b>
+    <img class="mount" src="/media/images/mountcrop.png" style="height: 100%; position: absolute; z-index: 22">
+    <b class="top-text">Travelling is interesting <br> with us.</b> 
+    <p class="logo-text">WELCOME TO <br> TRIP VOYAGE</p>
     <nav>
         <a href="#catalog">Catalog</a>
         <a href="#news">Latest news</a>
@@ -14,12 +16,6 @@
         <a href="#partners">Our partners</a>
     </nav>
 </div>
-
- <!-- <div class="ad-container">
-    <img src=" /media/images/ad1.png " alt="ad1">
-    <img src=" /media/images/ad2.png " alt="ad2">
-    <img src=" /media/images/ad3.png " alt="ad3">
-</div>  -->
 
 <div class="slideshow">
     <div class="slide" href="{% url 'tour' pk=9 %}">
@@ -55,15 +51,18 @@
     <span class="dot" onclick="currentSlide(3)"></span>
   </div>
 
-<section id="slide-settings">
+  {% if request.user.is_authenticated and user.is_superuser %}
+  <style>
+      #slide-settings {
+          display: block !important;
+      }
+  </style>
+  {% endif %}
+
+<section id="slide-settings" style="display: none;">
+    <hr style="width: 50%;"><span style="color: rgb(240,239,239); font-size: 24px;">Settings</span><hr style="width: 80%; height: 0.01px;">
     <label>
-        <input type="checkbox" id="loop">Возможность листать слайдер по кругу
-    </label>
-    <label>
-        <input type="checkbox" id="navs">Hide navigation
-    </label>
-    <label>
-        <input type="checkbox" id="pags">Hide pagination
+        <input type="checkbox" id="loop">Loop Mode
     </label>
     <label>
         <input type="checkbox" id="auto">Enable auto slideshow (default 5s)
@@ -71,8 +70,19 @@
     <label>
         <input type="checkbox" id="stopHover">Stop sliding on hover
     </label>
+    <br>
     <label>
-        <input type="number" id="delay">Choose a delay
+        <input type="number" min="1" max="600" id="delay">Choose a delay
+    </label>
+    <br>
+    <label>
+        <input type="radio" id="navs" name="view" value="navs">Hide navigation
+    </label>
+    <label>
+        <input type="radio" id="pags" name="view" value="pags">Hide pagination
+    </label>
+    <label>
+        <input type="radio" id="allviews" name="view" value="allviews">Show all
     </label>
 </section>
 
@@ -139,7 +149,6 @@
     <a href="{% url 'reviews' %}" style="margin-top: 30px; width: fit-content;">Read more opinions</a>
     <hr style="width: 80%; color: rgb(240,239,239)">
 </section>
-<div class="loader"></div>
 <section id="partners">
     <h3>Our dearest partners</h3>
     <div class="partner-list">
@@ -150,9 +159,65 @@
         {% endfor %}
     </div>
 </section>
+<script>
+const topMenu = document.querySelector('.top-menu');
+const textMenu = document.querySelector('.top-text');
+const logoMenu = document.querySelector('.logo-text');
+const mount = document.querySelector('.mount');
+
+const startHeight = window.innerHeight;
+
+window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+
+    const progress = scrollY / startHeight;
+
+    textMenu.style.transform = `translateX(${progress * 200}%)`;
+    logoMenu.style.transform = `translateX(${progress * 400}%)`;
+    logoMenu.style.opacity = `${1 - 5*progress}`;
+    textMenu.style.opacity = `${0 + 4*progress}`;
+
+    if (progress > 0.3) {
+        const adjustedProgress = (progress - 0.3) / 0.3; 
+        topMenu.style.opacity = `${1 - adjustedProgress}`;
+        topMenu.style.transform = `translateY(-${adjustedProgress * 200}%)`;
+        mount.style.transform = `translateX(-${adjustedProgress * 200}%)`;
+    } else {
+        topMenu.style.opacity = '1';
+        topMenu.style.transform = 'translateY(0)';
+        mount.style.transform = 'translateX(0)';
+    }
+
+});
+
+
+const catalog = document.querySelector('#catalog');
+const tourItems = document.querySelectorAll('#catalog .tourcatal');
+
+window.addEventListener('scroll', () => {
+    const rect = catalog.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+
+    const progress = Math.min(Math.max(0, (viewportHeight - rect.top) / viewportHeight), 1);
+
+    tourItems.forEach((item, index) => {
+        const delay = index * 0.1;
+        const adjustedProgress = Math.max(0, progress - delay);
+
+        item.style.transform = `translateX(${(1 - adjustedProgress) * 100}%)`;
+        item.style.opacity = adjustedProgress;
+        
+    });
+});
+
+
+</script>
 {% endblock content %}
 
 {% block script %}
+{% if request.user.is_authenticated %}
+    <script src="/static/js/datescript.js"></script>
+{% endif %}
     <script src="/static/js/slidescript.js"></script>
 {% endblock script %}
     
