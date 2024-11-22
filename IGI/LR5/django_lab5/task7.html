@@ -32,7 +32,7 @@
         //     this.product = product;
         //     this.country = country;
         //     this.volume = volume;
-        // }
+        // } //по умолчанию export.prototype == { constructor: Export }
 
         // Export.prototype.getProduct = function() {
         //     return this.product;
@@ -115,15 +115,15 @@
                 this.volume = volume;
             }
 
-            getProduct() {
+            get gproduct() {
                 return this.product;
             }
 
-            getCountry() {
+            get gcountry() {
                 return this.country;
             }
 
-            getVolume() {
+            get gvolume() {
                 return this.volume;
             }
 
@@ -154,9 +154,9 @@
             }
 
             analyzeProduct(productName) {
-                const filteredExports = this.exports.filter(exp => exp.getProduct() === productName);
-                const countries = [...new Set(filteredExports.map(exp => exp.getCountry()))];
-                const totalVolume = filteredExports.reduce((sum, exp) => sum + exp.getVolume(), 0);
+                const filteredExports = this.exports.filter(exp => exp.gproduct === productName);
+                const countries = [...new Set(filteredExports.map(exp => exp.gcountry))];
+                const totalVolume = filteredExports.reduce((sum, exp) => sum + exp.gvolume, 0);
 
                 const resultsDiv = document.getElementById('results');
                 if (filteredExports.length > 0) {
@@ -170,7 +170,7 @@
             }
         }
 
-        
+
         const analysis = new ExportAnalysis();
 
         document.getElementById('exportForm').addEventListener('submit', function(event) {
@@ -183,6 +183,8 @@
             analysis.displayExports();
             analysis.analyzeProduct(product);
         });
+
+        
     </script>
 </body>
 </html>

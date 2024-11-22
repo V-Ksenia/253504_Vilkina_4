@@ -10,7 +10,7 @@
     }
     #contactTable {
         width: 80%;
-        margin: 20px auto 20px auto;
+        margin: 50px auto 20px auto;
         border-collapse: collapse;
         background-color: #eaeaea;
         color:rgb(23, 23, 23);
@@ -43,47 +43,115 @@
         height: fit-content;
         border-radius: 20px;
         padding: 20px;
-        margin: 15px;
+        margin: 50px 15px 15px 15px;
+    }
+    #contactInfo img {
+        width: 80px;
+        height: 80px;
     }
 
     #awardButton {
-        text-align: center;
+        position: absolute;
+        border-radius: 0;
+        right: 220px;
     }
 
     #addButton {
         position: absolute;
-        right: 10px;
+        border-radius: 0;
+        right: 160px;
     }
 
-    #addForm {
-        display: flex;
-        position: absolute;
-        flex-direction: column;
-        text-align: center;
-        width: 400px;
-        top: 180px;
-        right: 10px;
-        background-color: #bcc6ba;
-        border: #232323  0.5px solid;
-        border-radius: 20px;
-        z-index: 20;
-        color: #232323;
-        font-size: 19px;
-    }
+#addForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    width: 400px;
+    padding: 20px;
+    background-color: #30403e;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    color: #eaeaea;
+    margin: 20px auto;
+}
 
-    #addForm input {
-        width: 250px;
-        height: 10px;
-    }
+#addForm h3 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #f0efef;
+    text-align: center;
+}
+
+#addForm form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+#addForm label {
+    font-size: 16px;
+    margin-bottom: 5px;
+    color: #93a898;
+}
+
+#addForm input[type="text"],
+#addForm input[type="email"],
+#addForm input[type="file"] {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #93a898;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    background-color: #2b3c3a;
+    color: #eaeaea;
+}
+
+#addForm input[type="text"]:focus,
+#addForm input[type="email"]:focus,
+#addForm input[type="file"]:focus {
+    outline: none;
+    border-color: #f0efef;
+    box-shadow: 0 0 5px rgba(240, 239, 239, 0.8);
+}
+
+#addForm button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #f0efef;
+    background-color: #93a898;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#addForm button:hover {
+    background-color: #76998f;
+}
+
+#addForm button:disabled {
+    background-color: #5c6f6c;
+    cursor: not-allowed;
+}
+
+#addForm p#validationResult {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #f08080;
+    text-align: center;
+}
+
 
 </style>
 {% endblock style %}
 {% block content %}
-<div class="filter-container">
-    <input type="text" id="filterInput" placeholder="Enter text to filter...">
-    <button id="filterButton">Find</button>
+<div class="filter-container" style="margin: 20px 0 0 20px">
+    <input type="text" id="filterInput" placeholder="Enter a substring you want to find..." style="width: 300px; border-radius: 0;">
+    <button id="filterButton" style="border-radius: 0;">Find</button>
 </div>
-<button id="addButton" onclick="showForm()">Add Contact</button>
+<button id="addButton" onclick="showForm()">+</button>
 
 <div id="addForm" style="display: none;">
     <h3 style="color:#eaeaea; font-size: 22px;">Enter contact info</h3>
@@ -114,7 +182,7 @@
     <button id="awardButton" onclick="chooseAward()">Award</button>
 </div>
 
-<div id="awardMessage" style="display: none; margin-top: 20px; font-weight: bold;"></div>
+<div id="awardMessage" style="display: none; margin-top: 20px; font-weight: bold; font-size: 20px; color: rgb(189, 243, 159); margin-left: 20px;"></div>
 
 <section id="contactSec">
 
@@ -200,6 +268,8 @@
             const photo = document.createElement("img");
             photo.src = contact.photo || "/media/images/contact.png";
             photo.alt = `${contact.first_name} ${contact.last_name}`;
+            photo.style.width = "70px";
+            photo.style.height = "70px";
             photoCell.appendChild(photo);
             row.appendChild(photoCell);
             tableBody.appendChild(row);
@@ -358,55 +428,58 @@
     };
 
 
-    document.getElementById("photo").addEventListener("change", fileInput => {
-        if (fileInput.files.length > 0) {
-            const file = fileInput.files[0];
-            const validExtensions = ["image/png", "image/jpeg", "image/jpg"]; 
+document.getElementById("photo").addEventListener("change", function () {
+    if (this.files.length > 0) {
+        const file = this.files[0];
+        const validExtensions = ["image/png", "image/jpeg", "image/jpg"];
 
-            if (validExtensions.includes(file.type)) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    fileInput.dataset.photoUrl = e.target.result; 
-                };
-                reader.readAsDataURL(file);
-            } else {
-                fileInput.value = ""; 
-                delete fileInput.dataset.photoUrl; 
-            }
-        }
-    });
-
-    document.getElementById("contactForm").addEventListener("submit", event => {
-        event.preventDefault(); 
-        const firstName = document.getElementById("firstName").value;
-        const lastName = document.getElementById("lastName").value;
-        const description = document.getElementById("description").value;
-        const phoneNumber = document.getElementById("phoneNumber").value;
-        const email = document.getElementById("email").value || "Not provided";
-
-        const photoInput = document.getElementById("photo");
-        const photoUrl = photoInput.dataset.photoUrl || "/media/images/contact.png";
-
-        const newContact = {
-                id: contacts.length + 1,
-                first_name: firstName,
-                last_name: lastName,
-                description: description,
-                phone_number: phoneNumber,
-                email: email,
-                photo: photoUrl 
+        if (validExtensions.includes(file.type)) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById("photo").dataset.photoUrl = e.target.result;
             };
+            reader.readAsDataURL(file);
+        } else {
+            this.value = ""; 
+            delete this.dataset.photoUrl; 
+            alert("Invalid image type. Select a PNG, JPEG, or JPG.");
+        }
+    }
+});
 
-        contacts.push(newContact);
-        showPreloader();
+document.getElementById("contactForm").addEventListener("submit", event => {
+    event.preventDefault();
 
-        setTimeout(() => {
-            hidePreloader();
-            document.getElementById("addForm").style.display = "none";
-            renderTable(contacts, currentPage);
-        }, 1000);
+    const firstName = document.getElementById("firstName").value;
+    const lastName = document.getElementById("lastName").value;
+    const description = document.getElementById("description").value;
+    const phoneNumber = document.getElementById("phoneNumber").value;
+    const email = document.getElementById("email").value || "Not provided";
+
+    const photoInput = document.getElementById("photo");
+    const photoUrl = photoInput.dataset.photoUrl || "/media/images/contact.png";
+
+    const newContact = {
+        id: contacts.length + 1,
+        first_name: firstName,
+        last_name: lastName,
+        description: description,
+        phone_number: phoneNumber,
+        email: email,
+        photo: photoUrl
+    };
+
+    contacts.push(newContact);
+
+    showPreloader();
+
+    setTimeout(() => {
+        hidePreloader();
+        document.getElementById("addForm").style.display = "none";
+        renderTable(contacts, currentPage);
+    }, 1000);
         
-    });
+});
 
     document.getElementById("phoneNumber").addEventListener("input", () => {
             const phoneNumber = document.getElementById("phoneNumber").value;
@@ -418,15 +491,49 @@
 
             if (!phoneValidationResult.isValid) {
                 document.getElementById("phoneNumber").style.border = "2px solid red";
+                document.getElementById("phoneNumber").style.color = "#551e1e"
                 document.getElementById("phoneNumber").style.backgroundColor = "#f8d7da";
                 addButton.disabled = true;
                 validationResultElement.textContent = phoneValidationResult.message;
             } else {
                 document.getElementById("phoneNumber").style.border = "1px solid #ddd";
                 document.getElementById("phoneNumber").style.backgroundColor = "";
+                document.getElementById("phoneNumber").style.color = " #eaeaea";
                 validationResultElement.textContent = "";
             }
-        });
+    });
+
+    document.getElementById("email").addEventListener("input", () => {
+        const email = document.getElementById("email").value;
+        emailValidationResult = validateEmail(email);
+
+        const addButton = document.getElementById("addContactButton");
+        const validationResultElement = document.getElementById("validationResult");
+
+        if (!email) {
+            checkFormValidity();
+            document.getElementById("email").style.border = "1px solid #ddd";
+            document.getElementById("email").style.backgroundColor = "";
+            validationResultElement.textContent = "";
+
+        } else {
+    
+            if(!emailValidationResult.isValid) {
+                document.getElementById("email").style.border = "2px solid red";
+                document.getElementById("email").style.color = "#551e1e"
+                document.getElementById("email").style.backgroundColor = "#f8d7da";
+                addButton.disabled = true;
+                validationResultElement.textContent = emailValidationResult.message;
+            } else {
+                document.getElementById("email").style.border = "1px solid #ddd";
+                document.getElementById("email").style.backgroundColor = "";
+                document.getElementById("email").style.color = " #eaeaea";
+                validationResultElement.textContent = "";
+                checkFormValidity();
+            }
+           
+        }
+    });
 
     function validatePhoneNumber(phoneNumber) {
         const phoneRegex = /^(8|\+375)(\s|\()?(\d{2})(\s|\))?(\d{3})(\s|\-)?(\d{2})(\s|\-)?(\d{2})$/;
@@ -434,6 +541,15 @@
             return { isValid: true, message: "Valid phone number." };
         } else {
             return { isValid: false, message: "Invalid phone number." };
+        }
+    }
+
+    function validateEmail(email) {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (emailRegex.test(email)) {
+            return { isValid: true, message: "Valid email address." };
+        } else {
+            return { isValid: false, message: "Invalid email address." };
         }
     }
 
@@ -454,7 +570,7 @@
     }
 
     document.querySelectorAll("#contactForm input").forEach(input => {
-        if (input.id == ("phoneNumber" || "photo" || "email")) {
+        if (input.id == "phoneNumber" || input.id == "photo" || input.id == "email") {
             
         }
         else 
@@ -467,10 +583,12 @@
 
                 if (input.value.length > 2){
                     input.style.border = "1px solid #ddd";
+                    input.style.color = "#eaeaea";
                     input.style.backgroundColor = "";
                     validationResultElement.textContent = "";
                 } else {
                     input.style.border = "2px solid red";
+                    input.style.color = "#551e1e"
                     input.style.backgroundColor = "#f8d7da";
                     addButton.disabled = true;
                     validationResultElement.textContent = `${input.id} is required`;

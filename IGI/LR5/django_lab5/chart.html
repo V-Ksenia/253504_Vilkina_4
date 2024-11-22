@@ -3,18 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>График разложения функции в ряд с Chart.js</title>
+    <title>Chart</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
 </head>
 <body>
     <canvas id="myChart" width="600" height="400"></canvas>
     <script>
-        let x = parseFloat(prompt("Enter x:"));
-        let eps = parseFloat(prompt("Enter eps:"));
+            let x = 0.9;
+            let eps = 0.001;
 
-        if (Math.abs(x) >= 1) {
-            alert("Error: |x| should be less than 1.");
-        } else {
             function calculateSeries(x, eps) {
                 let result = 0.0;
                 let seriesList = [];
@@ -39,7 +37,7 @@
             const seriesValues = [];
             
             for (let i = -0.99; i < 1; i += 0.01) {
-                xValues.push(i);
+                xValues.push(Math.round(i * 100) / 100);
                 logValues.push(Math.log(1 - i));
                 
                 let seriesValue = 0;
@@ -48,6 +46,7 @@
                 }
                 seriesValues.push(seriesValue);
             }
+            
 
 
             const ctx = document.getElementById('myChart').getContext('2d');
@@ -61,38 +60,52 @@
                             data: logValues,
                             borderColor: 'rgba(54, 162, 235, 1)', 
                             backgroundColor: 'rgba(54, 162, 235, 0.2)', 
+                            pointStyle: false,
                             fill: false,
-                            tension: 0.1
+                            animation: {
+                                duration: 2000,
+                                easing: 'easeInOutQuart',
+                            },  
+                            
                         },
                         {
-                            label: 'Разложение в ряд Тейлора',
+                            label: 'My series',
                             data: seriesValues,
                             borderColor: 'rgba(255, 99, 132, 1)', 
                             backgroundColor: 'rgba(255, 99, 132, 0.2)', 
+                            pointStyle: false,
                             fill: false,
-                            tension: 0.1
+                            animation: {
+                                duration: 2000,
+                                easing: 'easeInOutQuart', 
+                                delay: 2000,
+                            },
+                            
                         }
                     ]
                 },
-                options: {
-                    responsive: true,
+                options: {                   
                     scales: {
                         x: {
                             title: {
                                 display: true,
-                                text: 'x (значение аргумента)'
+                                text: 'x'
                             }
                         },
                         y: {
                             title: {
                                 display: true,
-                                text: 'F(x) (значение функции)'
+                                text: 'F(x)'
                             }
                         }
                     },
                     plugins: {
                         legend: {
                             position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: `x = ${x}, n = ${n}, ln(1-x) = ${result.toFixed(3)}, Math ln(1-x) = ${Math.log(1 - x).toFixed(3)}, eps = ${eps}`,    
                         },
                         tooltip: {
                             callbacks: {
@@ -102,24 +115,50 @@
                             }
                         },
                         annotation: {
-                            annotations: [{
-                                type: 'line',
-                                scaleID: 'x',
-                                value: 0,
-                                borderColor: 'black',
-                                borderWidth: 2,
-                                label: {
-                                    enabled: true,
-                                    content: 'x = 0'
+                            annotations: {
+                                point1: {
+                                    type: 'point',
+                                    xValue: 100,
+                                    yValue: 0,
+                                    backgroundColor: '#fff',
+                                    radius: 6,
+                                    label: {
+                                        content: "x = y = 0",
+                                        display: true,
+                                    }
+                                },
+                                line1: {
+                                    type: 'line',
+                                    yMin: 0,
+                                    yMax: 0,
+                                    backgroundColor: '#fff',
+                                    label: {
+                                        content: "y = 0",
+                                        position: 'start',
+                                        display: true,
+                                        
+                                    }
+                                },
+                                label1: {
+                                    type: 'label',
+                                    xValue: 100,
+                                    yValue: -0.2,
+                                    content: 'пересечение функций с y = 0',
+                                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                                    color: 'black',
+                                    font: {
+                                        size: 12,
+                                        weight: 'bold',
+                                    },
+                                    padding: 6,
+                                    position: 'center'  
                                 }
-                            }]
+                        }
+
                         }
                     }
                 }
             });
-
-            alert(`Для x = ${x}, n = ${n}, ln(1-x) = ${result.toFixed(3)}, Math ln(1-x) = ${Math.log(1 - x).toFixed(3)}, eps = ${eps}`);
-        }
     </script>
 </body>
 </html>

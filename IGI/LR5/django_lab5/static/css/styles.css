@@ -196,7 +196,9 @@ main .top-menu {
     text-transform: lowercase;
     color: rgb(240, 239, 239);
     position: absolute;
+    transform: translateX(200%);
     left: 55%;
+    transition: transform 0.5s ease;
 }
 .top-menu nav {
     position: absolute;
@@ -205,6 +207,8 @@ main .top-menu {
     display: flex;
     gap: 20px;
     padding: 10px;
+    transform: translateX(200%);
+    transition: transform 0.5s ease;
 }
 
 .top-menu nav a {
@@ -348,16 +352,81 @@ main .top-menu {
 
 #slide-settings {
     text-align: center;
-    background-color: rgb(48,63,62);
-    color: #93a898;
-    font-size: 20px;
+    background-color: #30403e; /* Темно-зеленый оттенок */
+    color: #93a898; /* Светлый зеленовато-серый */
+    font-size: 18px;
     padding: 20px;
+    border-radius: 10px; /* Закругленные углы */
+    width: 50%; /* Ограничение ширины */
+    margin: 20px auto; /* Центрирование */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Тень */
+}
+
+#slide-settings hr {
+    border: none;
+    height: 1px;
+    background-color: #93a898;
+    margin: 10px auto;
+}
+
+#slide-settings span {
+    display: block;
+    color: #f0efef;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+#slide-settings label {
+    display: block;
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+#slide-settings input[type="checkbox"],
+#slide-settings input[type="radio"] {
+    margin-right: 10px;
 }
 
 #slide-settings input[type="number"] {
-    height: 5px;
-    width: 35px;
+    height: 30px; /* Увеличенный ввод */
+    width: 60px; /* Ширина побольше */
+    font-size: 16px;
+    border: 1px solid #93a898;
+    border-radius: 5px;
+    background-color: #2b3c3a; /* Темный фон */
+    color: #f0efef;
+    text-align: center;
 }
+
+#slide-settings input[type="number"]:focus {
+    outline: none;
+    border-color: #f0efef;
+    box-shadow: 0 0 5px rgba(240, 239, 239, 0.8);
+}
+
+#slide-settings input[type="radio"],
+#slide-settings input[type="checkbox"] {
+    accent-color: #93a898; /* Цвет переключателей */
+    transform: scale(1.2); /* Увеличенный размер */
+}
+
+#slide-settings button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #f0efef;
+    background-color: #93a898;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#slide-settings button:hover {
+    background-color: #76998f; /* Более светлый оттенок */
+}
+
 
 /* КАТАЛОГ ---------------------------------------------------------------------------*/
 
@@ -1327,7 +1396,7 @@ input[type="checkbox"]{
     gap: 20px;
     margin: 30px;
     padding: 30px;
-    background-color: rgba(240, 239, 239, 0.516);
+    background-color: rgba(240, 239, 239, 0.878);
     border-radius: 30px;
     width: 60%;
     font-size: 20px;

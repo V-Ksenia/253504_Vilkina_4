@@ -89,6 +89,7 @@ stopHoverCheckbox.addEventListener("change", () => {
       slide.removeEventListener("mouseenter", () => (isHovered = true));
       slide.removeEventListener("mouseleave", () => (isHovered = false));
     }
+    isHovered = false;
   }
 });
 

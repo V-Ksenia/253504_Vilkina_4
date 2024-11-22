@@ -5,10 +5,11 @@
 {% block content %}
 
 <div class="top-menu">
-    <img class="mount" src="/media/images/mountcrop.png" style="height: 100%; position: absolute; z-index: 22">
+    <img class="mount" src="/media/images/mountcrop.png" style="height: 100%; 
+    position: absolute; z-index: 22; transform: translateX(-100%); transition: transform 0.5s ease;">
     <b class="top-text">Travelling is interesting <br> with us.</b> 
     <p class="logo-text">WELCOME TO <br> TRIP VOYAGE</p>
-    <nav>
+    <nav class="top-nav">
         <a href="#catalog">Catalog</a>
         <a href="#news">Latest news</a>
         <a href="#why_us">Why us</a>
@@ -163,9 +164,18 @@
 const topMenu = document.querySelector('.top-menu');
 const textMenu = document.querySelector('.top-text');
 const logoMenu = document.querySelector('.logo-text');
+const navMenu = document.querySelector('.top-nav');
 const mount = document.querySelector('.mount');
 
 const startHeight = window.innerHeight;
+
+window.addEventListener("load", () => {
+    setTimeout(() => {
+        mount.style.transform = `translateX(0)`;
+        logoMenu.style.transform = `translateX(0)`;
+        navMenu.style.transform = `translateX(0)`;
+    }, 500);
+});
 
 window.addEventListener('scroll', () => {
     const scrollY = window.scrollY;
@@ -201,11 +211,11 @@ window.addEventListener('scroll', () => {
     const progress = Math.min(Math.max(0, (viewportHeight - rect.top) / viewportHeight), 1);
 
     tourItems.forEach((item, index) => {
-        const delay = index * 0.1;
+        const delay = index * 0.05;
         const adjustedProgress = Math.max(0, progress - delay);
 
-        item.style.transform = `translateX(${(1 - adjustedProgress) * 100}%)`;
-        item.style.opacity = adjustedProgress;
+        item.style.transform = `translateX(${(1 - adjustedProgress) * 200}%)`;
+        item.style.opacity = adjustedProgress * 2;
         
     });
 });

@@ -30,7 +30,7 @@ function startCountdown() {
         } else {
             hourTimer.textContent = formatTime(timeLeft);
         }
-    }, 1000); //каждую секунду
+    }, 1000);
 }
 
 
